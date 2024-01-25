@@ -1,7 +1,7 @@
 ---
 title: 'Worksheet 1: R Basics'
-author: ""
-date: ""
+author: "Addison Horton"
+date: "1/31/24"
 ---
 _This is the first in a series of worksheets for History 8510 at Clemson University. The goal of these worksheets is simple: practice, practice, practice. The worksheet introduces concepts and techniques and includes prompts for you to practice in this interactive document. When you are finished, you should change the author name (above), knit your document to a pdf, and upload it to canvas._
 
@@ -27,9 +27,16 @@ Numbers can be used to do arithmetic.
 ```
 
 (@) You try, multiple two numbers. 
+```{r}
+5*5
+```
 
 
 (@) Can you multiply two numbers and then divide by the result? 
+```{r}
+(5*5)/5
+```
+
 
 The next type of value is a **string**. Strings are lines of text. Sometimes these are referred to as character vectors. To create a string, you add text between two quotation marks. For example: 
 ```{r}
@@ -38,7 +45,7 @@ The next type of value is a **string**. Strings are lines of text. Sometimes the
 
 (@) Try to create your own string.
 ```{r}
-
+"This is fun!"
 ```
 
 You can't add strings using `+` like you can numbers. But there is a function called `paste()` which concatenates character vectors into one. This function is _very_ useful and one you'll use a lot in a variety of circumstances. Here's what that looks like: 
@@ -49,12 +56,13 @@ paste("Hello", "Clemson Graduate Students")
 
 (@) Try it, add two strings together like the above example. 
 ```{r}
-
+paste("I need to think about", "committing these changes soon")
 ```
 
 (@) Can you explain what happened in 2-3 sentences? 
 
-> 
+> The paste function took two separate words or phrases (aka strings) and it put them together as a single string of text. It is essentailly adding them together, however it does not create a new unit as a result - meaning you can see the elements that were pasted together. 
+
 
 The last type are **logical** values like `TRUE` and `FALSE`. (Note that these are all caps.)
 
