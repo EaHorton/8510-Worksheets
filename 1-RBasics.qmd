@@ -336,7 +336,7 @@ Run `help(package="DigitalMethodsData")` in your console to pull up a list of da
 
 For demonstration purposes we'll use the `gayguides` data here. Pull up the help documentation for this dataset. What does the documentation tell you abou the scope of this dataset? 
 
->
+> This dataset contains information from 1965 to 1985. 
 
 To use a dataset included in this package we first need to load it. We can do so like this:
 
@@ -354,17 +354,17 @@ That gives us the first 6 rows of data. Its really useful if you just want to pe
 
 (@) The default is to print six rows of data. Can you modify the above code to print out the first 10 rows? 
 ```{r}
-
+head(gayguides, 10)
 ```
 
 (@) Can you find the last 6 rows of data? 
 ```{r}
-
+tail(gayguides)
 ```
 
 (@) Reflect on the previous two prompts. How did you figure these out? 
 
->
+> For the first prompt, I attempted to use the ? prompt in the consul to figure it out. However, after a couple moments of searching, I decided to Google it. I didn't even have to click on a link before I found my answer. For the second prompt, I simply replicated the head() function above with tail instead of head (per the help guide), assuming it followed the same principle of a default 6 rows. 
 
 The `str()` function is another very useful function for understanding a dataset. It compactly displays the internal structure of an R object. 
 ```{r}
@@ -383,30 +383,47 @@ gayguides$title[500]
 
 (@) Break this down. Whats going on here? What do each of the elements of this code mean? (gayguides, $, title, and [500]) 
 
->
+> gayguides is the name of the dataset, $ is what allows us to get a segemnt of the data, title is the descriptor of the row we're searching, and 500 is the specific row we are looking for. 
 
 (@) The Year variable contains the year (numeric) of each entry. Can you find the earliest year in this dataset? (Using code, don't cheat and use the documentation!)
 ```{r}
-
+min(gayguides$Year)
 ```
 
 
 (@) How about the latest year? 
 ```{r}
-
+max(gayguides$Year)
 ```
 
 
 (@) Add another dataset from `DigitalMethodsData`. How many observations are included in this dataset? Run through some of the examples from above to learn about the dataset.
 ```{r}
-
+data("statepopulations")
 ```
+```{r}
+tail(statepopulations)
+```
+```{r}
+str(statepopulations)
+```
+
+
+
+```{r}
+head(statepopulations)
+```
+```{r}
+max(statepopulations$X1890)
+```
+
+
+
+
 
 (@) What did you learn about the dataset? What can you tell me about it? 
 
->
-
-
+> I learned that this dataset is tracking the populations of more than just offical states. It also accounts for territories and persons in the military. This dataset is organized differently than the gayguides dataset, as the year is a demarkated in the column rather than a varibale - so the max and min functions do not work for the year in this context. The years included in this dataset are every-ten-years from 1790 to 2020. There are 28 columns and 84 rows. 
 
 
 CONGRATS! You've completed your first worksheet for Digital Methods II. That wasn't so bad, right? 
