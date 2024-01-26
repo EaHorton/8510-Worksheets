@@ -225,7 +225,7 @@ my.numbers * 2
 ```
 (@) Explain in a few sentences, what happened in the code above?
 
->
+> In the code above, each number included in the my.numbers variable was multiplied by 2. 2*2=4, 4*2=8, 6*2=12, and 8*2=16. It deals with each number in the variable individually.   
 
 Lets try something slightly different. 
 ```{r}
@@ -233,11 +233,11 @@ my.numbers[3] * 2
 ```
 (@) Explain in a few sentences, what happened in the code above? 
 
->
+> In the code above, the third number in the my.numbers varaible, which is 6, was multiplied by 2. 6 multiplied by 2 equals 12. 
 
 (@) You try, create a list of five items and store it in a descriptive variable. 
 ```{r}
-
+grocery.list <- c("eggs","milk", "oatmeal", "chocolate", "cinnamon")
 ```
 
 
