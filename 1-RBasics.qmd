@@ -102,11 +102,11 @@ Logical Operators allow you to combine or change the results of comparisons.
 ```
 (@) Explain, what does the code on each line above do? 
 
->
+> Row 96 asks if 5 is equal to 10, which is false. Row 97 asks if 3 is less than 4, it is. 98 asks if 5 does not equal 10. 99 asks if 5 does not equal 5. Row 100 asks if 3 is equivalent to 4 or 3, it is true because 3 equals 3 even if it does not equal 4. Row 101 asks if 3 does not equal 4 AND 3 does not equal 5. 
 
 (@) Create your own comparison. 
 ```{r}
-
+10 <= 7 | 15 > 10
 ```
 
 ---
