@@ -314,7 +314,7 @@ What is going on here? Each line within this function (x,y,z) creates a new colu
 
 (@) What is going on in row z? Can you explain the logic here?
 
->
+> The third column (z) takes the integer from column x, multiplies it by 2, and adds the integer in column y (which is always 1 in this case). Column z only stores the solution to the equation. For example row one is 1 * 2 + 1 = 3 or x * 2 + y = z. 
 
 
 ## Loading Dataframes from Packages
