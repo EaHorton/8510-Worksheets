@@ -1,6 +1,8 @@
 ---
 title: "Worksheet 2: Data Structures"
 format: html
+author: Addison Horton
+date: 2/7/2024
 ---
 
 _This is the second in a series of worksheets for History 8510 at Clemson University. The goal of these worksheets is simple: practice, practice, practice. The worksheet introduces concepts and techniques and includes prompts for you to practice in this interactive document. When you are finished, you should change the author name (above), knit your document to a pdf, and upload it to canvas._
@@ -40,7 +42,9 @@ x[c(3,3)]
 ```
 (@) Create your own vector and return three values using the subsetting method above. 
 ```{r}
+y <- c(7, 6, 5, 4, 3, 2, 1)
 
+y[c(2, 4, 6)]
 ```
 
 
@@ -51,7 +55,7 @@ x[-c(3, 1)]
 
 (@) What happened here? Describe this in your own words. 
 
->
+> The function above spit out the integers included in x, but it skipped over/excluded the numbers in the 3rd and 1st postions (2 and 15.4 respectively). 
 
 You can use either positive or negative integers to subset a vector but you **cannot mix the two**.
 
@@ -68,7 +72,7 @@ x[x > 7]
 
 (@) What is going on in each of the lines above? Describe it in your own words. 
 
->
+> The script beginning on line 63 is only printing the integers that assigned a 'true' value. As it reads true, false, true, true, false, the second and fifth integers (25 and 5) are excluded. After playing with this function in the terminal, I discovered that it works as a loop. Meaning if you assign x[c(TRUE, FALSE)], it will print out every other integer until every integer assigned to x is accounted for. The script beginning in line 69 is asking for the computer to return every number in x that is greater than 7. 
 
 Nothing returns the original vector. This isn't that useful here but can come in handy when you have more complex structures like matrices and arrays. 
 ```{r}
@@ -81,6 +85,7 @@ If your vector is named, you can also use character vectors to return elements w
 y[c("d")]
 ```
 (@) What happened here? Explain this in your own words. 
+Immediately, y appeared in the environment and reads "Named num [1:7]," followed by the integers that compose x. The first 4 numbers return named "a" "b" "c" and "d" because the first line of code told the computer return all of the integers in x, as well as the first four letters of the alphabet. That is why the 5th, 6th, and 7th integers in x are not accompanied by a letter. Line 86 confirms that the previous script worked, as 8.35 is synonymous with "d" in y. 
 
 #### Matrices
 

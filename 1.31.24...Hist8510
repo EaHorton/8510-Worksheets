@@ -1,0 +1,60 @@
+Bengals <- 27
+Bills <- 10 
+if (27>10) {
+  print("Bengals Win")
+}
+
+if (10>27) {
+  print("Bengals Win")
+} else {
+    print("Bills Win")
+}
+
+
+bengals <- 2
+bills <- 2 
+if (bengals > bills) {
+  print("Bengals win!")
+} else {
+  print("Bills win!")
+}
+
+bengals <- 2
+bills <- 2 
+if (bengals > bills) {
+  print("Bengals win!")
+} else if (bills > bengals) {
+  print("Bills win!")
+} else {
+  print("There was a tie!")
+}
+
+
+bengals <- 2
+bills <- 2 
+if (bengals > bills){
+  print ("Benglas win!")
+} else if (bills > bengals) {
+  print("Bills win!")
+} else {
+  print("There was a tie!")
+}
+
+#for loops 
+
+presidents <- c("Washington", "Jefferson", "Adams")
+for (i in presidents) {
+  print(i)
+}
+length(presidents)
+
+#while loops
+
+pagenumber <- 1 
+while (pagenumber <= 10) {
+print(pagenumber)
+pagenumber <- pagenumber + 1 
+}
+
+
+  
