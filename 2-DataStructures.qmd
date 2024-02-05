@@ -310,12 +310,15 @@ for (p in 1:length(presidents)) {
 
 (@) Why does this work? What does `length()` do and why do we use it on `presidents`?
 
-> 
+> length() indicates that the code is to work through each item in presidents. We use it on presidents to create the loop that it is supposed to shuffle through. 
 
 Create a character vector that contains the title of each of your classes this semester. Can you write a `for` loop that prints out "I am enrolled in" and the name of each of your classes? ("I am enrolled in History 8150", "I am enrolled in History 8000".....etc). Hint: you'll need a function to combine the output and some text of your choosing inside the function. 
 
 ```{r}
-
+classes <- c("Hist 8000", "Hist 8520", "Hist 8510")
+for (c in 1:length(classes)) {
+  print(paste("I am enrolled in", classes))
+}
 ```
 
 Sometimes we want our loop to terminate itself early. There are two statements that help us do that: 
@@ -346,15 +349,33 @@ for (i in 1:10) {
 ```
 
 (@) What happened here? Why did the loop only print 3 and 4? 
+The loop only printed 2 and 3 because it was told to skip anything less than 3 and it stopped after 4 because 5 is greater than OR EQUAL TO 5. 
 
 
 (@) In the state population data, can you write a loop that pulls only states with populations between 200,000 and 250,000 in 1800? You could accomplish this a few different ways. Try to use next and break statements. 
 ```{r}
+1:length(statepopulations$X1800)
+
+for (c in 1:length(statepopulations$X1800)) {
+  if (c < 200000)
+    next 
+  if (c > 250000)
+    next
+}
 
 ```
 
 (@) What if we wanted to loop through the gay guides data? Can you write a loop that iterates through the cities in the Gay Guides data and returns the title of any location in Greenville? 
 ```{r}
+for (c in 1:length(gayguides$city)) {
+
+  if (c != "Greenville")
+       next
+
+    print(gayguides$title)
+}
+
+
 
 ```
 
