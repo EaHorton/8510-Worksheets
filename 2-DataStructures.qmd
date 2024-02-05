@@ -173,17 +173,19 @@ gayguides[2560,6:7]
 
 (@) Load another dataset from `DigitalMethodsData`. Subset it to find some element of the data. Write the code below and then explain what element of the data you wanted to subset and why:
 ```{r}
-
+library(DigitalMethodsData)
+data("judges")
+judges[,17:18]
 ```
 
-> 
+> I wanted to subset each judge's gender and ethnicity. I anticipated that the results would be majority male and white. Isolating these columns makes it easier to look at the information that is relevant to my curiosity. 
 
 Another useful operator to know is `$` which we used a little bit in the previous worksheet. `$` is shorthand for accessing a variable in a dataframe. 
  
 So for example both of these produce the same result. One is just easier to type. Because the output here is so large, I've commented these two lines out. Uncomment them and the run the block.
 ```{r R.options=list(max.print=10)}
-#gayguides["title"]
-#gayguides$title
+gayguides["title"]
+gayguides$title
 ```
 
 Notice the above output is _huge_. We can combine `$` and `[` to drill down more specifically like we did earlier.
@@ -193,7 +195,7 @@ gayguides$city[100:110]
 
 (@) What does this code do? 
 
->
+> This code provides the data stored in the city column for rows 100 through 110. 
 
 
 We can also use `$` to create a new column in `gayguides`. 
