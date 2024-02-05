@@ -481,7 +481,7 @@ grade(75)
 GeorgeWashington <- grade(60)
 ```
 
->
+> This is because you are assigning grade(60), aka "C," to George Washington as a variable. It appears in the environment rather than being printed out. 
 
 
 Here's a more complex example: 
@@ -502,11 +502,36 @@ gg.locations <- function (city, year) {
 (@) Write a function that uses the things you've learned in this worksheet. The function should accept two arguments, city and year. It should pull all the locations in that city and year and return a statement that says "Found a location called xxx". (Where x is the title of a location in that year and city.) 
 ```{r}
 
+GayGuidesLocations <- function (city, year) {
+  data(gayguides)
+
+  for (x in 1:length(gayguides$city)) {
+    if (gayguides$city[x] == city && gayguides$Year[x] == year) {
+     print(paste("Found a location called ", gayguides$title[x]))
+    } else {
+      next 
+    } 
+  }
+}
+
+GayGuidesLocations("Washington", 1983)
+
 ```
 
 (@) Use the Boston Women Voter dataset. Write a function that accepts the name of an occupation. Your function should return new dataframe that includes the records for every voter listed with that occupation.  
 ```{r}
+BotsonWomenVotersOccupation <- function (occupation) 
+  data(BostonWomenVoters)
 
+ for (x in 1:length(BostonWomenVoters$Occupation)) {
+    if (BostonWomenVoters$Occupation[x] == occupation) {
+     print(BostonWomenVoters$Name)
+    } else {
+      next 
+    } 
+  }
+
+BostonWomenVotersOccupation("Housewife")
 
 ```
 
