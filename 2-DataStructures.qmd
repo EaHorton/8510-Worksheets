@@ -258,22 +258,27 @@ if (x > 90) {
 
 (@) You are teaching History 100 for Clemson. Write an `if` statement that calculates whether the enrollment cap of 30 on your class has been met. 
 ```{r}
-
+c <- 30
+if (c >= 30) {"yes"} else {"no"}
 ```
 
 (@) Create a list of presidents and store it in a variable. Use an `if` statement to check if the number of presidents in the list is more than 5. If its not indicate that too. 
 ```{r}
-
+p <- c("Jefferson", "Lincoln", "Bush", "Carter", "Coolidge")
+length(p)
+if (length(p) > 5) {"yes"} else {"no"}
 ```
 
 (@) You can also use an if statement to check a variable in a dataframe. How might you use an if statement to check if the GayGuides dataset contains any year after 1990? (Hint: first try to figure out how to determine the latest year in the dataframe and then build an if statement that checks that and prints something out if its true or false. You should think about what kind of value in contained in the Year column, how to access it, and how to check for the latest value.) 
 
 ```{r}
+max(gayguides$Year)
+if (max(gayguides$Year) > 1990) {"true"} else {"false"}
 ```
 
 (@) Reflect on the question above. How did you figure this out? What was the process you went through to build this chunk of code?
 
-> 
+> I remebered from last week that you can check the latest year using the max function. I hit a snag creating the if statement because I tried to simply use gayguides$Year > 1990, which was spitting back an error. I decided to try it with the max function and it worked! I had the pieces correct, I just needed a little trial and error to put it together properly. 
 
 #### Loops
 
