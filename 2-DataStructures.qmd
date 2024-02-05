@@ -422,6 +422,10 @@ historyStudents <- function(studentname, class) {
 ```
 (@) Can you run this function? 
 ```{r}
+studentname <- "Horton"
+class <- "Hist8510"
+
+historyStudents(studentname, class)
 
 ```
 
@@ -435,12 +439,21 @@ There are several components to a function.
 
 (@) Write a function that takes a string of text and counts the number of characters. The function should return "There are xx characters in that string." 
 ```{r}
+myfirstfunction <- function(z) {
+  z <- "This is a message and I really hope this works."
+  myvalue <- nchar(z)
+  statement <- paste("There are ", myvalue, "characters in that string.")
+  statement
+  }
+
+myfirstfunction()
+
 
 ```
 
 (@) Reflect on the process of building the above function. How did you go about figuring this out? 
 
->
+> That was so cool! First, I had to google the function that counts characters (nchar). Once I figured that out, I used the previous function as a template and changed what I needed to. I hit a snag when I assigned my string as follows - myfirstfunction <- function("This is a message and I really hope this works.") When I received an error messaged, I ran to google, and, after looking at some examples, I settled on assigning a value to the function, and then assigning my string to that value. It worked! 
 
 The body of a functions can use any of the techniques we've learned in this worksheet like loops and if statements. For example: 
 ```{r}
