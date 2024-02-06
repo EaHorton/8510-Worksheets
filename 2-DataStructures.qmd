@@ -371,8 +371,8 @@ for (c in 1:length(gayguides$city)) {
 
   if (c != "Greenville")
        next
-
-    print(gayguides$title)
+  
+    print (gayguides$title[c])
 }
 
 
@@ -520,18 +520,18 @@ GayGuidesLocations("Washington", 1983)
 
 (@) Use the Boston Women Voter dataset. Write a function that accepts the name of an occupation. Your function should return new dataframe that includes the records for every voter listed with that occupation.  
 ```{r}
-BotsonWomenVotersOccupation <- function (occupation) 
+BotsonWomenVotersOccupation <- function(Occupation) 
   data(BostonWomenVoters)
 
- for (x in 1:length(BostonWomenVoters$Occupation)) {
-    if (BostonWomenVoters$Occupation[x] == occupation) {
-     print(BostonWomenVoters$Name)
+  for (x in 1:length(BostonWomenVoters$Occupation)) {
+    if (BostonWomenVoters$Occupation[x] == Occupation) {
+     print(BostonWomenVoters$Name[x])
     } else {
       next 
     } 
   }
 
-BostonWomenVotersOccupation("Housewife")
+BotsonWomenVotersOccupation("Student")
 
 ```
 
