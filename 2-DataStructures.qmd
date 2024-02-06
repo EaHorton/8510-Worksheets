@@ -368,15 +368,10 @@ for (c in 1:length(statepopulations$X1800)) {
 (@) What if we wanted to loop through the gay guides data? Can you write a loop that iterates through the cities in the Gay Guides data and returns the title of any location in Greenville? 
 ```{r}
 for (c in 1:length(gayguides$city)) {
-
-  if (c != "Greenville")
-       next
+  #print(gayguides$city[c]) } 
   
-    print (gayguides$title[c])
-}
-
-
-
+  if (gayguides$city[c] == "Greenville") {
+    print(gayguides$title[c])} } 
 ```
 
 `while` is another useful tool for writing loops. While will run a loop _while_ a condition is true. Once that condition is not true, it exits. For example: 
