@@ -538,7 +538,11 @@ BotsonWomenVotersOccupation("Student")
 
 BotsonWomenVotersOccupation <- function(Occupation) 
   #data(BostonWomenVoters)
-m <- BostonWomenVoters[,,]
+  
+#mat <- mat[mat[,"car_color"]=="Red",]
+
+m <- mat[BostonWomenVoters[,"Occupation"]=="x",]
+
 
 
   for (x in 1:length(BostonWomenVoters$Occupation)) {
