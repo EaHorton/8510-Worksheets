@@ -1,6 +1,5 @@
 ---
 title: "Worksheet 2: Data Structures"
-format: html
 author: Addison Horton
 date: 2/7/2024
 ---
@@ -354,16 +353,33 @@ The loop only printed 2 and 3 because it was told to skip anything less than 3 a
 
 (@) In the state population data, can you write a loop that pulls only states with populations between 200,000 and 250,000 in 1800? You could accomplish this a few different ways. Try to use next and break statements. 
 ```{r}
+for (c in 1:length(statepopulations$X1800)) {
+if (is.na (statepopulations$X1800[c])){
+  next
+}
+    else if (statepopulations$X1800[i] < 200000){
+       next
+}
+   else if (statepopulations$X1800[c] > 250000){
+          next 
+   }
+  
+  else 
+   print(paste(statepopulations$STATE[c], "is between 200000 and 250000")) 
+
+}
+```
+
+```{r}
 
 #1:length(statepopulations$X1800)
 
 for (c in 1:length(statepopulations$X1800)) {
-  if (!is.null(statepopulations$X1800[c] > 200000) | !is.null(statepopulations$X1800[c] < 250000))
-    print(paste(statepopulations$STATE[c], "is between 200000 and 250000"))
-    next
+  if (!is.na (statepopulations$X1800[c] > 200000) | 
+      !is.na(statepopulations$X1800[c] < 250000))
+    print(paste(statepopulations$STATE[c], "is between 200000 and 250000")) 
+  next
 }
-
-
 
 ```
 
@@ -517,8 +533,8 @@ GayGuidesLocations("Washington", 1983)
 
 (@) Use the Boston Women Voter dataset. Write a function that accepts the name of an occupation. Your function should return new dataframe that includes the records for every voter listed with that occupation.  
 ```{r}
-BotsonWomenVotersOccupation <- function(Occupation) 
-  data(BostonWomenVoters)
+BotsonWomenVotersOccupation <- function(Occupation) {
+  #data(BostonWomenVoters)
 
   for (x in 1:length(BostonWomenVoters$Occupation)) {
     if (BostonWomenVoters$Occupation[x] == Occupation) {
@@ -527,10 +543,12 @@ BotsonWomenVotersOccupation <- function(Occupation)
       next 
     } 
   }
-
-BotsonWomenVotersOccupation("Student")
+}
+BotsonWomenVotersOccupation("Student") 
 
 ```
+
+
 ```{r}
 
 BotsonWomenVotersOccupation <- function(Occupation) {
@@ -548,5 +566,27 @@ BotsonWomenVotersOccupation <- function(Occupation) {
   }
 }
 BotsonWomenVotersOccupation("Student")
+```
+```{r}
+
+BotsonWomenVotersOccupation <- function(Occupation)  {
+  data(BostonWomenVoters)
+subset (BostonWomenVoters, Occupation == Occupation)
+}
+BotsonWomenVotersOccupation("Student")
+```
+```
+```{r}
+for (p in 1:length(statepopulations$X1800)) {
+  if (is.na(statepopulations$X1800[p])) {
+    next
+  }
+  else if (statepopulations$X1800[p] < 200000) {
+    next
+  }
+  else if (statepopulations$X1800[p] > 250000) {
+    next
+  }
+  print(statepopulations$STATE[p]) }
 ```
 
