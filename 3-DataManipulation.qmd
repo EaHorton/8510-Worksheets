@@ -202,6 +202,8 @@ gayguides %>% select(description, city, Year, state) %>% filter(state == "SC") %
 ```{r}
 southernstates <- c("AL", "AR", "FL", "GA", "KY", "LA", "MD", "MS", "NC", "SC", "TN", "TX", "VI", "WV")
 
+gayguides %>% select(description, city, Year, state) %>% filter(state == c("AL", "AR", "FL", "GA", "KY", "LA", "MD", "MS", "NC", "SC", "TN", "TX", "VI", "WV")) %>% filter(Year == 1975) %>% group_by(Year) %>%  summarize(count = n())
+
 ```
 
 ## Re-Shaping Data: Joins and Pivots
