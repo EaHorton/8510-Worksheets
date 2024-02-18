@@ -105,7 +105,7 @@ gayguides %>% filter(Year == 1975) %>%  filter(city != "New York" & city != "San
 
 #mpg_df %>% filter(str_detect(model,'4wd')) 
 
-gayguides %>% filter (str_detect(amenityfeatures, '(G)'))
+gayguides %>% filter (str_detect(amenityfeatures, '(G)|(L)'))
 
 #mpg_df %>% filter(cyl %in% c(4,5,6))
 #gayguides %>% select(contains("(G)" | "(L)"))
@@ -230,12 +230,27 @@ head(almshouse_admissions)
 (@) Below I've downloaded data about each of the census regions. Join this dataset with `gayguides`. Create a data frame that includes each of the regions and the total number of locations in 1980. How many locations appear in the Mountain region in 1980?
 ```{r}
 regions <- read.csv("https://raw.githubusercontent.com/regan008/DigitalMethodsData/main/raw/censusregions.csv")
+
+census_regions_info <- left_join(gayguides, regions, by=c("state"="State.Code"))
+
+census_regions_info %>% select(Region, Year, title, Division) %>% filter(Year == 1980) %>%  group_by(Division, Region) %>%  summarize(count = n())
+
+
+
 ```
 
 (@) Explain what you did above. What variable did you join by and why? What results?
 
+I joined state with State.Code because they corresponded in content and format. After I joined the datasets, I used the filter, group_by, and summarize features that we learned above. The mountain region is contained in Division rather than region, but I included both, which works because all Mountain entries are in the West. The total number is 285. 
+
+
 (@)How much did LGTBQ life grow between 1970 and 1980? Can you create a data frame that computes the growth in the number of locations between 1970 and 1980 for every state? For every region? 
 ```{r}
+
+census_regions_info %>% select(Region, Year, State) %>% filter(Year == 1980 | Year == 1970) %>%  group_by(State, Region) %>% mutate(growth = summarize(count = n("1980")) - n("1970"))
+
+#data("BostonWomenVoters")
+#BostonWomenVoters %>% mutate(Birthyear = 1920 - Age) 
 
 ```
 
