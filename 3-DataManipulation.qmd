@@ -247,7 +247,7 @@ I joined state with State.Code because they corresponded in content and format. 
 (@)How much did LGTBQ life grow between 1970 and 1980? Can you create a data frame that computes the growth in the number of locations between 1970 and 1980 for every state? For every region? 
 ```{r}
 
-census_regions_info %>% select(Region, Year, State) %>% filter(Year == 1980 | Year == 1970) %>%  group_by(State, Region) %>% mutate(growth = summarize(count = n("1980")) - n("1970"))
+census_regions_info %>% select(Region, Year, State) %>% filter(Year == 1980 | Year == 1970) %>%  group_by(State, Region) %>% mutate(growth = (count = n()))
 
 #data("BostonWomenVoters")
 #BostonWomenVoters %>% mutate(Birthyear = 1920 - Age) 
@@ -270,11 +270,15 @@ sc.parks <- sc.parks %>%
 ```
 
 (@) What did this code do? 
->
+> This code took the years that were provided originally in columns and turned them into rows.This lengthened the dataset.  
 
 (@) Here's another wide data frame. Can you turn this from a wide to a narrow data frame? 
 ```{r}
 rec.spaces <- read.csv("https://raw.githubusercontent.com/regan008/DigitalMethodsData/main/raw/PlayAreabyType.csv")
+```
+```{r}
+rec.spaces <- rec.spaces %>%
+  pivot_longer(!type, names_to = "year", values_to = "count")
 ```
 
 The opposite of `pivot_longer()` is `pivot_wider()`. It "widens" data by increasing the number of columns and decreasing the number of rows. We can revert `sc.parks` back to a wide dataset using this function.
@@ -285,12 +289,14 @@ sc.parks %>%
 
 (@) Widen the `sc.parks` dataset so that the column names are drawn from the type of recreation worker.
 ```{r}
-
+sc.parks %>%
+  pivot_wider(names_from = type_of_worker, values_from = count)
 ```
 
 (@) Turn `rec.spaces` into a wide dataframe. 
 ```{r}
-
+rec.spaces %>%
+  pivot_wider(names_from = year, values_from = count)
 ```
 
 
