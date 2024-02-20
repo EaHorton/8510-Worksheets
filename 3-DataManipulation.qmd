@@ -350,5 +350,17 @@ group_by(Year, state) %>%
 (@) Write a function that filters the gay guides dataset. It should accept 2 arguments: year and state. When passed to the function the function should return only the title, type, state and year for each entry. 
 ```{r}
 
+#for (o in 1:length(BostonWomenVoters)) {
+  #  if (BostonWomenVoters$Occupation[o]=="Housewife")}
+  #{  print("Housewife")
+ # } else if (BostonWomenVoters$Occupation[o]=="Stenographer"){
+ #   print("Stenographer")
+ # }
+
+gayguides_year_and_state <- for (x in 1:length(gayguides)) {if gayguides$Year[x] & gayguides$state[y]} {print(gayguides$title,gayguides$type, gayguides$state, gayguides$Year)}
+#gayguides %>% select(title, type, state, Year) %>% group_by(title, type, state, Year)
+```
+```{r}
+gayguides_year_and_state(1985, "CA")
 ```
 
