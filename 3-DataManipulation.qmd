@@ -312,21 +312,38 @@ The implicit question was, "How many locations appear in each year?". The `judge
 
 (@) First, tell me, what is the question you are asking? 
 ```{r}
-
+#Looking chronologically, when do we start to see women appearing in the dataset and at what frequency?
 ```
 
 (@) Now write some code to address that question. Comment the code with notes that explain your thinking as you go. Use functions like select(), filter(), etc to pair down your dataset and reshape it to address your question. 
 ```{r}
-
+judges %>% 
+  #go to judges dataset
+    select(Confirmation.Date..1., Gender)  %>% 
+  #select the two columns that are relevant to my question
+arrange(desc(Confirmation.Date..1.)) %>%
+  #arrange the dates in descending order so that I can view the data chronologically 
+    group_by(Confirmation.Date..1., Gender) %>%
+  #in my result, I want to see both the date and gender of the judge
+    summarize(count = n())
+  #i want to know how many judges are initiated on each date in the case that there are multiple
 ```
 
 (@) Now ask a question of the `gayguides` data (or another dataset of your choice). What is the question you are asking? 
 ```{r}
-
+#How many street addresses are located on an interstate or highway? 
 ```
 
 (@) Now write some code to address that question. Comment the code with notes that explain your thinking as you go. Use functions like select(), filter(), etc to pair down your dataset and reshape it to address your question. 
 ```{r}
+gayguides %>% select(streetaddress, Year, state) %>%
+# these are the columns that I want to appear in my final results
+filter (str_detect(streetaddress, 'Hwy.| I-')) %>%
+# I need R to identify any address with Hwy or I in the name
+group_by(Year, state) %>%
+  #I don't need the actual street address to appear in the final result, but I do want the count. 
+  summarize(count = n())
+  
 
 ```
 
