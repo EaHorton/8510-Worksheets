@@ -205,7 +205,11 @@ avg.by.year <- gayguides %>% filter(state == "SC") %>% filter(Year == 1970:1975)
 ```{r}
 southernstates <- c("AL", "AR", "FL", "GA", "KY", "LA", "MD", "MS", "NC", "SC", "TN", "TX", "VI", "WV")
 
-gayguides %>% select(description, city, Year, state) %>% filter(state == c("AL", "AR", "FL", "GA", "KY", "LA", "MD", "MS", "NC", "SC", "TN", "TX", "VI", "WV")) %>% filter(Year == 1975) %>% group_by(Year) %>%  summarize(count = n())
+#gayguides %>% select(description, city, Year, state) %>% filter(state == c("AL", "AR", "FL", "GA", "KY", "LA", "MD", "MS", "NC", "SC", "TN", "TX", "VI", "WV")) %>% filter(Year == 1975) %>% group_by(Year) %>%  summarize(count = n())
+
+
+#in class way of doing this 
+gayguides %>% select(description, city, Year, state) %>% filter(state %in% southernstates) %>% filter(Year == 1975) %>% group_by(Year) %>%  summarize(count = n())
 
 ```
 
@@ -352,8 +356,9 @@ group_by(Year, state) %>%
 
 (@) Write a function that filters the gay guides dataset. It should accept 2 arguments: year and state. When passed to the function the function should return only the title, type, state and year for each entry. 
 ```{r}
-gg_function <- gayguides %>% select(Year, state, title, type) %>%
-  filter(state == x) %>% filter(Year == y)
+gg_function <- function(state1, Year1){
+  gayguides %>% select(Year, state, title, type) %>%
+  filter(state == state1) %>% filter(Year == Year1)}
  
 ```
 ```{r}
