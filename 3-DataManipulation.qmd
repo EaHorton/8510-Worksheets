@@ -193,7 +193,10 @@ BostonWomenVoters %>%
 (@) In the `gayguides` data, on average how many locations did each city in South Carolina have between 1970 and 1975?
 ```{r}
 
-gayguides %>% select(description, city, Year, state) %>% filter(state == "SC") %>% filter(Year >= 1970 & Year <= 1975) %>% group_by(city) %>%  summarize(count = n())
+#gayguides %>% select(description, city, Year, state) %>% filter(state == "SC") %>% filter(Year >= 1970 & Year <= 1975) %>% group_by(city) %>%  summarize(count = n())
+
+avg.by.year <- gayguides %>% filter(state == "SC") %>% filter(Year == 1970:1975) %>% group_by(city, Year) %>% summarize(count = n()) %>% summarize(avg = mean(count))
+
 
 #gayguides %>% select(description, city, Year) %>% group_by(Year) %>%summarize(count = n())
 ```
