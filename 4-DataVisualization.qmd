@@ -142,7 +142,10 @@ ggplot(sc.rec, aes(x = state, y = state.expenditures )) +
 
 (@) Using the `gayguides` data, create a bar chart that shows the number of locations in 1980 in South Carolina, Georgia, and North Carolina. 
 ```{r}
-
+g.g.hist <- gayguides %>% group_by(state, Year) %>% filter(state == "SC" | state == "GA" | state == "NC") %>% filter(Year == 1980) %>% summarize(count=n())
+                                                    
+ggplot(g.g.hist, aes(x = state, y = count)) +
+  geom_col() + labs(x="State", y="Number of Locations", title="Number of Locations per State in 1980")
 ```
 
 (@) Using the `gayguides` data, plot the number of religious institutions in each state.
