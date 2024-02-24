@@ -199,10 +199,18 @@ ggplot(gg.byyear, aes(x = Year, y = count)) +
 (@) Create a line chart that shows the number of religious institutions in the gay guides data over time.
 ```{r}
 
+g.g.rel.2 <- gayguides %>% group_by(type, Year) %>% filter(type == "Religious Institution") %>% summarize(count=n())
+
+ggplot(g.g.rel.2, aes(x = Year, y = count)) +
+  geom_line(linetype = 1)
 ```
 
 (@) In the gayguides data, danger or risk is indicated in several different ways. Sometimes it through the use of an amenity categorization of (HOT) or (AYOR) which meant that these locations were frequented by police and should be used at your own risk. Other times, locations were listed as "inquire locally" in either the description or address field. There are many reasons a location would have requested to have been listed this way. Many times, it was due to harassment and the location deemed it too dangerous to publicly list its location. Can you create a subset of the gay guides data about risk and then use it to create a chart about the usage of these indicators over time? 
 ```{r}
+data("gayguides")
+g.g.danger <- gayguides %>% group_by(amenityfeatures, Year) %>% filter (str_detect(amenityfeatures, '(AYOR)|(HOT)'))  %>% summarize(count=n())
+                                    
+
 
 ```
 
