@@ -151,14 +151,37 @@ ggplot(g.g.hist, aes(x = state, y = count)) +
 (@) Using the `gayguides` data, plot the number of religious institutions in each state.
 ```{r}
 
+
+g.g.rel <- gayguides %>% group_by(state, type) %>% filter(type == "Religious Institution") %>% summarize(count=n())
+                                                    
+#ggplot(g.g.rel, aes(x = state, y = count)) + geom_col() + labs(x="State", y="Number of Religious Institutions", title="Number of Religious Institutions")
+
+ggplot(g.g.rel, aes(x = state, y = count)) + geom_col(width = .7) + labs(x="State", y="Number of Religious Institutions", title="Number of Religious Institutions")
+```
+
 ```
 
 (@) Formulate a question based on a dataset of your choice. That question should be something that would be appropriately answered by a bar chart. What is the question you want to explore?
 
-<
+< I want to visualize the change in South Carolina's popualtion in the statepopulations dataset.
 
 (@) Now write the code to answer that question and use comments (`#`) to explain your thinking as you go.
+
 ```{r}
+
+```{r}
+#first, I need to modify the statepopulations dataset to make it longer
+
+statepopulations.1. <- statepopulations %>%
+  pivot_longer(X1790:X2020, names_to = "year", values_to = "count")
+
+#then, I need to isolate the relevant information -- ie. only SC
+
+sc.statepopulations <- statepopulations.1. %>% group_by(STATE, year, count) %>% filter(STATE == "South Carolina") 
+
+#then, I plot the year along the x axis and the population count along the y axis
+
+ggplot(sc.statepopulations, aes(x = year, y = count)) + geom_col(fill = "navy") + labs(x="Year", y="Population", title="State Populations SC")
 
 ```
 
