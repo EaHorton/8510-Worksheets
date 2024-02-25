@@ -211,7 +211,7 @@ data("gayguides")
 g.g.danger <- gayguides %>% filter (str_detect(amenityfeatures, '(AYOR)|(HOT)') | str_detect(streetaddress, 'Inquire locally| Inquire Locally')| str_detect(description, 'Inquire locally| Inquire Locally')) %>% group_by(Year) %>% summarize(count=n())
                                     
 ggplot(g.g.danger, aes(x = Year, y = count)) +
-  geom_line(linetype = 1) + labs(x="Year", y="Usage of Inquire Locally, (HOT), or (AYOR)", title="Danger in the GayGuides")
+  geom_line(linetype = 1, linewidth = 2) + labs(x="Year", y="Usage of Inquire Locally, (HOT), or (AYOR)", title="Danger in the GayGuides")
 
 ```
 
@@ -228,11 +228,20 @@ ggplot(gg.byyear, aes(x = Year, y = count)) +
 
 (@) Using the state recreation data, can you create a chart that outlines the total expenditures in South Carolina by city?
 ```{r}
+sc.cities.rec <- recreational.data %>% filter(state == "SC") %>% group_by(year, city, total_expenditures)
 
+ggplot(sc.cities.rec, aes(x = city, y = total_expenditures)) +
+  geom_col() + labs(x="City in SC", y="Total Expenditures", title="Expenditures in SC in 1930")
+
+#ggplot(sc.cities.rec, aes(x = year, y = total_expenditures)) + geom_line() + facet_wrap(~city)
 ```
 
 (@) Using the gayguides data can you select 5 types of locations and chart the number of each type between 1965 and 1980? 
 ```{r}
+gay.guides.faceting <- gayguides %>% filter(type == "Cruising Areas" | type == "Bars/Clubs" | type == "Restaurant" | type == "Book Store" | type == "Hotel") %>% filter(Year <=1980) %>% group_by(type, Year) %>% summarize(count = n())
+
+ggplot(gay.guides.faceting, aes(x = Year, y = count)) +geom_line() + facet_wrap(~type)
+
 
 ```
 
@@ -240,6 +249,11 @@ ggplot(gg.byyear, aes(x = Year, y = count)) +
 ```{r}
 rec.workers <- read.csv("https://raw.githubusercontent.com/regan008/DigitalMethodsData/main/raw/RecreationData-Wide.csv")
 
+rec.workers.1. <- rec.workers %>%
+ pivot_longer(X1930:X1945, names_to = "year", values_to = "count")  %>% filter (str_detect(type_of_worker, 'paid' | 'volunteer') %>% group_by(year, city) %>% summarize(count = n())
+  
+  
+  
 
 ```
 
