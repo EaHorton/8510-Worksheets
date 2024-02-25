@@ -208,9 +208,10 @@ ggplot(g.g.rel.2, aes(x = Year, y = count)) +
 (@) In the gayguides data, danger or risk is indicated in several different ways. Sometimes it through the use of an amenity categorization of (HOT) or (AYOR) which meant that these locations were frequented by police and should be used at your own risk. Other times, locations were listed as "inquire locally" in either the description or address field. There are many reasons a location would have requested to have been listed this way. Many times, it was due to harassment and the location deemed it too dangerous to publicly list its location. Can you create a subset of the gay guides data about risk and then use it to create a chart about the usage of these indicators over time? 
 ```{r}
 data("gayguides")
-g.g.danger <- gayguides %>% group_by(amenityfeatures, Year) %>% filter (str_detect(amenityfeatures, '(AYOR)|(HOT)'))  %>% summarize(count=n())
+g.g.danger <- gayguides %>% filter (str_detect(amenityfeatures, '(AYOR)|(HOT)') | str_detect(streetaddress, 'Inquire locally| Inquire Locally')| str_detect(description, 'Inquire locally| Inquire Locally')) %>% group_by(Year) %>% summarize(count=n())
                                     
-
+ggplot(g.g.danger, aes(x = Year, y = count)) +
+  geom_line(linetype = 1) + labs(x="Year", y="Usage of Inquire Locally, (HOT), or (AYOR)", title="Danger in the GayGuides")
 
 ```
 
