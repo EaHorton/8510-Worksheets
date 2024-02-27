@@ -250,10 +250,15 @@ ggplot(gay.guides.faceting, aes(x = Year, y = count)) +geom_line() + facet_wrap(
 rec.workers <- read.csv("https://raw.githubusercontent.com/regan008/DigitalMethodsData/main/raw/RecreationData-Wide.csv")
 
 rec.workers.1. <- rec.workers %>%
- pivot_longer(X1930:X1945, names_to = "year", values_to = "count")  %>% filter (str_detect(type_of_worker, 'paid' | 'volunteer') %>% group_by(year, city) %>% summarize(count = n())
+ pivot_longer(X1930:X1945, names_to = "year", values_to = "count")  %>% pivot_wider(names_from = type_of_worker, values_from = count) %>% pivot_longer("male paid":"female paid", names_to = "paid", values_to = "count_paid") %>% pivot_longer("men volunteer":"women volunteer", names_to = "men volunteer", values_to = "count volunteer")  
+
+#%>% pivot_longer("volunteer", names_to = "men volunteer", values_to = "count volunteer")
   
   
+  filter (str_detect(type_of_worker, 'paid' | 'volunteer') %>% group_by(year, city) %>% summarize(count = n())
   
+  
+  #BostonWomenVoters %>%  select(Age, Occupation) %>% group_by(Occupation) %>% summarize(average_age = mean(Age))
 
 ```
 
@@ -263,23 +268,42 @@ In the slots below use the datasets for class (or a dataset of your choice) to c
 (@) Plot 1
 ```{r}
 
+library(DigitalMethodsData)
+data(judges)
+
+judges.month <- judges %>% group_by(Birth.Month) %>% summarize(count = n())
+
+ggplot(gg.byyear, aes(x = Year, y = count)) +
+  geom_line() + facet_wrap(~state)
+
+recreational.data %>% filter(state == "SC") %>% group_by(year, city, total_expenditures)
+
+ggplot(judges.month, aes(x = Birth.Month, y = count)) +
+  geom_col() + labs(x="Birth Month", y="Count", title="Birth Month of US Judges and Justices")
+
+
 ```
 
 (@) Plot 1 explanation: 
->
+> This plot represents a curiousity question that I had - are certain birth months more popular than others in this dataset? Or, is there any relationship between certain birth months and ultimately becoming a judge or justice? I did not expect to find anything astonishing, however, I was curious and now had the means to explore this question. 
 
 (@) Plot 2
 ```{r}
+judges.gender <- judges %>% group_by(Gender, Birth.Year) %>% summarize(count = n()) 
 
+
+ggplot(judges.gender, aes(x = Birth.Year, y = count)) +geom_line() + facet_wrap(~Gender) + geom_col()
 ```
 
 (@) Plot 2 explanation: 
->
+> I was curious as to the relationship between the history of female judges/justices and male judges/justices. Visualizig their trajectories side by side allows the reader to see the greater historical context. At first, I thought I was looking to see if the introduction of female judges impacted the number of male judges. Instead, I observed a great leap in the number of justices overall, followed by a significant dropoff. 
 
 (@) Plot 3. For this one, try a different kind of plot. [Check out a useful gallery here.](https://github.com/regan008/DigitalMethodsData/blob/main/raw/RecreationData-Wide.csv)
 (For this week, avoid choosing a map. We'll talk more about maps and geographic data over the next two weeks.)
 ```{r}
+BWO <- BostonWomenVoters %>% filter(Occupation=="Housekeeper") %>% group_by(Occupation, Age) %>% summarize(count = n()) 
 
+ggplot(BWO, aes(x = Occupation, y = Age)) + geom_dotplot()
 ```
 
 (@) Plot 3 explanation: 
