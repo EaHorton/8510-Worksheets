@@ -301,10 +301,30 @@ ggplot(judges.gender, aes(x = Birth.Year, y = count)) +geom_line() + facet_wrap(
 (@) Plot 3. For this one, try a different kind of plot. [Check out a useful gallery here.](https://github.com/regan008/DigitalMethodsData/blob/main/raw/RecreationData-Wide.csv)
 (For this week, avoid choosing a map. We'll talk more about maps and geographic data over the next two weeks.)
 ```{r}
-BWO <- BostonWomenVoters %>% filter(Occupation=="Housekeeper") %>% group_by(Occupation, Age) %>% summarize(count = n()) 
+BWO <- BostonWomenVoters %>% filter(Occupation == "Artist" | Occupation ==  "Housewife" | Occupation == "At home" | Occupation ==  "Bookkeeper" | Occupation ==  "Clerk" | Occupation ==  "Dressmaker") %>% group_by(Occupation, Age) %>% summarize(count = n()) 
 
-ggplot(BWO, aes(x = Occupation, y = Age)) + geom_dotplot()
+#ggplot(BWO, aes(x = Occupation, y = Age)) + geom_dotplot()
+
+ggplot(data=BWO, aes(x=count, y=Age)) +
+  geom_point(aes(colour=Occupation), shape=15, size=1.5) +
+  ggtitle("Age per Occupation in Boston Women Voters") +
+  labs(x="count", y="age)") 
+ #+  common_theme()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ```
 
 (@) Plot 3 explanation: 
->
+> I wanted to visualize the age and count distribution among certain occupations in Boston Women Voters. A majority of women in my sample are housewives, as we could have expected. However, the more intersting observation is the ages to which women work certain professions. Artists are under 60, however some dressmakers work into thier 70s. It is worth noting, however, that all of the older women who persue occuptions outside of the home are relatively few in number, whereas clerks in their 30s(for example) appear in great numbers. 
