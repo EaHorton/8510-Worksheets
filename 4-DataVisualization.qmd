@@ -145,7 +145,7 @@ ggplot(sc.rec, aes(x = state, y = state.expenditures )) +
 g.g.hist <- gayguides %>% group_by(state, Year) %>% filter(state == "SC" | state == "GA" | state == "NC") %>% filter(Year == 1980) %>% summarize(count=n())
                                                     
 ggplot(g.g.hist, aes(x = state, y = count)) +
-  geom_col() + labs(x="State", y="Number of Locations", title="Number of Locations per State in 1980")
+  geom_col(fill="darkslategrey") + labs(x="State", y="Number of Locations", title="Number of Locations per State in 1980")
 ```
 
 (@) Using the `gayguides` data, plot the number of religious institutions in each state.
@@ -156,7 +156,7 @@ g.g.rel <- gayguides %>% group_by(state, type) %>% filter(type == "Religious Ins
                                                     
 #ggplot(g.g.rel, aes(x = state, y = count)) + geom_col() + labs(x="State", y="Number of Religious Institutions", title="Number of Religious Institutions")
 
-ggplot(g.g.rel, aes(x = state, y = count)) + geom_col(width = .7) + labs(x="State", y="Number of Religious Institutions", title="Number of Religious Institutions")
+ggplot(g.g.rel, aes(x = state, y = count)) + geom_col(width = .7, fill="antiquewhite4") + labs(x="State", y="Number of Religious Institutions", title="Number of Religious Institutions")
 ```
 
 ```
@@ -231,7 +231,7 @@ ggplot(gg.byyear, aes(x = Year, y = count)) +
 sc.cities.rec <- recreational.data %>% filter(state == "SC") %>% group_by(year, city, total_expenditures)
 
 ggplot(sc.cities.rec, aes(x = city, y = total_expenditures)) +
-  geom_col() + labs(x="City in SC", y="Total Expenditures", title="Expenditures in SC in 1930")
+  geom_col(fill="darkseagreen4") + labs(x="City in SC", y="Total Expenditures", title="Expenditures in SC in 1930")
 
 #ggplot(sc.cities.rec, aes(x = year, y = total_expenditures)) + geom_line() + facet_wrap(~city)
 ```
@@ -250,12 +250,18 @@ ggplot(gay.guides.faceting, aes(x = Year, y = count)) +geom_line() + facet_wrap(
 rec.workers <- read.csv("https://raw.githubusercontent.com/regan008/DigitalMethodsData/main/raw/RecreationData-Wide.csv")
 
 rec.workers.1. <- rec.workers %>%
- pivot_longer(X1930:X1945, names_to = "year", values_to = "count")  %>% pivot_wider(names_from = type_of_worker, values_from = count) %>% pivot_longer("male paid":"female paid", names_to = "paid", values_to = "count_paid") %>% pivot_longer("men volunteer":"women volunteer", names_to = "men volunteer", values_to = "count volunteer")  
+ pivot_longer(X1930:X1945, names_to = "year", values_to = "count")  
+
+
+#%>% pivot_wider(names_from = type_of_worker, values_from = count) %>% pivot_longer("male paid":"female paid", names_to = "paid_volunteer", values_to = "count") %>% pivot_longer("men volunteer":"women volunteer", names_to = "paid_volunteer", values_to = "count")  
+
+ggplot(rec.workers.1., aes(x = year, y = count)) +geom_line() + facet_wrap(~type_of_worker) + geom_col()
+
 
 #%>% pivot_longer("volunteer", names_to = "men volunteer", values_to = "count volunteer")
   
   
-  filter (str_detect(type_of_worker, 'paid' | 'volunteer') %>% group_by(year, city) %>% summarize(count = n())
+ # filter (str_detect(type_of_worker, 'paid' | 'volunteer') %>% group_by(year, city) %>% summarize(count = n())
   
   
   #BostonWomenVoters %>%  select(Age, Occupation) %>% group_by(Occupation) %>% summarize(average_age = mean(Age))
@@ -279,7 +285,7 @@ ggplot(gg.byyear, aes(x = Year, y = count)) +
 recreational.data %>% filter(state == "SC") %>% group_by(year, city, total_expenditures)
 
 ggplot(judges.month, aes(x = Birth.Month, y = count)) +
-  geom_col() + labs(x="Birth Month", y="Count", title="Birth Month of US Judges and Justices")
+  geom_col(fill="darkslategrey") + labs(x="Birth Month", y="Count", title="Birth Month of US Judges and Justices")
 
 
 ```
@@ -292,7 +298,7 @@ ggplot(judges.month, aes(x = Birth.Month, y = count)) +
 judges.gender <- judges %>% group_by(Gender, Birth.Year) %>% summarize(count = n()) 
 
 
-ggplot(judges.gender, aes(x = Birth.Year, y = count)) +geom_line() + facet_wrap(~Gender) + geom_col()
+ggplot(judges.gender, aes(x = Birth.Year, y = count)) +geom_line() + facet_wrap(~Gender) + geom_col(fill="bisque4")
 ```
 
 (@) Plot 2 explanation: 
