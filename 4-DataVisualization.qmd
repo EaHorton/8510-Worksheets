@@ -213,6 +213,15 @@ g.g.danger <- gayguides %>% filter (str_detect(amenityfeatures, '(AYOR)|(HOT)') 
 ggplot(g.g.danger, aes(x = Year, y = count)) +
   geom_line(linetype = 1, linewidth = 2) + labs(x="Year", y="Usage of Inquire Locally, (HOT), or (AYOR)", title="Danger in the GayGuides")
 
+#other ways to search for strings - grepl() -- an option to ignore case!!!!!
+
+
+```
+
+
+```{r}
+test <- gayguides %>% filter(grepl("HOT"), gayguides$amenityfeatures, ignore.case=TRUE) | grepl("(AYOR)", gayguides$amenityfeatures, ignore.case=TRUE))
+#theoretically this is an alternative to the above
 ```
 
 
@@ -252,10 +261,22 @@ rec.workers <- read.csv("https://raw.githubusercontent.com/regan008/DigitalMetho
 rec.workers.1. <- rec.workers %>%
  pivot_longer(X1930:X1945, names_to = "year", values_to = "count")  
 
+all.paid <- c("male paid", "female paid")
+all.volunteer <- c("men volunteer", "female volunteer")
+
+avg.paid <- rec.workers.1. %>% group_by(year) %>% filter(type_of_worker %in% all.paid) %>% summarise(avg.paid.count = mean(count, na.rm = TRUE))
+
+avg.volunteer <- rec.workers.1. %>% group_by(year) %>% filter(type_of_worker %in% all.volunteer) %>% summarise(avg.volunteer.count = mean(count, na.rm = TRUE))
+
+merge <- left_join(avg.paid, avg.volunteer)
+merge <- pivot_longer(merge, !year, names_to = "typeofworker", values_to = "avg")
+
+ggplot(data=merge, mapping = aes(x= year, y= avg, group=typeofworker, color=typeofworker)) + geom_line()
+
 
 #%>% pivot_wider(names_from = type_of_worker, values_from = count) %>% pivot_longer("male paid":"female paid", names_to = "paid_volunteer", values_to = "count") %>% pivot_longer("men volunteer":"women volunteer", names_to = "paid_volunteer", values_to = "count")  
 
-ggplot(rec.workers.1., aes(x = year, y = count)) +geom_line() + facet_wrap(~type_of_worker) + geom_col()
+#ggplot(rec.workers.1., aes(x = year, y = count)) +geom_line() + facet_wrap(~type_of_worker) + geom_col()
 
 
 #%>% pivot_longer("volunteer", names_to = "men volunteer", values_to = "count volunteer")
