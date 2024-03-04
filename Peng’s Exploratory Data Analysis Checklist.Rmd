@@ -8,7 +8,9 @@ There are 10 steps in Peng's Exploratory Data Analysis Checklist. This worksheet
 
 ## 1. FORMULATE YOUR QUESTION
 
-Which states had the largest numbers of locations mapped in the GayGuides? 
+```{r}
+#Which states had the largest number of locations mapped in the GayGuides? 
+```
 
 
 ## 2. READ IN YOUR DATA
@@ -61,13 +63,32 @@ unique(gayguides$state)
 
 ## 8. TRY THE EASY SOLUTION FIRST 
 ```{r}
-
+library(plyr)
+count(gayguides$state) %>% arrange(desc(freq))
 ```
 
 
 ## 9. CHALLENGE YOUR SOLUTION
+```{r}
+#perhaps locations in CA were logged for more years than those in NY or elsewhere
+gayguides %>% 
+    select(state, Year) %>%
+  filter(state == "CA" | state == "NY") %>%  filter(Year == 1965:1985)  %>%
+    group_by(state, Year) %>% summarize(count=n()) %>%
+    arrange(desc(Year)) 
+
+```
+
 
 ## 10. FOLLOW UP
+```{r}
+#Do you have the right data?
+
+#Do you need other data?
+
+#Do you have the right question? 
+```
+
 
 
 
