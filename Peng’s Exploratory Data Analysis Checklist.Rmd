@@ -74,7 +74,7 @@ count(gayguides$state) %>% arrange(desc(freq))
 gayguides %>% 
     select(state, Year) %>%
   filter(state == "CA" | state == "NY") %>%  filter(Year == 1965:1985)  %>%
-    group_by(state, Year) %>% summarize(count=n()) %>%
+    group_by(state, Year) %>%
     arrange(desc(Year)) 
 
 ```
@@ -83,10 +83,13 @@ gayguides %>%
 ## 10. FOLLOW UP
 ```{r}
 #Do you have the right data?
+#This data has plenty of avenues to explore, and I do think it is well suited for the question I asked. According to the Gay Guides, California led the other states in numbers-of-locations by a significant margin, followed by New York. Florida and Texas coming in a third and fourth is interesting. 
 
 #Do you need other data?
+#I wonder how comprehensive the Gay Guides were. If there was another guide that maps this same kind of information, it would be interesting to cross-reference the two sources. 
 
 #Do you have the right question? 
+#Yes, but now I have more questions to ask. Namely, what cities in Florida and Texas led to them ranking so high in my results? 
 ```
 
 
