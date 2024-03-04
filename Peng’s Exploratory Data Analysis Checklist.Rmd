@@ -1,0 +1,82 @@
+---
+title: "Peng’s Exploratory Data Analysis Checklist"
+output: html_document
+date: "2024-03-04"
+---
+
+There are 10 steps in Peng's Exploratory Data Analysis Checklist. This worksheet will walk you through each step. 
+
+## 1. FORMULATE YOUR QUESTION
+
+Which states had the largest numbers of locations mapped in the GayGuides? 
+
+
+## 2. READ IN YOUR DATA
+
+```{r}
+library(DigitalMethodsData)
+data("gayguides")
+```
+
+
+## 3. CHECK THE PACKAGING
+
+```{r}
+nrow(gayguides)
+ncol(gayguides)
+```
+
+
+## 4. RUN str()
+
+```{r}
+str(gayguides)
+#making sure the numbers are "num"s and strings are "chr"s
+```
+
+## 5. LOOK AT THE TOP AND BOTTOM OF YOUR DATA
+
+```{r}
+head(gayguides)
+```
+```{r}
+tail(gayguides)
+```
+
+## 6. CHECK YOUR "n"'S
+```{r}
+select(gayguides, state) %>% unique %>% nrow
+```
+```{r}
+unique(gayguides$state)
+#here we see that various abbreviations for DC, provinces, and Mexico inflate the number of states from 51 to 57. 
+```
+
+## 7. VALIDATE WITH ATLEAST ONE EXTERNAL SOURCE
+```{r}
+(gayguides[68, c(5, 8:9, 12:13)])
+#Looking for the below lat and long
+#32.79533055538653, -116.96098980394923
+```
+
+## 8. TRY THE EASY SOLUTION FIRST 
+```{r}
+
+```
+
+
+## 9. CHALLENGE YOUR SOLUTION
+
+## 10. FOLLOW UP
+
+
+
+
+
+
+
+
+
+
+
+
