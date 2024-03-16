@@ -117,7 +117,14 @@ ggplot() +
 
 (@) Can you map just locations in South Carolina (on a basemap of SC)? 
 ```{r}
+data(gayguides)
+gayguides.SC <- gayguides %>% filter(state == "SC")
 
+usa.SC <- usa %>% filter(region == "south carolina")
+
+ggplot() + 
+  geom_map( data = usa.SC, map = usa.SC, aes(long, lat, map_id=region), fill = "slategrey", color = "cornflowerblue") +
+  geom_point(data = gayguides.SC, mapping = aes(x=lon, y=lat), color= "black") + labs(title = "Gayguides Locations in SC")
 ```
 
 (@) Create a map that uses your geocoded data from the Boston Women Voters dataset. 
