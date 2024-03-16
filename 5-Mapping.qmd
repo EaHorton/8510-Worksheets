@@ -74,7 +74,7 @@ First we need to get a basemap. For this example we'll use the `map_data()` func
 
 (@) Look at the documentation for `map_data()`. Which geographies does this package provide access to?
 
->
+> map_data() provides access to maps:: country, maps::france, maps::italy, maps::nz, maps::state, maps::world, maps::world2. You can then narrow these further to subregion if you wish. 
 
 Lets load the base map data for the US. 
 ```{r}
@@ -83,7 +83,7 @@ usa <- map_data("state")
 
 (@) `map_data()` generates a data frame. Take a look at this data frame, what types of data are included? 
 
-> 
+> Longitude, latitude, group, order, region, and subregion. 
 
 
 We can now pass this data to ggplot to create a simple basemap. When we wanted to create a bar plot using `ggplot()` we called `geom_bar`. When we wanted to create a line chart we used `geom_point()` and `geom_line()`. The sample principle applies here and `ggplot()` provides a geom for maps.
@@ -107,7 +107,12 @@ ggplot() +
 
 (@) This map looks slightly funny, but that is because the data includes entries outside of the contiguous United States. Try filtering out those entries and mapping this again. Can you change the color or size of the points? Can you add a title?
 ```{r}
+data(gayguides)
+gayguides <- gayguides %>% filter(Year == 1965)  %>% filter(lon >= -140)
 
+ggplot() + 
+  geom_map( data = usa, map = usa, aes(long, lat, map_id=region), fill = "slategrey", color = "cornflowerblue") +
+  geom_point(data = gayguides, mapping = aes(x=lon, y=lat), color= "black") + labs(title = "Gayguides Locations in 1965")
 ```
 
 (@) Can you map just locations in South Carolina (on a basemap of SC)? 
