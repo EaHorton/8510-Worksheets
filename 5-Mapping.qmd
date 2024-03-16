@@ -1,10 +1,12 @@
 ---
+name: Addison Horton
 title: "Worksheet 5: Mapping"
 format: html
+date: 3/27/2024
 ---
 
 _This is the fifth in a series of worksheets for History 8510 at Clemson University. The goal of these worksheets is simple: practice, practice, practice. The worksheet introduces concepts and techniques and includes prompts for you to practice in this interactive document. When you are finished, you should change the author name (above), knit your document, and upload it to canvas. Don't forget to commit your changes as you go and push to github when you finish the worksheet._
-
+li
 ## Mapping with `ggmap()` and `ggplot2()`
 
 There are many different mapping packages for R. That means there is no single way to create a map in R. Different packages have different strengths and weaknesses and your use of them will depend on your goals and the historical questions you would like to ask. If your project is highly map centric - it may be better suited to ArcGIS which we will not cover in this class. 
@@ -36,18 +38,32 @@ Now we have latitude and longitude coordinates for our data.
 
 (@) Use this approach to geocode the `UndergroundRR` data. 
 ```{r}
-
+UndergroundRR.coordinates <- undergroundRR %>% geocode(city = City, state = State, method='osm', lat = latitude, long = longitude)
+head(UndergroundRR.coordinates)
 ```
 
 
 (@) Geocode the Boston Women Voters dataset. Note that the data does include street addresses but because they are broken into parts - street address number, street, etc - you'll need to combine them into a full address to pass to the geocoding function. 
 ```{r}
 data("BostonWomenVoters")
+
+BostonWomenLocation <- BostonWomenVoters %>% select(Street.of.Residence.on.April.1, Street.Number.on.April.1) %>% mutate(location = paste0(Street.Number.on.April.1, " ", Street.of.Residence.on.April.1, ", ", "Boston,", " MA"))
+
+BostonWomenVoters.coordinates <- BostonWomenLocation %>% geocode(address = location, method='osm', lat = latitude, long = longitude)
+head(BostonWomenVoters.coordinates)
+
+
 ```
 
 (@) As mentioned above - there are many ways to make a map in R. The `ggmap()` package has a function called `qmplot()` which allows for the quick plotting of maps with data. Look up the documentation for this package and use it to create a plot of the recreational data that we gecode above.
 ```{r}
+#?qmplot()
 
+
+rec.data.coordinates %>% qmplot(x = longitude, y = latitude, data = rec.data.coordinates)
+
+                                
+#, colour = total_expenditures, size = I(3.5), alpha = I(.6))
 ```
 
 ### Maps with `ggplot()`
