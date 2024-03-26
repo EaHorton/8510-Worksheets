@@ -215,22 +215,27 @@ This is now much more readable but the numbers represented are simply the raw po
 
 (@) First, create a variable called total_male_pop, with the total foreign and native born male population by summing the variables AZF001 and AZF003. 
 ```{r}
-
+total_male_pop <- nhgis %>% mutate(AZF005 = AZF001 + AZF003)
+  
+  
 ```
 
 (@) Now, use the total_male_pop variable and create a variable for the the percentage of foreign born males.
 ```{r}
-
+percentage_foreign_pop <- total_male_pop %>% mutate(AZF006 = AZF003/AZF005)
 ```
 
 (@) Now map your result. You'll want to replicate the code from the example above, but this time add another layer to the plot - a scale. Here we'll use this scale `scale_fill_continuous("", labels = scales::percent)`
 
 Before you write that code, look up the documentation for the above code (and look at the examples). What does it do? 
 
->
+> It changes the gradient legend's scale to percentage.
 
 Now create the map: 
 ```{r}
+
+ggplot(data = percentage_foreign_pop, aes(fill = AZF006)) +
+  geom_sf() + scale_fill_distiller(name="Percentage of Foreign Born Males", palette = "Spectral" , breaks = pretty_breaks(n = 10)) + scale_fill_continuous("", labels = scales::percent)
 
 ```
 
