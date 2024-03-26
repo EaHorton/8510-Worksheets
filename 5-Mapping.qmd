@@ -266,12 +266,12 @@ leaflet(data=rec.data.coordinates) %>% addTiles() %>% addMarkers(~longitude, ~la
 
 (@) Use leaflet to map a dataset of your choice: 
 ```{r}
-
+leaflet(data=gayguides.SC) %>% addTiles() %>% addMarkers(~lon, ~lat, popup = paste(gayguides.SC$type, " in ",  gayguides.SC$Year, sep=""))
 ```
 
 (@) Explain what choices you made in building this map? Why might you use leaflet over ggplot? When would ggplot be more desirable? 
 
->
+> The scope of my map was predetermined by the dataset that I chose, meaning I did not have to narrow the algorithm to only consider locations in SC in the GayGuides dataset because I had already done that. However, I had to decide how to display year. I opted to include that infomation in the pop-up, however, the other option would be to feed the algorithm a specific year. I also wanted the pop-up to express the type of location. It would also be interesting (on a ggplot map) to distinguish types of locations based on color to see what the distribution looks like. Leaflet and ggplot serve different purposes. Leaflet, being interactive, would be useful to implement into a shiny app. You could allow your audience to input information. Ggplot is more desirable when you need a static map - for a print article for instance. 
 
 
 ### Exercises
@@ -281,4 +281,53 @@ For the next portion of this worksheet you will use some data about national par
 parks <- read.csv("https://raw.githubusercontent.com/regan008/DigitalMethodsData/main/raw/parks-geocoded.csv")
 ```
 
+```{r}
+
+usa.parks <- parks %>% filter(country == "United States") %>% filter (state_region_province != "Alaska" & state_region_province != "Hawaii")
+
+
+ggplot() + 
+  geom_map( data = usa, map = usa, aes(long, lat, map_id=region), fill="white", color="gray") +
+  geom_point(data = usa.parks, mapping = aes(x=lon, y=lat, size=distance_from_closest_city))
+
+
+```
+
+```{r}
+UK.parks <- parks %>% filter(country == "United Kingdom") 
+
+
+library(ggplot2)
+UK <- map_data(map = "world", region = "UK") # changed map to "world"
+ggplot(data = UK, aes(x = long, y = lat, group = group)) + 
+  geom_polygon() +
+  coord_map()
+
+ggplot() +  geom_map(map = UK, data = UK, aes(long, lat, map_id=region), fill="white", color="gray") +
+geom_point(data = UK.parks, mapping = aes(x=lon, y=lat, size=distance_from_closest_city))
+
+ #geom_map(data = UK, aes(long, lat, map_id=region), fill="white", color="gray") +
+
+
+
+```
+
+```{r}
+
+leaflet(data=parks) %>% addTiles() %>% addMarkers(~lon, ~lat, popup = paste(parks$park, " , ",  parks$year, sep=""))
+
+
+
+```
+```{r}
+US_Uk_parks <- parks %>% filter(country == "United Kingdom" | country == "United States") 
+
+leaflet(data=US_Uk_parks) %>% addTiles() %>% addMarkers(~lon, ~lat, popup = paste(parks$park, " , ",  parks$year, sep=""))
+```
+```{r}
+
+ggplot(US_Uk_parks, aes(x = year, y = distance_from_closest_city))  + facet_wrap(~country) + geom_col(fill="bisque4")
+
+
+```
 
