@@ -1,0 +1,19 @@
+Hi! Today, we'll be learning about a super easy and super practical function – separate_rows().
+
+As I'm sure you can gather from the name, separate_rows() separates rows! This is not to be confused with its sibling - separate_columns() - which you are far more likely to use. However, this function just might save you lots of time some day.
+
+```{r}
+library(tidyr)
+?separate_rows()
+```
+
+This function is contained in the tidyr package. This does not come as a surpirse because separate_rows() is most often used to tidy your dataset. If a row contains multiple values, it is in violation of one of the foundational tidy data rules – that each cell should contain a single value. Separate_rows() will take the contents of a single row and convert it into two.
+
+```{r}
+sample <- read_csv("Sample_separate_rows() - Sheet1.csv")
+```
+
+```{r}
+#separate_rows(data, column, where to split it)
+separate_rows(sample, group, sep = ",")
+```

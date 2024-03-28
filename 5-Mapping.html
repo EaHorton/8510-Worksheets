@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2024-03-27">
+
+<title>Worksheet 5: Mapping</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="5-Mapping_files/libs/clipboard/clipboard.min.js"></script>
+<script src="5-Mapping_files/libs/quarto-html/quarto.js"></script>
+<script src="5-Mapping_files/libs/quarto-html/popper.min.js"></script>
+<script src="5-Mapping_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="5-Mapping_files/libs/quarto-html/anchor.min.js"></script>
+<link href="5-Mapping_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="5-Mapping_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="5-Mapping_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="5-Mapping_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="5-Mapping_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="5-Mapping_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="5-Mapping_files/libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="5-Mapping_files/libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
+<script src="5-Mapping_files/libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="5-Mapping_files/libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
+<script src="5-Mapping_files/libs/proj4-2.6.2/proj4.min.js"></script>
+<script src="5-Mapping_files/libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="5-Mapping_files/libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
+<script src="5-Mapping_files/libs/leaflet-binding-2.2.1/leaflet.js"></script>
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Worksheet 5: Mapping</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 27, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<p><em>This is the fifth in a series of worksheets for History 8510 at Clemson University. The goal of these worksheets is simple: practice, practice, practice. The worksheet introduces concepts and techniques and includes prompts for you to practice in this interactive document. When you are finished, you should change the author name (above), knit your document, and upload it to canvas. Don’t forget to commit your changes as you go and push to github when you finish the worksheet.</em> li ## Mapping with <code>ggmap()</code> and <code>ggplot2()</code></p>
+<p>There are many different mapping packages for R. That means there is no single way to create a map in R. Different packages have different strengths and weaknesses and your use of them will depend on your goals and the historical questions you would like to ask. If your project is highly map centric - it may be better suited to ArcGIS which we will not cover in this class.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DigitalMethodsData)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggmap)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidygeocoder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="geocoding" class="level3">
+<h3 class="anchored" data-anchor-id="geocoding">Geocoding</h3>
+<p>The first step in any project is to create geographical data. Depending on the time period you study and the nature of the data, this may or may not be able to be automated. The process of associating geographical coordinates (latitude/longitude) with data is called <strong>geocoding</strong>. There are numerous avenues and services for performing this service. Google Maps and Open Street Maps are the two most common. These services accept an address and return latitude and longitude coordinates. Google Maps does require an API Key which you can sign up for. Typically geocoding with Google costs .5 cents per entry but when you sign up with them, you get $300 in credit per year (at least at the time of writing this - that may change). Although we geocode a very large amount of data with Google on Mapping the Gay Guides, I’ve never been charged for geocoding.</p>
+<p>However, for the purposes of this class we’re going to use Open Street Map’s geocoding API because it is open source and therefore free.</p>
+<p>To use the geocoding service, lets first load some data. We’ll use the recreation data that we used last week.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>rec.data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/regan008/DigitalMethodsData/main/raw/Recreation-Expenditures.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(rec.data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         city state year population total_expenditures  X
+1 Charleston     SC 1930      84000           19593.65 NA
+2    Columbia    SC 1930      65000           18000.00 NA
+3    Florence    SC 1930      17000            6100.00 NA
+4 Greenville     SC 1930      35000            5315.00 NA
+5  Orangeburg    SC 1930      10000            3206.57 NA
+6 Spartanburg    SC 1930      35000           10313.14 NA</code></pre>
+</div>
+</div>
+<p>Notice in this dataset we have the city state and year but no geographical coordinates if we wanted to map this data. Even if we don’t have an exact street address, we can still geocode this data to get coordinates. The function to do that is <code>geocode()</code> and we can pass it a city and street. Note the method option, which designates which geocoding service we want to use.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>rec.data.coordinates <span class="ot">&lt;-</span> rec.data <span class="sc">%&gt;%</span> <span class="fu">geocode</span>(<span class="at">city =</span> city, <span class="at">state =</span> state, <span class="at">method=</span><span class="st">'osm'</span>, <span class="at">lat =</span> latitude, <span class="at">long =</span> longitude)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(rec.data.coordinates)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we have latitude and longitude coordinates for our data.</p>
+<ol class="example" type="1">
+<li>Use this approach to geocode the <code>UndergroundRR</code> data.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DigitalMethodsData)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(UndergroundRR)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>UndergroundRR.coordinates <span class="ot">&lt;-</span> undergroundRR <span class="sc">%&gt;%</span> <span class="fu">geocode</span>(<span class="at">city =</span> City, <span class="at">state =</span> State, <span class="at">method=</span><span class="st">'osm'</span>, <span class="at">lat =</span> latitude, <span class="at">long =</span> longitude)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(UndergroundRR.coordinates)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" class="example" type="1">
+<li>Geocode the Boston Women Voters dataset. Note that the data does include street addresses but because they are broken into parts - street address number, street, etc - you’ll need to combine them into a full address to pass to the geocoding function.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"BostonWomenVoters"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>BostonWomenLocation <span class="ot">&lt;-</span> BostonWomenVoters <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Husband.State.or.Province.of.Birth <span class="sc">==</span> <span class="st">"Maryland"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(Street.of.Residence.on.April<span class="fl">.1</span>, Street.Number.on.April<span class="fl">.1</span>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">location =</span> <span class="fu">paste0</span>(Street.Number.on.April<span class="fl">.1</span>, <span class="st">" "</span>, Street.of.Residence.on.April<span class="fl">.1</span>, <span class="st">", "</span>, <span class="st">"Boston,"</span>, <span class="st">" MA"</span>))</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>BostonWomenVoters.coordinates <span class="ot">&lt;-</span> BostonWomenLocation <span class="sc">%&gt;%</span> <span class="fu">geocode</span>(location, <span class="at">method=</span><span class="st">'osm'</span>, <span class="at">lat =</span> latitude, <span class="at">long =</span> longitude) </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(BostonWomenVoters.coordinates)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="3" class="example" type="1">
+<li>As mentioned above - there are many ways to make a map in R. The <code>ggmap()</code> package has a function called <code>qmplot()</code> which allows for the quick plotting of maps with data. Look up the documentation for this package and use it to create a plot of the recreational data that we gecode above.</li>
+</ol>
+</section>
+<section id="maps-with-ggplot" class="level3">
+<h3 class="anchored" data-anchor-id="maps-with-ggplot">Maps with <code>ggplot()</code></h3>
+<p>Just like charts in ggplot, maps in ggplot are plotted using a variety of layers. To build a map we need to supply it with geographic data that can use to plot a base map. Your base map will differ depending on the scale of your data, the questions you are asking, and your area of study. For the purposes of this worksheet lets map the gay guides data. Typically you’d need to geocode this data first, but this data has already been geolocated for you.</p>
+<p>First we need to get a basemap. For this example we’ll use the <code>map_data()</code> function which turns data from the <code>maps</code> package into a data frame that is suitable for plotting with ggplot.</p>
+<ol start="4" class="example" type="1">
+<li>Look at the documentation for <code>map_data()</code>. Which geographies does this package provide access to?</li>
+</ol>
+<blockquote class="blockquote">
+<p>map_data() provides access to maps:: country, maps::france, maps::italy, maps::nz, maps::state, maps::world, maps::world2. You can then narrow these further to subregion if you wish.</p>
+</blockquote>
+<p>Lets load the base map data for the US.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>usa <span class="ot">&lt;-</span> <span class="fu">map_data</span>(<span class="st">"state"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="5" class="example" type="1">
+<li><code>map_data()</code> generates a data frame. Take a look at this data frame, what types of data are included?</li>
+</ol>
+<blockquote class="blockquote">
+<p>Longitude, latitude, group, order, region, and subregion.</p>
+</blockquote>
+<p>We can now pass this data to ggplot to create a simple basemap. When we wanted to create a bar plot using <code>ggplot()</code> we called <code>geom_bar</code>. When we wanted to create a line chart we used <code>geom_point()</code> and <code>geom_line()</code>. The sample principle applies here and <code>ggplot()</code> provides a geom for maps.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_map</span>( <span class="at">data =</span> usa, <span class="at">map =</span> usa, <span class="fu">aes</span>(long, lat, <span class="at">map_id=</span>region))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in geom_map(data = usa, map = usa, aes(long, lat, map_id = region)):
+Ignoring unknown aesthetics: x and y</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="5-Mapping_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Now we have a basemap! But what if we want to layer data onto it. Lets add all of the locations in <code>gayguides</code> from 1965. First we need to set up our data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(gayguides)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>gayguides <span class="ot">&lt;-</span> gayguides <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Year <span class="sc">==</span> <span class="dv">1965</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>And then we can use the same mapping code from above but this time we’re going to add an additional geom – <code>geom_point()</code> which will point to each of our locations from 1965.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_map</span>( <span class="at">data =</span> usa, <span class="at">map =</span> usa, <span class="fu">aes</span>(long, lat, <span class="at">map_id=</span>region)) <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> gayguides, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x=</span>lon, <span class="at">y=</span>lat))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in geom_map(data = usa, map = usa, aes(long, lat, map_id = region)):
+Ignoring unknown aesthetics: x and y</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="5-Mapping_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<ol start="6" class="example" type="1">
+<li>This map looks slightly funny, but that is because the data includes entries outside of the contiguous United States. Try filtering out those entries and mapping this again. Can you change the color or size of the points? Can you add a title?</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(gayguides)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>gayguides <span class="ot">&lt;-</span> gayguides <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Year <span class="sc">==</span> <span class="dv">1965</span>)  <span class="sc">%&gt;%</span> <span class="fu">filter</span>(lon <span class="sc">&gt;=</span> <span class="sc">-</span><span class="dv">140</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_map</span>( <span class="at">data =</span> usa, <span class="at">map =</span> usa, <span class="fu">aes</span>(long, lat, <span class="at">map_id=</span>region), <span class="at">fill =</span> <span class="st">"slategrey"</span>, <span class="at">color =</span> <span class="st">"cornflowerblue"</span>) <span class="sc">+</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> gayguides, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x=</span>lon, <span class="at">y=</span>lat), <span class="at">color=</span> <span class="st">"black"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Gayguides Locations in 1965"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in geom_map(data = usa, map = usa, aes(long, lat, map_id = region), :
+Ignoring unknown aesthetics: x and y</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="5-Mapping_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<ol start="7" class="example" type="1">
+<li>Can you map just locations in South Carolina (on a basemap of SC)?</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(gayguides)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>gayguides.SC <span class="ot">&lt;-</span> gayguides <span class="sc">%&gt;%</span> <span class="fu">filter</span>(state <span class="sc">==</span> <span class="st">"SC"</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>usa.SC <span class="ot">&lt;-</span> usa <span class="sc">%&gt;%</span> <span class="fu">filter</span>(region <span class="sc">==</span> <span class="st">"south carolina"</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_map</span>( <span class="at">data =</span> usa.SC, <span class="at">map =</span> usa.SC, <span class="fu">aes</span>(long, lat, <span class="at">map_id=</span>region), <span class="at">fill =</span> <span class="st">"slategrey"</span>, <span class="at">color =</span> <span class="st">"cornflowerblue"</span>) <span class="sc">+</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> gayguides.SC, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x=</span>lon, <span class="at">y=</span>lat), <span class="at">color=</span> <span class="st">"black"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Gayguides Locations in SC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in geom_map(data = usa.SC, map = usa.SC, aes(long, lat, map_id =
+region), : Ignoring unknown aesthetics: x and y</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="5-Mapping_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<ol start="8" class="example" type="1">
+<li>Create a map that uses your geocoded data from the Boston Women Voters dataset.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>BostonWomenVoters.coordinates <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"bwv-coords.csv"</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co">#data(BostonWomenVoters.coordinates)</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>usa.MA <span class="ot">&lt;-</span> usa <span class="sc">%&gt;%</span> <span class="fu">filter</span>(region <span class="sc">==</span> <span class="st">"massachusetts"</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_map</span>( <span class="at">data =</span> usa.MA, <span class="at">map =</span> usa.MA, <span class="fu">aes</span>(long, lat, <span class="at">map_id=</span>region), <span class="at">fill =</span> <span class="st">"cornsilk4"</span>, <span class="at">color =</span> <span class="st">"cadetblue1"</span>) <span class="sc">+</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> BostonWomenVoters.coordinates, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x=</span>longitude, <span class="at">y=</span>latitude), <span class="at">color=</span> <span class="st">"cadetblue1"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"BostonWomenVoters from Maryland"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in geom_map(data = usa.MA, map = usa.MA, aes(long, lat, map_id =
+region), : Ignoring unknown aesthetics: x and y</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 6 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="5-Mapping_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Lets return to the recreational data for a minute.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>rec.data.coordinates <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"recdata.csv"</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(rec.data.coordinates)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  X.1        city state year population total_expenditures  X latitude
+1   1 Charleston     SC 1930      84000           19593.65 NA 32.78844
+2   2    Columbia    SC 1930      65000           18000.00 NA 34.00031
+3   3    Florence    SC 1930      17000            6100.00 NA 34.19844
+4   4 Greenville     SC 1930      35000            5315.00 NA 34.85135
+5   5  Orangeburg    SC 1930      10000            3206.57 NA 33.49182
+6   6 Spartanburg    SC 1930      35000           10313.14 NA 34.94980
+  longitude
+1 -79.93993
+2 -81.03313
+3 -79.76717
+4 -82.39849
+5 -80.85565
+6 -81.93202</code></pre>
+</div>
+</div>
+<p>One interesting way to visualize this map might be to plot each location as a point on the map but to use the total_expenditures values to determine the size of the points.</p>
+<p>We can do that by making a small adjustment to the map we made previously. First lets recreate a basic map of all these locations using <code>ggplot()</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_map</span>( <span class="at">data =</span> usa, <span class="at">map =</span> usa, <span class="fu">aes</span>(long, lat, <span class="at">map_id=</span>region)) <span class="sc">+</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> rec.data.coordinates, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x=</span>longitude, <span class="at">y=</span>latitude))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in geom_map(data = usa, map = usa, aes(long, lat, map_id = region)):
+Ignoring unknown aesthetics: x and y</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 5 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="5-Mapping_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_map</span>( <span class="at">data =</span> usa, <span class="at">map =</span> usa, <span class="fu">aes</span>(long, lat, <span class="at">map_id=</span>region), <span class="at">fill=</span><span class="st">"white"</span>, <span class="at">color=</span><span class="st">"gray"</span>) <span class="sc">+</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> rec.data.coordinates, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x=</span>longitude, <span class="at">y=</span>latitude, <span class="at">size=</span>total_expenditures))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in geom_map(data = usa, map = usa, aes(long, lat, map_id = region), :
+Ignoring unknown aesthetics: x and y</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 5 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="5-Mapping_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr) <span class="co">#you may have to install it using `install.packages()`. </span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0; sf_use_s2() is TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ipumsr)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co">#NHGIS data is stored in zip files. R has functions for dealing with these but we still need to download the file to our server. Here we're going to write a function that will create a new directory, download the data, and rename it. </span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"data/"</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>get_data <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">download.file</span>(<span class="st">"https://github.com/regan008/DigitalMethodsData/blob/main/raw/nhgis0005_shape_simplified.zip?raw=true"</span>, <span class="st">"data/nhgis_simplified_shape.zip"</span>)</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">download.file</span>(<span class="st">"https://github.com/regan008/DigitalMethodsData/blob/main/raw/nhgis0005_csv.zip?raw=true"</span>, <span class="st">"data/nhgis_data.zip"</span>)</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="fu">get_data</span>()</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Change these filepaths to the filepaths of your downloaded extract</span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>nhgis_csv_file <span class="ot">&lt;-</span> <span class="st">"data/nhgis_data.zip"</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>nhgis_shp_file <span class="ot">&lt;-</span> <span class="st">"data/nhgis_simplified_shape.zip"</span></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a><span class="co">#load the shape file and then the data file into read_nhgis_sf</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>nhgis_shp <span class="ot">&lt;-</span> <span class="fu">read_ipums_sf</span>(</span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">shape_file =</span> nhgis_shp_file</span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>nhgis_data <span class="ot">&lt;-</span> <span class="fu">read_nhgis</span>(nhgis_csv_file)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Use of data from NHGIS is subject to conditions including that users should cite the data appropriately. Use command `ipums_conditions()` for more details.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 2916 Columns: 13
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (6): GISJOIN, STATE, STATEA, COUNTY, COUNTYA, AREANAME
+dbl (7): YEAR, STATEICP, COUNTYICP, AZF001, AZF002, AZF003, AZF004
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Use the ipums join file to join both the data and shape file together.</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>nhgis <span class="ot">&lt;-</span> <span class="fu">ipums_shape_full_join</span>(nhgis_data, nhgis_shp, <span class="at">by =</span> <span class="st">"GISJOIN"</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co">#filter nhgis so that the map focuses on the 48 contiguous states. </span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>nhgis <span class="ot">&lt;-</span> nhgis <span class="sc">%&gt;%</span> <span class="fu">filter</span>(STATE <span class="sc">!=</span> <span class="st">"Alaska Territory"</span> <span class="sc">&amp;</span> STATENAM <span class="sc">!=</span> <span class="st">"Hawaii Territory"</span>)</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="co">#plot </span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> nhgis, <span class="fu">aes</span>(<span class="at">fill =</span> AZF001)) <span class="sc">+</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="5-Mapping_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<ol start="9" class="example" type="1">
+<li>In the code above, why filter out Hawaii and Alaska? Try commenting out that line and rerunning the code. What happens? Why might we want to do this? Why might we not want to do this? How does it shape the interpretation? &gt; The inclusion of Alaska and Hawaii messes with the scale of the map due to their size and location. You might want to filter them out if your focus is the continental US, because this will provide the clearest visualization. However, filtering it out allows the viewer to disregard Alaska and Hawaii as part of the US, if for just the moment, and this is not realistically the case.</li>
+</ol>
+<p>This is a great start. But using AZF001 (Native born males) as the fill does not create a useful visualization. It doesn’t give us a sense of the proportion of that data. There are multiple problems with the map as it is, but one is that the color scale makes this incredibly hard to read. We can fix that by using a scale to break the values of AZF001 into bins and assign each a color. R has a function for this. It comes from the scales pacakge which you may need to install.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'scales'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:purrr':
+
+    discard</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:readr':
+
+    col_factor</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> nhgis, <span class="fu">aes</span>(<span class="at">fill =</span> AZF001)) <span class="sc">+</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>() <span class="sc">+</span> <span class="fu">scale_fill_distiller</span>(<span class="at">name=</span><span class="st">"Native Born Males"</span>, <span class="at">palette =</span> <span class="st">"Spectral"</span> , <span class="at">breaks =</span> <span class="fu">pretty_breaks</span>(<span class="at">n =</span> <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="5-Mapping_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>This is now much more readable but the numbers represented are simply the raw population count. That may be fine depending on your question but what would be much better, is if we knew what percentage of the total population foreign born males represented. To get that we have to calculate it. The next few questions will walk build on the code above and walk you through doing this.</p>
+<ol start="10" class="example" type="1">
+<li>First, create a variable called total_male_pop, with the total foreign and native born male population by summing the variables AZF001 and AZF003.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>total_male_pop <span class="ot">&lt;-</span> nhgis <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">AZF005 =</span> AZF001 <span class="sc">+</span> AZF003)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="11" class="example" type="1">
+<li>Now, use the total_male_pop variable and create a variable for the the percentage of foreign born males.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>percentage_foreign_pop <span class="ot">&lt;-</span> total_male_pop <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">AZF006 =</span> AZF003<span class="sc">/</span>AZF005)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="12" class="example" type="1">
+<li>Now map your result. You’ll want to replicate the code from the example above, but this time add another layer to the plot - a scale. Here we’ll use this scale <code>scale_fill_continuous("", labels = scales::percent)</code></li>
+</ol>
+<p>Before you write that code, look up the documentation for the above code (and look at the examples). What does it do?</p>
+<blockquote class="blockquote">
+<p>It changes the gradient legend’s scale to percentage.</p>
+</blockquote>
+<p>Now create the map:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> percentage_foreign_pop, <span class="fu">aes</span>(<span class="at">fill =</span> AZF006)) <span class="sc">+</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>() <span class="sc">+</span> <span class="fu">scale_fill_distiller</span>(<span class="at">name=</span><span class="st">"Percentage of Foreign Born Males"</span>, <span class="at">palette =</span> <span class="st">"Spectral"</span> , <span class="at">breaks =</span> <span class="fu">pretty_breaks</span>(<span class="at">n =</span> <span class="dv">10</span>)) <span class="sc">+</span> <span class="fu">scale_fill_continuous</span>(<span class="st">""</span>, <span class="at">labels =</span> scales<span class="sc">::</span>percent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Scale for fill is already present.
+Adding another scale for fill, which will replace the existing scale.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="5-Mapping_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="leaflet" class="level3">
+<h3 class="anchored" data-anchor-id="leaflet">Leaflet</h3>
+<p>In recent years Leaflet has become the most popular open source Javascript library for mapping. In comparison to <code>ggplot()</code> the advantage of leaflet is its interactivity. It allows you to zoom in, have pop ups, etc. While <code>ggplot()</code> is a powerful tool for static maps and would be useful for a book or journal article, leaflet would make a useful addition to an online digital component.</p>
+<p>Like <code>ggplot()</code> it works by layering information on top of a basemap. You begin by loading the library and invoking leaflet.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>my.map <span class="ot">&lt;-</span> <span class="fu">leaflet</span>()</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>my.map</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-fbf238b5bc2cd56c167f" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-fbf238b5bc2cd56c167f">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Now that we’ve got a leaflet object created, we can add layers to it starting with a basemap.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>my.map <span class="sc">%&gt;%</span> <span class="fu">addTiles</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-bdf42f8daf0f11ef28ba" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-bdf42f8daf0f11ef28ba">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]}]},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Leaflet refers to tiles - these are sort of like base maps. Next we need to add coordinates. In this example, lets use the coordinates for Dr.&nbsp;Regan’s office.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>my.map <span class="sc">%&gt;%</span> <span class="fu">addTiles</span>() <span class="sc">%&gt;%</span> <span class="fu">addMarkers</span>(<span class="at">lng=</span><span class="sc">-</span><span class="fl">82.836856</span>, <span class="at">lat=</span><span class="fl">34.678286</span>, <span class="at">popup =</span> <span class="st">"Hardin 004"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-a4c652c2733a78c370bb" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-a4c652c2733a78c370bb">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addMarkers","args":[34.678286,-82.836856,null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},"Hardin 004",null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[34.678286,34.678286],"lng":[-82.836856,-82.836856]}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>We could also do this with a data frame. Notice that in this example, we use the leaflet function and call the data inside rather than passing the function coordinates manually. We then use the paste function to build out text for a pop up.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">leaflet</span>(<span class="at">data=</span>rec.data.coordinates) <span class="sc">%&gt;%</span> <span class="fu">addTiles</span>() <span class="sc">%&gt;%</span> <span class="fu">addMarkers</span>(<span class="sc">~</span>longitude, <span class="sc">~</span>latitude, <span class="at">popup =</span> <span class="fu">paste</span>(<span class="st">"The total expenditures in "</span>, rec.data.coordinates<span class="sc">$</span>city, <span class="st">", "</span>, rec.data.coordinates<span class="sc">$</span>state, <span class="st">" were "</span>,  rec.data.coordinates<span class="sc">$</span>total_expenditures, <span class="at">sep=</span><span class="st">""</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in validateCoords(lng, lat, funcName): Data contains 5 rows with either
+missing or invalid lat/lon values and will be ignored</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-42b44dcb6b0c8019a7a5" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-42b44dcb6b0c8019a7a5">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addMarkers","args":[[32.7884363,34.0003117,34.1984435,34.851354,33.4918203,34.9498007,33.9204354,34.7151939,43.3009156,43.823403,44.36308,43.70953,45.537216,44.3683644,44.0806041,43.5476008,44.899211,42.8712938,35.0457219,41.7407661,41.6770463,41.8873726,41.8194081,41.4899827,41.8789531,41.8239891,41.8987106,null,42.0028761,null,40.4416941,null,40.2452976,40.6851324,40.9436303,40.335345,39.9009334,41.3264557,40.7022913,41.4280432,40.6306464,41.4086874,40.3117707,40.2353679,40.8619754,null,40.7974296,40.6028462,41.8438079,40.17396,39.9597213,null,41.2493292,40.3909023,39.9624588,41.8522809,35.9603948,35.1460249,36.1622767,35.2072185,30.2711286,30.0860459,32.3474463,32.7762719,31.7550511,32.753177,29.3056996,29.7589382,27.5056251,33.5855677,35.3454847,33.6617962,34.1847936,29.8716577],[-79.93993089999999,-81.0331309,-79.7671658,-82.3984882,-80.8556476,-81.93201569999999,-80.3414693,-81.6237462,-96.59264109999999,-96.7118751,-98.214388,-98.025379,-100.427913,-100.351136,-103.228023,-96.7293629,-97.115289,-97.3967011,-85.3094883,-71.3084633,-71.2661597,-71.3876472,-71.376257,-71.31377070000001,-71.3821203,-71.4128343,-71.4131127,null,-71.5147839,null,-79.9900861,null,-75.6496424,-76.19537010000001,-78.97107800000001,-75.9279495,-76.6058001,-77.75082020000001,-80.2860955,-78.5611275,-76.171054,-75.6621294,-75.3251759,-76.8413613,-76.79362519999999,null,-75.9696186,-79.56477409999999,-79.14496010000001,-80.24617139999999,-75.6059638,null,-77.0027671,-79.81004729999999,-76.7277218,-79.3186597,-83.92102610000001,-90.0517638,-86.77429840000001,-101.833824,-97.74369950000001,-94.1018461,-97.38654940000001,-96.7968559,-106.488234,-97.33274590000001,-94.7933252,-95.3676974,-99.5074517,-101.8470215,-101.3804082,-95.555513,-101.706841,-93.9332302],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["The total expenditures in Charleston , SC were 19593.65","The total expenditures in Columbia, SC were 18000","The total expenditures in Florence, SC were 6100","The total expenditures in Greenville , SC were 5315","The total expenditures in Orangeburg, SC were 3206.57","The total expenditures in Spartanburg, SC were 10313.14","The total expenditures in Sumter, SC were 2400","The total expenditures in Union, SC were 930","The total expenditures in Canton, SD were 850","The total expenditures in Dell Rapids, SD were 0","The total expenditures in Huron, SD were 600","The total expenditures in Mitchell, SD were 7000","The total expenditures in Mobridge, SD were 270","The total expenditures in Pierre, SD were 3000","The total expenditures in Rapid City, SD were 248","The total expenditures in Sioux Falls, SD were 9181.08","The total expenditures in Watertown, SD were 3710.75","The total expenditures in Yankton, SD were 0","The total expenditures in Chattanooga, TN were 23381.23","The total expenditures in Barrington, RI were 2352.71","The total expenditures in Bristol, RI were 2600","The total expenditures in Central Falls, RI were 25954.68","The total expenditures in East Providence, RI were 4862.07","The total expenditures in Newport, RI were 14579.77","The total expenditures in Pawtucket, RI were 13215.75","The total expenditures in Providence, RI were 154128.09","The total expenditures in Saylesville, RI were 548.13","The total expenditures in Weserly , RI were 829","The total expenditures in Woonsocket, RI were 18350","The total expenditures in Pheonixville, PA were 7000","The total expenditures in Pittsburgh, PA were 721136.48","The total expenditures in Pittsburgh, North Side, PA were 38950.92","The total expenditures in Pottstown, PA were 315","The total expenditures in Pottsville, PA were 367.43","The total expenditures in Punxsutawney, PA were 20988.77","The total expenditures in Reading, PA were 29300.8","The total expenditures in Red Lion, PA were 300","The total expenditures in Renovo, PA were 187.5","The total expenditures in Rochester, PA were 750","The total expenditures in St. Marys, PA were 1670.32","The total expenditures in Schuylkill Haven, PA were 288.9","The total expenditures in Scranton, PA were 63249.92","The total expenditures in Souderton, PA were 1150","The total expenditures in Steelton, PA were 1688.98","The total expenditures in Sunbury, PA were 5027.87","The total expenditures in Swissvalue, PA were 809.27","The total expenditures in Tamaqua, PA were 1200","The total expenditures in Vandergrift, PA were 600","The total expenditures in Warren, PA were 1780.72","The total expenditures in Washington, PA were 2975","The total expenditures in West Chester, PA were 4132.68","The total expenditures in Wilkes Barre and Wyoming Valley, PA were 59000","The total expenditures in Williamsport, PA were 4191.59","The total expenditures in Wilmerding, PA were 1946.98","The total expenditures in York, PA were 9396.1","The total expenditures in Youngsville, PA were 55","The total expenditures in Knoxville, TN were 38400","The total expenditures in Memphis, TN were 164325","The total expenditures in Nashville, TN were 78896.94","The total expenditures in Amarillo, TX were 2000","The total expenditures in Austin, TX were 288457.71","The total expenditures in Beaumont, TX were 15224.58","The total expenditures in Cleburne, TX were 0","The total expenditures in Dallas, TX were 191413.36","The total expenditures in El Paso, TX were 0","The total expenditures in Ft. Worth, TX were 97564.44","The total expenditures in Galveston, TX were 27708.92","The total expenditures in Houston, TX were 53877.97","The total expenditures in Laredo, TX were 2400","The total expenditures in Lubbock, TX were 12500","The total expenditures in Panhandle, TX were 220","The total expenditures in Paris, TX were 0","The total expenditures in Plainview, TX were 2250","The total expenditures in Port Arthur, TX were 500"],null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[27.5056251,45.537216],"lng":[-106.488234,-71.2661597]}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<ol start="13" class="example" type="1">
+<li>Use leaflet to map a dataset of your choice:</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">leaflet</span>(<span class="at">data=</span>gayguides.SC) <span class="sc">%&gt;%</span> <span class="fu">addTiles</span>() <span class="sc">%&gt;%</span> <span class="fu">addMarkers</span>(<span class="sc">~</span>lon, <span class="sc">~</span>lat, <span class="at">popup =</span> <span class="fu">paste</span>(gayguides.SC<span class="sc">$</span>type, <span class="st">" in "</span>,  gayguides.SC<span class="sc">$</span>Year, <span class="at">sep=</span><span class="st">""</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-3484eb526235ed43a02b" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-3484eb526235ed43a02b">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addMarkers","args":[[34.00071,34.00071,34.00071,34.00071,34.00071,34.852618,34.00071,35.071795,34.00071,35.071795,34.852618,34.00071,34.852618,34.00071,35.071795,35.071795,34.00071,34.852618,34.852618,34.1959775,34.1970256,34.1970256,32.784591,34.0782296,34.0782296,34.00071,34.0782296,34.00071,32.7845789,32.7845789,34.8601064,34.860106,34.860106,34.860106,34.860106,34.195433,34.195433,34.195433,32.65518,32.65518,32.65518,32.65518,32.65518,34.0384031,34.0384031,34.0384031,34.0384031,34.0384031,32.7795182,34.1973204,34.1973204,34.0013022,32.7781107,34.852618,34.852618,34.852618,34.852618,34.852618,34.852618,32.7824915,32.7824915,34.280552,34.280552,34.280552,34.280552,32.7813885,32.776475,32.776475,32.776475,34.0426943,34.052996,34.042694,32.781415,32.781415,32.781415,32.781415,34.0046692,34.0046692,34.0046692,32.776475,34.852618,32.8669545,34.0046692,34.0046692,34.852618,32.776475,33.9943566,33.9943566,33.9943566,34.992962,34.992962,33.6815574,34.001721,34.001721,34.001721,34.001721,34.001721,34.852618,34.852618,34.852618,34.852618,34.852618,34.845011,33.6796264,33.6796264,32.776475,32.776475,32.776475,32.776475,32.776475,34.852618,34.852618,34.852618,34.852618,34.852618,34.0559933,34.4394215,34.4394215,34.499623,34.4394215,34.499623,34.8482404,34.8482404,34.8482404,34.8482404,34.8482404,32.7845789,32.7845789,32.7848012,32.7848012,34.0400667,34.0400667,32.7833089,32.7833089,32.769936,32.769936,32.769936,32.769936,32.769936,33.692441,33.692441,33.692441,33.692441,33.692441,34.185242,34.185242,34.185242,34.852618,34.852618,34.852618,34.852618,34.852618,34.949567,34.949567,34.949567,34.949567,32.7845789,33.996645,33.996645,33.996645,33.996645,33.996645,33.996645,33.996645,33.996645,34.9291948,34.9291948,34.9291948,34.1930649,34.1930649,34.1930649,34.1930649,34.1930649,34.001321,34.001321,33.6890603,33.7196796,33.6890603,33.68906,34.00071,34.00071,34.00071,34.00071,34.00071,32.8326805,32.7861721,32.7806006,32.7845789,32.7845789,32.76928,32.776475,32.7818266,32.7818266,32.7822985,32.783307,32.783307,32.783307,32.783209,32.783307,32.783209,32.783307,32.782878,32.65518,32.65518,32.65518,32.65518,32.7764749,32.776475,32.7813919,32.782299,32.782299,32.782299,32.816486,32.7812983,32.7812983,32.776475,32.780578,32.780578,32.780578,32.780578,32.780578,32.780578,32.780578,32.7808491,32.7808491,32.7764749,32.776475,32.776475,32.776475,32.776475,32.783209,32.781396,32.781396,32.781396,32.76928,32.769936,32.769936,32.76928,32.769936,32.7764749,32.7764749,32.7845789,32.8415024,32.7845789,32.7845789,32.7845789,32.784211,32.784211,32.7845789,32.7845789,32.7845789,32.7845789,32.7845789,32.7845789,32.769936,32.769936,32.8029964,32.8029964,34.0560313,34.0007104,34.000399,34.000399,34.000399,34.00071,34.00071,34.000399,34.000399,34.000399,34.00071,34.00071,34.000399,34.00071,34.032549,34.032549,34.032549,34.022549,34.0560313,34.0560313,34.0560313,34.0560313,34.0383915,34.0560313,34.0560313,34.00071,34.00071,34.00071,34.0231009,34.0231009,34.0231009,34.0231009,34.0231009,34.0231009,34.001721,34.001721,34.0023869,34.032549,34.0070003,34.0072973,34.0072973,34.0072973,34.001721,33.9993979,34.001721,34.022549,33.996645,33.996645,33.996645,33.996645,34.000399,34.0400214,34.0400214,34.032549,34.0023869,34.0023869,34.0023869,34.0023869,34.0023869,34.0023869,34.0023869,34.0023869,34.0023869,34.001721,33.996645,33.996645,33.996645,33.996645,33.996645,34.00071,34.001321,34.001321,34.001321,34.001321,34.001321,34.00071,34.00071,34.00071,34.00071,34.00071,34.499623,34.499623,34.499623,34.499623,34.499623,34.499623,34.499623,35.052664,35.052664,34.1959775,34.1970256,34.195433,34.1973204,34.1993069,34.1971533,34.1971533,34.229128,34.229128,34.229128,34.229128,34.229128,34.229221,34.229221,34.229221,34.1932217,34.852618,34.852618,34.8601001,34.8601001,34.8601001,34.8622922,34.8067776,34.7993881,34.852618,34.852618,34.852618,34.8601001,34.8601001,34.8601001,34.852618,34.852618,34.852618,34.852618,34.852618,34.852618,34.859022,34.859022,34.852618,34.852618,34.852618,34.8894327,34.1954,34.1954,34.1954,34.1954,34.1954,33.692441,33.692441,33.692441,33.692441,33.6839727,33.6839727,33.6839727,33.68906,33.68906,33.68906,33.807673,33.692441,33.692441,33.692441,34.992962,34.9291948],[-81.034814,-81.034814,-81.034814,-81.034814,-81.034814,-82.39400999999999,-81.034814,-81.64981899999999,-81.034814,-81.64981899999999,-82.39400999999999,-81.034814,-82.39400999999999,-81.034814,-81.64981899999999,-81.64981899999999,-81.034814,-82.39400999999999,-82.39400999999999,-79.7255445,-79.7701435,-79.7701435,-79.93234320000001,-80.9427482,-80.9427482,-81.034814,-80.9427482,-81.034814,-79.935163,-79.935163,-82.3863194,-82.386319,-82.386319,-82.386319,-82.386319,-79.762562,-79.762562,-79.762562,-79.94036699999999,-79.94036699999999,-79.94036699999999,-79.94036699999999,-79.94036699999999,-81.001632,-81.001632,-81.001632,-81.001632,-81.001632,-79.9339892,-79.7067481,-79.7067481,-81.03768669999999,-79.9328254,-82.39400999999999,-82.39400999999999,-82.39400999999999,-82.39400999999999,-82.39400999999999,-82.39400999999999,-79.92869210000001,-79.92869210000001,-82.23675299999999,-82.23675299999999,-82.23675299999999,-82.23675299999999,-79.9331543,-79.931051,-79.931051,-79.931051,-81.1174546,-81.099841,-81.11745500000001,-79.9279312,-79.9279312,-79.9279312,-79.9279312,-81.05059749999999,-81.05059749999999,-81.05059749999999,-79.931051,-82.39400999999999,-79.97522119999999,-81.05059749999999,-81.05059749999999,-82.39400999999999,-79.931051,-81.0443161,-81.0443161,-81.0443161,-81.9939667,-81.9939667,-78.8930613,-81.03524400000001,-81.03524400000001,-81.03524400000001,-81.03524400000001,-81.03524400000001,-82.39400999999999,-82.39400999999999,-82.39400999999999,-82.39400999999999,-82.39400999999999,-82.401645,-78.8981038,-78.8981038,-79.931051,-79.931051,-79.931051,-79.931051,-79.931051,-82.39400999999999,-82.39400999999999,-82.39400999999999,-82.39400999999999,-82.39400999999999,-80.9737018,-79.3787069,-79.3787069,-79.30775800000001,-79.3787069,-79.30775800000001,-82.3594927,-82.3594927,-82.3594927,-82.3594927,-82.3594927,-79.935163,-79.935163,-79.9353488,-79.9353488,-80.99960350000001,-80.99960350000001,-79.93346680000001,-79.93346680000001,-79.930361,-79.930361,-79.930361,-79.930361,-79.930361,-78.881687,-78.881687,-78.881687,-78.881687,-78.881687,-79.77083500000001,-79.77083500000001,-79.77083500000001,-82.39400999999999,-82.39400999999999,-82.39400999999999,-82.39400999999999,-82.39400999999999,-81.93204799999999,-81.93204799999999,-81.93204799999999,-81.93204799999999,-79.935163,-81.026995,-81.026995,-81.026995,-81.026995,-81.026995,-81.026995,-81.026995,-81.026995,-81.8930876,-81.8930876,-81.8930876,-79.7766324,-79.7766324,-79.7766324,-79.7766324,-79.7766324,-81.033563,-81.033563,-78.8866943,-78.9290931,-78.8866943,-78.88669400000001,-81.034814,-81.034814,-81.034814,-81.034814,-81.034814,-79.9521017,-79.9349007,-79.93249520000001,-79.935163,-79.935163,-79.92885,-79.931051,-79.9301332,-79.9301332,-79.9322504,-79.93194699999999,-79.93194699999999,-79.93194699999999,-79.931862,-79.93194699999999,-79.931862,-79.93194699999999,-79.933004,-79.94036699999999,-79.94036699999999,-79.94036699999999,-79.94036699999999,-79.9310512,-79.931051,-79.9331486,-79.93225,-79.93225,-79.93225,-79.993315,-79.9729511,-79.9729511,-79.931051,-79.933222,-79.933222,-79.933222,-79.933222,-79.933222,-79.933222,-79.933222,-79.9301531,-79.9301531,-79.9310512,-79.931051,-79.931051,-79.931051,-79.931051,-79.931862,-79.93070299999999,-79.93070299999999,-79.93070299999999,-79.92885,-79.930361,-79.930361,-79.92885,-79.930361,-79.9310512,-79.9310512,-79.935163,-79.963458,-79.935163,-79.935163,-79.935163,-79.9352176,-79.9352176,-79.935163,-79.935163,-79.935163,-79.935163,-79.935163,-79.935163,-79.930361,-79.930361,-79.9447778,-79.9447778,-80.98050240000001,-81.0348144,-81.031569,-81.031569,-81.031569,-81.034814,-81.034814,-81.031569,-81.031569,-81.031569,-81.034814,-81.034814,-81.031569,-81.034814,-81.006483,-81.006483,-81.006483,-81.042187,-80.98050240000001,-80.98050240000001,-80.98050240000001,-80.98050240000001,-81.0016212,-80.98050240000001,-80.98050240000001,-81.034814,-81.034814,-81.034814,-81.012917,-81.012917,-81.012917,-81.012917,-81.012917,-81.012917,-81.03524400000001,-81.03524400000001,-81.0355423,-81.006483,-81.03389,-81.03433200000001,-81.03433200000001,-81.03433200000001,-81.03524400000001,-81.03470179999999,-81.03524400000001,-81.042187,-81.026995,-81.026995,-81.026995,-81.026995,-81.031569,-80.9995117,-80.9995117,-81.006483,-81.0355423,-81.0355423,-81.0355423,-81.0355423,-81.0355423,-81.0355423,-81.0355423,-81.0355423,-81.0355423,-81.03524400000001,-81.026995,-81.026995,-81.026995,-81.026995,-81.026995,-81.034814,-81.033563,-81.033563,-81.033563,-81.033563,-81.033563,-81.034814,-81.034814,-81.034814,-81.034814,-81.034814,-79.30775800000001,-79.30775800000001,-79.30775800000001,-79.30775800000001,-79.30775800000001,-79.30775800000001,-79.30775800000001,-78.87835800000001,-78.87835800000001,-79.7255445,-79.7701435,-79.762562,-79.7067481,-79.7703767,-79.76441149999999,-79.76441149999999,-79.799604,-79.799604,-79.799604,-79.799604,-79.799604,-79.795794,-79.795794,-79.795794,-79.77664559999999,-82.39400999999999,-82.39400999999999,-82.3864988,-82.3864988,-82.3864988,-82.3944789,-82.3720986,-82.3759965,-82.39400999999999,-82.39400999999999,-82.39400999999999,-82.3864988,-82.3864988,-82.3864988,-82.39400999999999,-82.39400999999999,-82.39400999999999,-82.39400999999999,-82.39400999999999,-82.39400999999999,-82.40485099999999,-82.40485099999999,-82.39400999999999,-82.39400999999999,-82.39400999999999,-82.4115601,-82.161788,-82.161788,-82.161788,-82.161788,-82.161788,-78.881687,-78.881687,-78.881687,-78.881687,-78.888305,-78.888305,-78.888305,-78.88669400000001,-78.88669400000001,-78.88669400000001,-78.70085,-78.881687,-78.881687,-78.881687,-81.9939667,-81.8930876],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["Cruising Areas in 1981","Cruising Areas in 1982","Cruising Areas in 1983","Cruising Areas in 1984","Cruising Areas in 1985","Cruising Areas in 1981","Cruising Areas in 1981","Cruising Areas in 1982","Cruising Areas in 1982","Cruising Areas in 1983","Cruising Areas in 1983","Cruising Areas in 1983","Cruising Areas in 1984","Cruising Areas in 1984","Cruising Areas in 1984","Cruising Areas in 1985","Cruising Areas in 1985","Cruising Areas in 1985","Cruising Areas in 1982","Book Store,Erotic Shop in 1981","Bars/Clubs in 1981","Bars/Clubs in 1982","Bars/Clubs in 1985","Book Store,Erotic Shop in 1981","Book Store,Erotic Shop in 1982","Book Store,Erotic Shop in 1983","Book Store,Erotic Shop in 1984","Book Store,Erotic Shop in 1985","Cruising Areas,Bars/Clubs in 1984","Bars/Clubs,Cruising Areas in 1985","Bars/Clubs in 1981","Bars/Clubs in 1982","Bars/Clubs in 1983","Bars/Clubs in 1984","Bars/Clubs in 1985","Cruising Areas in 1983","Cruising Areas in 1984","Cruising Areas in 1985","Cruising Areas in 1981","Cruising Areas in 1982","Cruising Areas in 1983","Cruising Areas in 1984","Cruising Areas in 1985","Bars/Clubs in 1981","Bars/Clubs in 1982","Bars/Clubs in 1983","Bars/Clubs in 1984","Bars/Clubs in 1985","Bars/Clubs in 1983","Bars/Clubs in 1984","Bars/Clubs in 1985","Bars/Clubs in 1985","Restaurant,Cruising Areas in 1985","Cruising Areas in 1981","Cruising Areas in 1983","Cruising Areas in 1984","Cruising Areas in 1985","Cruising Areas in 1982","Cruising Areas,Book Store in 1985","Restaurant in 1983","Restaurant in 1984","Bars/Clubs in 1982","Bars/Clubs in 1983","Bars/Clubs in 1984","Bars/Clubs in 1985","Bars/Clubs in 1981","Organization in 1983","Organization in 1984","Organization in 1985","Bars/Clubs in 1984","Bars/Clubs in 1985","Bars/Clubs in 1985","Bars/Clubs in 1981","Bars/Clubs in 1982","Bars/Clubs in 1983","Bars/Clubs in 1984","Religious Institution in 1981","Religious Institution in 1982","Religious Institution in 1983","Religious Institution in 1983","Religious Institution in 1984","Religious Institution in 1984","Religious Institution in 1984","Religious Institution in 1985","Religious Institution in 1985","Religious Institution in 1985","Bars/Clubs in 1981","Bars/Clubs in 1982","Bars/Clubs in 1983","Book Store in 1981","Book Store in 1982","Bars/Clubs in 1985","Bars/Clubs in 1981","Bars/Clubs in 1982","Bars/Clubs in 1983","Bars/Clubs in 1984","Bars/Clubs in 1985","Cruising Areas in 1981","Cruising Areas in 1983","Cruising Areas in 1984","Cruising Areas in 1982","Cruising Areas in 1985","Cruising Areas in 1985","Bars/Clubs,Cruising Areas in 1981","Bars/Clubs in 1982","Cruising Areas in 1981","Cruising Areas in 1983","Cruising Areas in 1984","Cruising Areas in 1985","Cruising Areas in 1982","Cruising Areas in 1981","Cruising Areas in 1982","Cruising Areas in 1983","Cruising Areas in 1984","Cruising Areas in 1985","Bars/Clubs in 1981","Bars/Clubs in 1981","Bars/Clubs,Hotel in 1982","Bars/Clubs,Hotel in 1983","Bars/Clubs in 1984","Bars/Clubs in 1985","Bars/Clubs in 1981","Bars/Clubs in 1982","Bars/Clubs in 1983","Bars/Clubs in 1984","Bars/Clubs in 1985","Cruising Areas,Bars/Clubs in 1982","Bars/Clubs,Cruising Areas in 1983","Cruising Areas,Bars/Clubs in 1984","Bars/Clubs in 1985","Theatre,Book Store in 1981","Book Store,Theatre in 1982","Bars/Clubs,Restaurant in 1983","Bars/Clubs in 1984","Cruising Areas in 1981","Cruising Areas in 1982","Cruising Areas in 1983","Cruising Areas in 1984","Cruising Areas in 1985","Cruising Areas in 1981","Cruising Areas in 1982","Cruising Areas in 1983","Cruising Areas in 1984","Cruising Areas in 1985","Cruising Areas in 1983","Cruising Areas in 1984","Cruising Areas in 1985","Cruising Areas in 1981","Cruising Areas in 1982","Cruising Areas in 1983","Cruising Areas in 1984","Cruising Areas in 1985","Cruising Areas in 1983","Cruising Areas in 1984","Cruising Areas in 1985","Cruising Areas in 1982","Bars/Clubs,Cruising Areas in 1981","Cruising Areas in 1981","Cruising Areas in 1981","Cruising Areas in 1982","Cruising Areas in 1982","Cruising Areas in 1983","Cruising Areas in 1984","Cruising Areas in 1985","Cruising Areas in 1985","Erotic Shop in 1981","Erotic Shop in 1982","Erotic Shop in 1983","Restaurant in 1981","Restaurant in 1982","Restaurant in 1983","Restaurant in 1984","Restaurant in 1985","Cruising Areas in 1981","Cruising Areas in 1982","Bars/Clubs in 1982"," in 1983","Bars/Clubs in 1984","Bars/Clubs in 1985","Cruising Areas in 1981","Hotel,Cruising Areas in 1982","Cruising Areas,Hotel in 1983","Hotel,Cruising Areas in 1984","Cruising Areas,Hotel in 1985","Bars/Clubs in 1985","Bars/Clubs in 1977","Bars/Clubs in 1979","Bars/Clubs,Cruising Areas in 1979","Bars/Clubs in 1977","Cruising Areas in 1973","Cruising Areas in 1973","Bars/Clubs in 1975","Bars/Clubs in 1976","Bars/Clubs in 1976","Restaurant in 1974","Restaurant in 1975","Restaurant in 1976","Restaurant in 1977","Restaurant in 1978","Restaurant in 1979","Restaurant in 1980","Bars/Clubs in 1977","Cruising Areas in 1976","Cruising Areas in 1977","Cruising Areas in 1978","Cruising Areas in 1979","Cruising Areas in 1980","Bars/Clubs in 1968","Bars/Clubs in 1980","Bars/Clubs in 1978","Bars/Clubs in 1979","Bars/Clubs in 1977","Restaurant in 1979","Restaurant in 1980","Restaurant in 1978","Bars/Clubs in 1974","Bars/Clubs in 1965","Bars/Clubs in 1966","Bars/Clubs in 1968","Bars/Clubs in 1969","Bars/Clubs in 1970","Bars/Clubs in 1971","Bars/Clubs in 1972","Bars/Clubs in 1965","Bars/Clubs in 1966","Cruising Areas in 1980","Cruising Areas in 1976","Cruising Areas in 1979","Cruising Areas in 1978","Cruising Areas in 1977","Bars/Clubs in 1975","Bars/Clubs in 1972","Bars/Clubs in 1971","Bars/Clubs in 1973","Cruising Areas in 1974","Cruising Areas in 1975","Cruising Areas in 1976","Cruising Areas in 1977","Cruising Areas in 1978","Cruising Areas in 1979","Cruising Areas in 1980","Bars/Clubs,Cruising Areas in 1980","Bars/Clubs in 1974","Bars/Clubs in 1965","Bars/Clubs in 1966","Bars/Clubs in 1968","Bars/Clubs in 1969","Bars/Clubs in 1970","Bars/Clubs in 1971","Bars/Clubs in 1972","Bars/Clubs in 1974","Bars/Clubs in 1975","Bars/Clubs in 1976","Bars/Clubs in 1973","Cruising Areas in 1974","Cruising Areas in 1975","Restaurant in 1973","Bars/Clubs in 1974","Bars/Clubs in 1977","Cruising Areas in 1980","Cruising Areas in 1974","Cruising Areas in 1976","Cruising Areas in 1975","Cruising Areas in 1976","Cruising Areas in 1980","Cruising Areas in 1978","Cruising Areas in 1979","Cruising Areas in 1973","Cruising Areas in 1979","Cruising Areas in 1978","Cruising Areas in 1977","Cruising Areas in 1977","Bars/Clubs in 1975","Bars/Clubs in 1973","Bars/Clubs in 1974","Bars/Clubs in 1979","Bars/Clubs in 1973","Bars/Clubs in 1974","Bars/Clubs in 1975","Bars/Clubs in 1976","Bars/Clubs in 1980","Bars/Clubs in 1978","Bars/Clubs in 1979","Bars/Clubs in 1971","Bars/Clubs in 1970","Bars/Clubs in 1972","Bars/Clubs in 1974","Bars/Clubs in 1976","Bars/Clubs in 1977","Bars/Clubs in 1978","Bars/Clubs in 1975","Bars/Clubs in 1979","Bars/Clubs in 1976","Bars/Clubs in 1977","Bars/Clubs in 1975","Bars/Clubs in 1972","Bars/Clubs in 1975","Bars/Clubs in 1976","Bars/Clubs in 1977","Bars/Clubs in 1978","Bars/Clubs in 1980","Bars/Clubs in 1978","Bars/Clubs in 1979","Bars/Clubs in 1980","Cruising Areas in 1974","Cruising Areas in 1975","Cruising Areas in 1973","Cruising Areas in 1972","Cruising Areas in 1972","Book Store,Theatre in 1979","Book Store,Theatre in 1980","Bars/Clubs in 1971","Bars/Clubs in 1965","Bars/Clubs in 1968","Bars/Clubs in 1969","Bars/Clubs in 1970","Bars/Clubs in 1971","Bars/Clubs in 1972","Bars/Clubs in 1973","Bars/Clubs in 1974","Bars/Clubs in 1966","Bars/Clubs in 1975","Cruising Areas in 1980","Cruising Areas in 1979","Cruising Areas in 1978","Cruising Areas in 1976","Cruising Areas in 1977","Bars/Clubs in 1976","Cruising Areas in 1976","Cruising Areas,Hotel in 1977","Cruising Areas,Hotel in 1978","Cruising Areas,Hotel in 1979","Cruising Areas,Hotel in 1980","Hotel in 1976","Hotel in 1977","Cruising Areas,Hotel in 1978","Hotel,Cruising Areas in 1979","Cruising Areas,Hotel in 1980","Hotel,Bars/Clubs in 1974","Bars/Clubs,Hotel in 1975","Bars/Clubs,Hotel in 1976","Hotel,Bars/Clubs in 1977","Bars/Clubs,Hotel in 1978","Hotel,Bars/Clubs in 1979","Bars/Clubs,Hotel in 1980","Cruising Areas in 1974","Cruising Areas in 1975","Book Store in 1980","Bars/Clubs in 1980","Business in 1980","Bars/Clubs in 1979","Bars/Clubs in 1980","Bars/Clubs in 1977","Bars/Clubs in 1978","Bars/Clubs,Hotel in 1976","Hotel,Bars/Clubs in 1974","Hotel,Bars/Clubs in 1975","Hotel,Bars/Clubs in 1977","Bars/Clubs,Hotel in 1978","Hotel,Bars/Clubs in 1974","Hotel,Bars/Clubs in 1975","Bars/Clubs,Hotel in 1976","Restaurant in 1980","Cruising Areas in 1980","Cruising Areas in 1979","Bars/Clubs in 1979","Bars/Clubs in 1980","Bars/Clubs in 1978","Restaurant,Cruising Areas in 1979","Restaurant,Bars/Clubs in 1980","Bars/Clubs in 1979","Cruising Areas in 1979","Cruising Areas in 1980","Cruising Areas in 1978","Bars/Clubs in 1968","Bars/Clubs in 1969","Bars/Clubs in 1970","Bars/Clubs,Cruising Areas in 1979","Cruising Areas in 1980","Bars/Clubs in 1973","Bars/Clubs in 1974","Bars/Clubs in 1976","Bars/Clubs in 1977","Bars/Clubs in 1971","Bars/Clubs in 1972","Cruising Areas in 1979","Cruising Areas,Hotel in 1980","Cruising Areas in 1980","Bars/Clubs in 1974","Cruising Areas in 1974","Cruising Areas in 1975","Cruising Areas in 1976","Cruising Areas in 1978","Cruising Areas in 1977","Cruising Areas in 1974","Cruising Areas in 1976","Cruising Areas in 1975","Cruising Areas in 1977","Bars/Clubs in 1970","Bars/Clubs in 1971","Bars/Clubs in 1972","Bars/Clubs in 1973","Hotel,Bars/Clubs in 1971","Hotel,Bars/Clubs in 1972","Bars/Clubs in 1973","Cruising Areas in 1980","Cruising Areas in 1979","Cruising Areas in 1978","Book Store in 1980","Business in 1980"],null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[32.65518,35.071795],"lng":[-82.4115601,-78.70085]}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<ol start="14" class="example" type="1">
+<li>Explain what choices you made in building this map? Why might you use leaflet over ggplot? When would ggplot be more desirable?</li>
+</ol>
+<blockquote class="blockquote">
+<p>The scope of my map was predetermined by the dataset that I chose, meaning I did not have to narrow the algorithm to only consider locations in SC in the GayGuides dataset because I had already done that. However, I had to decide how to display year. I opted to include that infomation in the pop-up, however, the other option would be to feed the algorithm a specific year. I also wanted the pop-up to express the type of location. It would also be interesting (on a ggplot map) to distinguish types of locations based on color to see what the distribution looks like. Leaflet and ggplot serve different purposes. Leaflet, being interactive, would be useful to implement into a shiny app. You could allow your audience to input information. Ggplot is more desirable when you need a static map - for a print article for instance.</p>
+</blockquote>
+</section>
+<section id="exercises" class="level3">
+<h3 class="anchored" data-anchor-id="exercises">Exercises</h3>
+<p>For the next portion of this worksheet you will use some data about national parks that Dr.&nbsp;Barczewski created. Using this data (link below) you should use ggplot (charts, maps) and other mapping tools to come up with several ways to visualize it. You should try to think about this from the perspective of her larger book project, how could you visualize this data to help her make a compelling argument? See the email I send for more details about her project. Pick a dimension and make maps based on it.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>parks <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/regan008/DigitalMethodsData/main/raw/parks-geocoded.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>usa.parks <span class="ot">&lt;-</span> parks <span class="sc">%&gt;%</span> <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">"United States"</span>) <span class="sc">%&gt;%</span> <span class="fu">filter</span> (state_region_province <span class="sc">!=</span> <span class="st">"Alaska"</span> <span class="sc">&amp;</span> state_region_province <span class="sc">!=</span> <span class="st">"Hawaii"</span>)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_map</span>( <span class="at">data =</span> usa, <span class="at">map =</span> usa, <span class="fu">aes</span>(long, lat, <span class="at">map_id=</span>region), <span class="at">fill=</span><span class="st">"white"</span>, <span class="at">color=</span><span class="st">"gray"</span>) <span class="sc">+</span></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> usa.parks, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x=</span>lon, <span class="at">y=</span>lat, <span class="at">size=</span>distance_from_closest_city))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in geom_map(data = usa, map = usa, aes(long, lat, map_id = region), :
+Ignoring unknown aesthetics: x and y</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="5-Mapping_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>UK.parks <span class="ot">&lt;-</span> parks <span class="sc">%&gt;%</span> <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">"United Kingdom"</span>) </span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>UK <span class="ot">&lt;-</span> <span class="fu">map_data</span>(<span class="at">map =</span> <span class="st">"world"</span>, <span class="at">region =</span> <span class="st">"UK"</span>) <span class="co"># changed map to "world"</span></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> UK, <span class="fu">aes</span>(<span class="at">x =</span> long, <span class="at">y =</span> lat, <span class="at">group =</span> group)) <span class="sc">+</span> </span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_polygon</span>() <span class="sc">+</span></span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_map</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="5-Mapping_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span>  <span class="fu">geom_map</span>(<span class="at">map =</span> UK, <span class="at">data =</span> UK, <span class="fu">aes</span>(long, lat, <span class="at">map_id=</span>region), <span class="at">fill=</span><span class="st">"white"</span>, <span class="at">color=</span><span class="st">"gray"</span>) <span class="sc">+</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_point</span>(<span class="at">data =</span> UK.parks, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x=</span>lon, <span class="at">y=</span>lat, <span class="at">size=</span>distance_from_closest_city))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in geom_map(map = UK, data = UK, aes(long, lat, map_id = region), :
+Ignoring unknown aesthetics: x and y</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="5-Mapping_files/figure-html/unnamed-chunk-28-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a> <span class="co">#geom_map(data = UK, aes(long, lat, map_id=region), fill="white", color="gray") +</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">leaflet</span>(<span class="at">data=</span>parks) <span class="sc">%&gt;%</span> <span class="fu">addTiles</span>() <span class="sc">%&gt;%</span> <span class="fu">addMarkers</span>(<span class="sc">~</span>lon, <span class="sc">~</span>lat, <span class="at">popup =</span> <span class="fu">paste</span>(parks<span class="sc">$</span>park, <span class="st">" , "</span>,  parks<span class="sc">$</span>year, <span class="at">sep=</span><span class="st">""</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in validateCoords(lng, lat, funcName): Data contains 1 rows with either
+missing or invalid lat/lon values and will be ignored</code></pre>
+</div>
+<div class="cell-output-display">
+
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-dfebd0739c34b0ea94c7" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-dfebd0739c34b0ea94c7">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addMarkers","args":[[44.3385559,38.733081,43.8553804,29.2499017,25.4824229,38.5753936,37.5930377,38.2135733,38.0877312,32.1291301,33.9681871,33.7918719,42.9294762,41.2808248,36.5322649,63.1148002,24.628477,25.2866155,67.88190090000001,38.6246509,48.7596128,58.6658073,36.1069258,43.7904282,38.9299798,37.7935263,35.6130503,31.9211082,20.7203826,19.4290543,34.5313219,41.6532678,47.9958654,33.873415,58.6125631,59.8486745,36.8878548,67.35751070000001,60.594101,40.49766,37.1861597,37.1837823,46.8799663,37.8752221,48.7718174,47.8021067,35.0036935,36.4905655,41.2131788,40.3427932,32.2967359,36.4863668,38.4754706,46.978965,48.4732901,32.7872403,43.5724388,61.7104448,44.427963,37.8651011,37.2982022,56.130366,73.7482485,67.489532,51.4968464,45.2297313,46.2486851,53.610095,56.130366,44.8743165,51.335289,49.1233273,49.652015,48.7861101,52.4682741,69.09418599999999,52.873383,44.435209,60.75,50.9769367,46.8103391,46.7332984,50.2205446,51.0926042,62.6819261,61.5006973,48.7919313,41.962772,53.9256904,46.4264574,48.5930342,76.0281123,50.6583616,43.8190375,43.9320919,73.0737535,48.5252647,56.130366,44.4804248,59.2246051,68.818748,66.043133,68.384944,57.7938508,49.0833333,59.4395031,51.4666667,-40.9050357,-43.5946537,-42.9363395,-39.2996766,-45.4629441,-41.0985169,-44.2319659,-42.0075113,-42.094803,-46.9972767,-39.1928169,-43.5,-39.2722805,-33.4442931,-34.7299119,-28.6211222,-28.5942498,-34.0656763,-32.2203946,-33.8341255,-28.5078838,-32.3634477,-26.4724121,-23.9883848,-22.222048,-24.4178448,-30.559482,-29.1658502,-32.1409504,-30.016748,-33.9604102,-32.2410219,-33.1709163,39.7622623,40.7095455,41.3607092,40.5661902,40.2177468,41.7878582,42.396177,41.5207241,42.4258646,40.7941689,40.92902,40.3674634,41.2319015,40.4916458,42.622289061659,42.5875497,42.4833069,47.0004342,47.7329082,48.1447168,47.7824299,48.8444708,47.5652076,52.5692797,55.6391682,51.6799781317432,53.709807,51.3970806,50.9924575,43.3239516,45.0171009,44.6982053,43.9710298,41.7245464,42.7112143,42.135391,44.8653966,44.3438096,45.4182073,42.7477712,43.8706921,44.9149629424503,43.8666017,44.8197427,35.1627226,35.0096685,35.1249823,34.9218218,34.9721212,34.7132674,34.9416941,34.9892794,34.663542,35.6176824,34.9404887,35.0429504,50.7672222,48.9720274,48.8448123,50.8784035,56.9584784,56.2194444,55.2410323,56.26392,56.0462977,58.7562217,59.5676617,57.7019254,58.4887933,58.3583201,59.1242448,null,68.6388189,60.6535892,62.1101353,66.37457190000001,62.5785481,62.8448328,64.586423,59.9345405,62.0234115,63.9020858,61.690591,62.195846,62.1521157,63.1131218,66.205758,63.2357871,61.969428,63.0736826,68.16666669999999,59.8728056,62.2523068,60.7313489,65.6290589,63.096858,60.3481012,61.3896745,61.2539863,60.2927289,60.5720544,60.7399567,65.634449,61.934819,61.1879953,67.9666667,67.0851971,61.5354681,60.3115477,62.5924528,60.2099945,65.46764880000001,66.78437580000001,43.0041324,45.3902213,42.8722093,44.2610295,44.8387896,44.1521534,43.2181902,47.8487554,53.0348764,48.9596919,47.5528926,53.9786618,52.6367036,53.9076927,54.5510593,53.4597583,50.9145241,54.4367417,51.0804143,50.5973902,51.0272222,51.7798662,48.5775211,49.6935931,47.5225431,46.8833159,48.0556308,48.5080267,47.6386776,45.9391182,46.8950755,47.8943839,46.8574868,46.8414481,64.2559196,64.80570229999999,64.7843002,53.5383782,55.0575877,52.9968282,53.0818051,54.0244585,52.0058447,45.5220276,41.8088069,41.3977742,46.4556321,46.169919,39.94133,42.9078391,38.165354,43.8724003,42.7963950452334,40.55,41.7817081,42.490648,42.0762743,41.87194,40.8281756,41.2322907,44.3805925,41.0643764,39.4496596,40.0728658,44.128109,40.8144771,40.3585491,36.785262,42.6234144,42.2054079,57.3320554,56.9453376,57.6935779,56.2670966,55.3439098,54.1631752,55.2950183,54.6478878,56.033622,47.3036244,43.149618,42.8920363,42.397607,42.1837016,42.5319022,52.0483103,52.078716,53.4774159,52.8087147,52.7256321,51.3465447,51.7507546,52.3960551,51.1560745,51.5831114,52.8800076,51.3995901,53.0823743,53.0752289,51.569722,51.6533754,53.3744179,52.0495308,52.3469049,53.129885,52.5276298,41.0014546,41.6549405,40.9641667,42.0833333,61.9315164,65.06237059999999,62.0254161,69.20793399999999,69.1499347,69.9952006,62.3193251,68.73488140000001,67.4385104,60.472024,60.472024,60.472024,62.3662329,68.76711899999999,61.5535919,60.1542843,69.40236539999999,66.6484076,60.472024,62.6066125,60.472024,68.50323779999999,62.577801,78.54722219999999,64.263885,66.92119270000001,64.32742380000001,63.2328834,60,60.472024,60.6144551,62.1647421,70.3890901,70.41666669999999,61.8037007,65.4435658,59.0249855,67.4070545,61.1945911,68.5477326,61.3976899,66.829868,59.0583812,58.8656363,60.472024,67.93235540000001,60.472024,52.7228852,50.896028,49.4191992,49.271441,49.5937423,50.2070516,52.2687064,52.3162506,50.7874926,53.8973669,54.7001729,49.1411769,50.6001398,49.5503544,54.0842819,53.21983,51.919438,53.4957878,50.4601238,49.5092526,53.0727652,53.81517,52.5689319,46.8092782,45.503807,47.264653,45.3002454,44.9022354,44.9558443,45.3818438,47.5596519,45.1563939,45.2458795,45.3145242,45.15614,44.5289598,43.2761907,43.848333,49.1417445,49.3872818,48.8889691,49.2512161,49.0544125,48.7722487,48.9377255,48.6121142,49.0096045,42.6468705,43.1869684,42.5719788,37.0427289,39.1380283,39.4007408,37.0871121,42.3777191,39.813014,40.824722,36.6989771,68.3187659,59.6173057,59.2785032,58.3523256,61.7639747,66.3505662,62.3,67.2833333,55.6762902,68.5398922,57.2537758,57.7629504,62.1669773,66.92967729999999,67.37368119999999,58.7171092,63.1194909,57.2999982,63.9712011,58.86413,59.1843103,65.57729500000001,59.043919,60.269924,60.128161,61.5472905,58.8371072,56.6166667,46.6666261,53.3342499,54.5772323,52.898964,50.5718857,51.8120746,54.38716,54.1962686,51.134614,55.3378051,51.8814731,52.604949,56.1487349,57.0492193,50.8764416,50.9892513,47.2390429,51.482778,48.617,49.0022159,46.1426499,48.1659463,48.9510953,49.9236992,52.3377732,49.0287995,48.330984,49.1237705,49.5711618,50.8579559,47.4289145,51.7166765,48.379433,51.8810262,46.4134002,48.379433,45.3576615,47.9949749,50.2892135,49.9570348,46.03372,50.4756729,46.4986066,48.3991667,50.1078135,48.379433,50.2394849,48.379433,48.379433,45.783333,48.379433,48.4156494,50.6302201,47.9378396078094,48.5097106,49.6023596,49.9381299,46.6199321,46.7454316,50.8911355,47.8568248,50.2062985,48.5923997],[-68.2733346,-109.5925139,-102.3396912,-103.2501638,-80.20831029999999,-107.7415961,-112.1870895,-109.9025345,-111.1354983,-104.5538893,-119.9913964,-80.74904859999999,-122.1279394,-81.567812,-116.9325408,-151.1926058,-82.87318740000001,-80.89865090000001,-153.1860539,-90.1855273,-113.7870225,-136.9002147,-112.1129484,-110.6817627,-114.2633787,-105.5930539,-83.5531537,-104.8848075,-156.1551524,-155.2568892,-93.0637411,-87.0524338,-88.9092899,-115.9009923,-155.0631051,-150.1878803,-118.5551477,-159.213676,-153.5301093,-121.4206552,-86.0999753,-108.4886935,-121.7269094,-81.0356791,-121.2984648,-123.6043524,-109.7889229,-121.1824925,-124.0046276,-105.6836389,-111.166615,-118.5657516,-78.4534573,-103.5387091,-92.8268267,-106.3256816,-103.4415644,-142.9856804,-110.588455,-119.5383294,-113.0263005,-106.346771,-119.590888,-66.055959,-115.9280561,-81.5250035,-60.851817,-112.8866106,-106.346771,-79.86995539999999,-117.5297595,-107.5423254,-57.755758,-123.1622203,-131.5582291,-139.833984,-117.9542939,-65.213655,-139.5,-115.9592101,-64.9611539,-72.7681748,-63.6242163,-118.0422245,-128.5709002,-125.5004695,-125.156359,-82.51844,-106.3888857,-63.1739467,-86.29337769999999,-101.0315081,-99.9712948,-79.17098900000001,-59.9067654,-79.78205579999999,-53.9655172,-106.346771,-75.8752705,-63.9933748,-121.748991,-88.9865879,-139.858033,-93.22902209999999,-113.9166667,-112.8764021,-116.5833333,172.9670849,170.2623985,171.7251065,174.0662744,167.5422023,172.5350873,168.8339931,172.6316661,171.449875,167.8372114,175.5938117,170.1666667,174.9193082,25.7448882,19.8128592,17.2429976,20.3380661,20.4687292,24.5412818,23.4537973,28.6031402,22.5412031,20.6117036,31.5547402,29.3472691,27.6022278,22.937506,24.3196629,25.5095692,17.5790365,18.4012537,20.095514,18.1492077,20.0320021,20.1284562,19.9120412,20.8254896,19.5627596,20.1944958,19.77311,19.8922062,19.925868,20.8791343,19.4973059,20.4280433,20.4542414,19.2741672,1.56264269750921,1.4666878,1.6031528,12.5408376,16.7681348,16.7004541,14.3843263,15.8600631,14.5891132,23.8029662,27.0319293,27.4949466920591,27.953389,4.4355541,5.615112,18.7148583,16.900127,16.0064703,19.5328634,23.41481,24.7612179,23.5802972,15.5820119,15.4840471,14.6861556,17.5150139,15.2324231,13.7541121849065,15.9724838,15.0623598,33.3842704,33.8929049,33.3962986,32.8802192,34.0720367,33.0058945,33.5724136,33.949661,32.627183,34.4087307,33.1905327,32.2994127,15.6222222,13.6331348,15.92027,14.3715503,8.368654599999999,10.5488889,8.497207899999999,9.501785,12.3771125,23.4827605,25.7810189,26.4915254,24.9824369,21.8569051,27.3497843,null,25.5985362,23.8977183,28.5121879,29.3222341,31.1746378,25.4693978,26.5052757,21.8115377,23.8463498,28.9848532,25.0021541,22.4502732,22.1751258,30.7011862,28.6396424,24.8229325,23.3613429,27.661883,28.25,23.3970549,28.8185295,23.6325656,24.3190094,29.8062314,27.4568573,25.4401744,22.5876927,24.5565109,26.705125,22.4130304,27.6069966,25.9798101,26.9023636,24.1333333,26.9197389,21.5640023,25.1611827,26.7089725,22.9378166,29.5183537,28.8631955,6.3961897,6.8629282,-0.0834092,3.7095146,6.2620555,7.0014116,5.4313296,4.8840399,14.2746662,13.39492,12.9176677,8.6986629,9.845076499999999,8.5654939,13.6478658,12.8306587,14.2811723,12.9431219,10.4342391,6.425929,9.103333299999999,10.5231907,8.270387700000001,7.0674843,21.0915786,19.400018,20.4037901,20.5400313,16.8635688,18.7488605,17.6770482,18.8941551,20.5266716,16.4170109,-21.1295496,-23.7730967,-17.2091077,-9.8875419,-7.9376869,-9.0373606,-6.3938595,-9.823327799999999,-9.556180299999999,7.3244838,13.7900817,12.916487,10.5339141,12.036645,16.122265,13.2201828,15.8904785,11.745409,10.2714331975294,15.316667,15.8516421,13.4974258,14.0891746,12.56738,14.4258522,9.436507150000001,10.2876983,8.274075699999999,16.6099337,9.3851236,9.7123907,16.418526,15.8725864,11.9918779,20.1879106,20.9443443,25.2123009,23.4603061,22.4133863,27.4790249,26.0569303,24.1861435,20.9904538,24.9332958,21.8531667,28.9789795,19.0895813,19.6103673,18.8432656,19.2914983,19.9139594,6.0198869,5.8324892,6.1614581,6.4093855,6.0282352,5.8173712,4.7632307,4.5921277,6.0847487,6.0985098,6.3104433,4.4076193,6.6418091,4.7433419,3.9486301,5.1318331,6.1730238,5.3539877,6.4184451,5.944981,5.4251703,21.2129616,20.7338513,20.8327778,20.8333333,9.788880900000001,13.9535612,12.1756405,17.2481834,29.2315988,24.5110167,12.151693,19.9612872,16.0056756,8.468946000000001,8.468946000000001,8.468946000000001,9.106266,24.6887897,8.484206,7.443046,21.7173781,14.5385458,8.468946000000001,10.7048034,8.468946000000001,15.489665,7.7922426,16.9755556,13.1970355,15.7453012,13.9670835,11.5172441,6.3333333,8.468946000000001,7.7378102,8.1373514,23.3084379,29.5,7.8584951,12.9727997,11.0367137,15.1747074,9.8146754,18.7943175,12.777547,14.2698089,10.4066938,9.5905535,8.468946000000001,13.087831,8.468946000000001,23.6555674,20.914549,20.3863415,19.982744,19.531196,19.8178761,16.7972774,20.6198094,15.6370425,14.4860663,17.3169313,22.5904351,22.9628607,20.1509328,23.0098343,15.75932,19.145136,22.7520131,16.3958558,21.4698347,22.8686148,17.5648264,14.651084,25.8142645,25.2328077,25.351797,24.2507056,22.4298417,21.8877902,22.882143,24.7202975,21.961281,24.094346,23.3819085,19.7444027,21.9802686,20.7985117,19.459444,20.0984208,20.5061033,19.2298088,19.0611785,22.4098853,20.0211046,20.2406407,20.53339,19.0883697,0.0349001,-4.8712433,0.9324087,-6.4344467,-3.6970369,-4.4931831,-3.1464992,-8.9366865,-5.9370734,-3.9614438,-4.9975534,18.685017,18.7608066,14.8834032,19.2576905,14.7575785,16.7427266,13.5833333,17.7,13.3300349,18.4345214,16.7937327,15.5938205,12.4504438,20.2204814,16.7132912,14.6065028,18.494087,13.9298207,18.0553953,13.4683508,18.2811826,23.748206,11.7950483,16.9087019,18.643501,12.7529779,11.03445,14.6500001,10.2000257,-1.7837383,-2.7974835,-3.8520817,-3.9206884,-5.1011117,-0.892714,-2.1632062,-3.6462346,-2.2566844,-3.443504,1.608883,-4.4720131,-3.5615665,-1.6312373,-0.7380902,25.5908974,23.859678,23.684,22.6751198,35.1128879,25.2380182,37.7516234,23.7225758,33.697539,23.5110466,24.9892825,24.7313165,36.2946031,32.3974889,35.0718456,33.0244208,31.16558,25.6128202,30.2279265,31.16558,32.5847032,25.0974541,26.2127997,37.8081598,32.8974944,34.9314477,31.6779877,29.2602778,25.7276661,31.16558,32.5070927,31.16558,31.16558,30,31.16558,23.122885,30.8725719,26.561542314772,26.4903334,32.7308659,24.9906548,32.7072675,35.6972773,25.9255327,24.8275976,26.7572944,27.0049293],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["Acadia , 1919","Arches , 1971","Badlands , 1978","Big Bend , 1944","Biscayne , 1980","Black Canyon of the Gunnison , 1999","Bryce Canyon , 1928","Canyonlands , 1964","Capitol Reef , 1971","Carlsbad Caverns , 1930","Channel Islands , 1980","Congaree , 2003","Crater Lake , 1902","Cuyahoga Valley , 2000","Death Valley , 1994","Denali , 1917","Dry Tortugas , 1992","Everglades , 1934","Gates of the Arctic , 1980","Gateway Arch , 2018","Glacier , 1910","Glacier Bay , 1980","Grand Canyon , 1919","Grand Teton , 1929","Great Basin , 1986","Great Sand Dunes , 2004","Great Smoky Mountains , 1934","Guadalupe Mountains , 1972","Haleakala , 1961","Hawaii Volcanoes , 1916","Hot Springs , 1921","Indiana Dunes , 2019","Isle Royal , 1930","Joshua Tree , 1994","Katmai , 1980","Kenai Fjords , 1980","Kings Canyon , 1940","Kobuk Valley , 1980","Lake Clark , 1980","Lassen Volcanic , 1916","Mammoth Cave , 1941","Mesa Verde , 1906","Mount Ranier , 1899","New River Gorge , 2020","North Cascades , 1968","Olympic , 1938","Petrified Forest , 1962","Pinnacles , 2013","Redwood , 1968","Rocky Mountain , 1915","Saguaro , 1994","Sequoia , 1890","Shenandoah , 1935","Theodore Roosevelt , 1978","Voyageurs , 1975","White Sands , 2019","Wind Cave , 1903","Wrangell-St Elias , 1980","Yellowstone , 1872","Yosemite , 1890","Zion , 1919","Akami-Uapishk KakKasuak-Mealy Mountains , 2015","Aulavik , 1992","Auyuittuq , 2001","Banff , 1885","Bruce Peninsula , 1987","Cape Breton Island , 1936","Elk Island , 1913","Forillon , 1970","Georgian Bay Islands , 1930","Glacier , 1886","Grasslands , 1981","Gros Morne , 2005","Gulf Islands , 2003","Gwaii Hanaas , 1988","Ivaavik , 1984","Jasper , 1907","Kejimkujik , 1967","Kluane , 1993","Kootenay , 1920","Kouchibouguac , 1969","La Mauricie , 1970","Mingan Archipelago  , 1984","Mount Revelstoke , 1914","Naats'ihch'oh , 2014","Nahanni , 1974","Pacific Rim , 1970","Point Pelee , 1918","Prince Albert , 1927","Prince Edward Island , 1937","Pukaskwa , 1971","Qausuittuq , 2015","Riding Mountain , 1933","Rouge , 2015","Sable Island , 2013","Sirmilik , 2001","Terra Nova , 1957","Thaidene Nene , 2019","Thousand Islands , 1904","Torngat Mountains , 2008","Tuktut Nogait , 1998","Ukkusiksalik , 2003","Vuntut , 1993","Wapusk , 1996","Waterton Lakes , 1895","Wood Buffalo , 1922","Yoho , 1886","Abel Tasman , 1942","Aoraki/Mount Cook , 1953","Arthur's Pass , 1929","Egmont , 1900","Fiordland , 1952","Kahurangi , 1996","Mount Aspiring , 1964","Nelson Lakes , 1956","Paparoa , 1987","Rakiura , 2002","Tongariro , 1887","Westland Tai Poutini , 1960","Whanganui , 1986","Addo Elephant , 1931","Agulhas , 1998","Richtersveld , 1991","Augrabies Falls , 1966","Bontebok , 1931","Camdeboo , 2005","Garden Route , 2009","Golden Gate Highlands , 1963","Karoo , 1979","Kalahari Gemsbok , 1931","Kruger , 1926","Mapungubwe , 1995","Marakele , 1994","Meerkat , 2020","Mokala , 2007","Mountain Zebra , 1937","Namaqua , 1999","Table Mountain , 1998","Tankwa Karoo , 1986","West Coast , 1985","Butrint , 1966","Tomorr Mountain  , 1956","Dajti , 1966","Fir of Drenove  , 1966","Llogara , 1966","Lure-Dejes Mountain  , 1966","Theth , 1966","Shtame Pass  , 1996","Valbone Valley  , 1996","Prespa , 1999","Divjake-Karavasta  , 2007","Fir of Hotove-Dangelli  , 2008","Shebenik-Jabllanice  , 2008","Karaburun-Sazan Marine Park  , 2010","Valle del Sorteny  , 1999","Valles del Comapedrosa  , 2003","Madriu-Perafita-Claror  , 2005","Hohe Tauern  , 1981","Neusielder See-Seewinkel  , 1993","Donau-Auen  , 1996","Kalkalpen , 1997","Thayatal  , 2000","Gesause , 2002","Belovezhskaya Pushcha , 1932","Braslau Lakes  , 1995","Pripyatski  , 1996","Naranchanski , 1999","De Zoom-Kalmthoutse Heide  , 2001","Hoge Kempen  , 2006","Sutjeska , 1962","Kozara , 1967","Una , 2008","Drina , 2017","Pirin , 1962","Central Balkan  , 1991","Rila , 1992","Plitvice Lakes  , 1949","Paklenica , 1949","Risnjak , 1953","Mljet , 1960","Kornati  , 1980","Brijuni , 1983","Krka , 1985","Sjeverni Velebit  , 1999","Pedagogical Academy  , 1983","Liopetri Forest  , 1984","Athalassa , 1990","Troodos , 1992","Cape Greco  , 1993","Polemidia , 1996","Rizoelia , 1998","Agios Nikandros  , 2000","Petra tou Romiou  , 2001","Karpasia/Dipkarpaz  , 2004","Machairas  , 2004","Akamas , 2022","Krkonose Mountains  , 1963","Sumava , 1981","Podyji  , 1991","Bohemian Switzerland  , 2000","Thy , 2008","Mols Berge  , 2009","Wadden Sea  , 2010","Land of the Scylding  , 2015","Kongernes Nordsjaelland  , 2018","Matsalu , 1957","Lahemaa , 1971","Karula , 1993","Soomaa , 1993","Vilsandi  , 1993","Alutaguse , 2018"," , NA","Lemmonjoki  , 1956","Liesjarvi , 1956","Linnansaari , 1956","Oulanka , 1956","Petkeljarvi , 1956","Pyha-Hakki  , 1956","Rokua , 1956","Archipelago , 1982","Helvetinjarvi , 1982","Hiidenportti  , 1982","Isojarvi  , 1982","Kauhaneva-Pohjankangas  , 1982","Lauhanvuori  , 1982","Patvinsuo , 1982","Riisitunturi  , 1982","Salamajarvi , 1982","Seitseminen , 1982","Tiilikajarvi , 1982","Urho Kekkonen  , 1983","Ekenas Archipelago  , 1989","Kolovesi , 1990","Torronsuo , 1990","Bothnian Bay  , 1991","Koli  , 1991","Eastern Gulf of Finland  , 1992","Paijanne , 1993","Puurijarvi-Isosuo  , 1993","Nuuksio , 1994","Valkmusa  , 1996","Kurjenrahka , 1998","Syote , 2000","Leivonmaki , 2003","Repovesi , 2003","Pallas-Yllastunturi  , 2005","Pyha-Luosto  , 2005","Bothnian Sea  , 2011","Sipoonkorpi  , 2011","Southern Konnevesi  , 2014","Teijo , 2015","Hossa , 2017","Salla , 2022","Port-Cros , 1963","Vanoise , 1963","Pyrenees , 1967","Cevennes , 1970","Ecrins , 1973","Mercantour , 1979","Calanques , 2012","Forets , 2019","Lower Oder Valley  , 1955","Bavarian Forest  , 1970","Berchtesgaden , 1978","Schleswig-Holstein Wadden Sea  , 1985","Lower Saxon Wadden Sea  , 1986","Hamburg Wadden Sea  , 1990","Jasmund  , 1990","Muritz , 1990","Saxon Switzerland  , 1990","Western Pomerania Lagoon Area  , 1990","Hainich , 1997","Eifel , 2004","Kellerwald-Edersee  , 2004","Harz  , 2006","Black Forest  , 2014","Hunsruck-Hochwald  , 2015","Hortobagy , 1973","Kiskunsag , 1975","Bukk , 1977","Aggtelek , 1985","Ferto-Hansag  , 1991","Danube-Drava  , 1996","Balaton Uplands  , 1997","Danube-Ipoly , 1997","Koros-Maros  , 1997","Orseg , 2002","Þingvellir  , 1930","Snæfellsjökull , 2001","Vatnajökull , 2008","Connemara , 1980","Glenveagh , 1984","The Burren  , 1991","Wicklow Mountains  , 1991","Wild Nephin  , 1998","Killarney , 1932","Gran Paradiso  , 1922","Abruzzo, Lazio and Molise  , 1923","Circeo , 1934","Stelvio , 1935","Dolomiti Bellunesi  , 1988","Pollino , 1988","Sibillini Mountains  , 1988","Aspromonte , 1989","Foreste Casentinesi, Monte Falterona and Campigna , 1989","Tuscan Archipelago  , 1989","Cilento, Valle di Diano and Alburni  , 1991","Gargano , 1991","Gran Sasso and Monti della Laga  , 1991","Majella , 1991","Val Grande  , 1991","Vesuvius , 1991","Archipelago of La Maddalena  , 1994","Apennino Tosco-Emiliano  , 1997","Asinara , 1997","Sila , 1997","Gennargentu , 1998","Cinque Terre  , 1999","Alta Murgia  , 2004","Apennino Lucano-Val d’Agri-Lagonegrese , 2007","Island of Pantelleria  , 2016","Bjeshket e Nemuna  , 2012","Sharr Mountains  , 2012","Gauja , 1973","Kemeri  , 1997","Slitere  , 1999","Razna , 2007","Aukstaitija , 1974","Dzukija , 1981","Curonian Spit  , 1991","Trakai National Historic Park  , 1991","Zemaitija , 1991","Orhei  , 2013","Durmitor , 1952","Biogradska Gora  , 1952","Lovcen , 1952","Lake Skadar  , 1983","Prokletije , 2009","Veluwezoom , 1930","De Hoge Veluwe  , 1935","Schiermonnikoog , 1989","Dwingelderveld , 1991","Weeribben-Wieden  , 1992","De Groote Peel  , 1993","De Biesboch  , 1994","Zuid-Kennemerland  , 1995","De Meinweg  , 1995","De Maasduinen  , 1996","Drents-Friese Wold  , 2000","De Zoom-Kalmthoutse  , 2001","Drentsche Aa  , 2002","Duinen van Texel  , 2002","Oosterschelde , 2002","De Loonse en Drunense Duinen  , 2002","Lauwersmeer , 2003","Utrechtse Heuvelrug  , 2003","Sallandse Heuvelrug  , 2004","De Alde Feanen  , 2006","Nieuw Land  , 2018","Pelister , 1948","Mavrovo , 1949","Galicica , 1958","Shar Mountain , 2021","Rondane , 1962","Borgefjell , 1963","Gutulia , 1968","Anderdalen , 1970","Ovre Pasvik  , 1970","Stabbursdalen , 1970","Femundsmarka , 1971","Ovre Dividal  , 1971","Rago , 1971","Forlandet , 1973","Nordvest-Spitzbergen  , 1973","Sor-Spitsbergen  , 1973","Dovrefjell-Sunndallsfjella  , 1974","Ovre Anarjohka  , 1975","Jotunheimen , 1980","Hardangervidda , 1981","Reisa , 1986","Saltfjellet-Svartisen  , 1989","Jostedalsbree , 1991","Forollhogna , 2001","Dovre , 2003","Moysalen , 2003","Nordre Isfjorden  , 2003","Sassen-Bunsow Land  , 2003","Blafjella-Skjaekerfjella  , 2004","Junkerdal , 2004","Lierne , 2004","Skarvan and Roltdalen  , 2004","Folgefonna  , 2005","Indre Wijdefjorden  , 2005","Hallingskarvet , 2006","Reinheimen  , 2006","Seiland  , 2006","Varangerhalvoy , 2006","Breihemen , 2009","Lomsdal-Visten  , 2009","Ytre Hvaler  , 2009","Sjunkhatten , 2010","Langsua , 2011","Rohkunborri , 2011","Fulufjellet  , 2012","Lakho , 2012","Faerder , 2013","Jomfruland , 2016","Raet , 2016","Lofotodden , 2018","Van Mijenfjorden  , 2021","Bialowieza , 1947","Swietokrzyski  , 1950","Pieniny , 1954","Tatra , 1954","Babia Gora  , 1955","Ojcow , 1956","Wielkopolska , 1957","Kampinos , 1959","Karkonosze , 1959","Wolin  , 1960","Slowinski , 1967","Bieszczady , 1973","Roztocze , 1974","Gorce  , 1981","Wigry , 1989","Drawno , 1990","Polosie , 1990","Biebrza , 1993","Stolowe Mountains  , 1993","Magura , 1995","Narew , 1996","Tuchola Forest  , 1996","Ujscie Warty  , 2001","Cheile Bicazului-Hasmas  , 1990","Piatra Craiului  , 1990","Calimani  , 2000","Cozia , 2000","Domogled-Valea Cernei  , 2000","Nera Gorge-Beusnita  , 2000","Retezat  , 2000","Rodna Mountains  , 2000","Semenic-Caras Gorge  , 2000","Buila-Vanturarita  , 2005","Defileul Jiului  , 2005","Fruska Gora  , 1960","Djerdap , 1974","Kopaonik  , 1981","Tara , 1981","Tatra , 1949","Pieniny , 1967","Low Tatras , 1978","Mala Fatra  , 1988","Poloniny , 1997","Muranska Planina  , 1998","Slovak Paradise  , 1998","Slovak Karst  , 2002","Vel’ka Fatra  , 2002","Ordesa y Monte Perdido  , 1918","Picos de Europa  , 1918","Aiguestortes i Estany de Sant Maurici  , 1955","Donana , 1969","Tablas de Daimiel  , 1973","Cabaneros , 1995","Sierra Nevada  , 1999","Illas Atlanticas de Galicia  , 2002","Monfrague , 2007","Sierra de Guadarrama  , 2013","Sierra de las Nieves  , 2021","Abisko , 1909","Angso , 1909","Garphyttan , 1909","Gotska Sandon  , 1909","Hamra  , 1909","Pieljekaise , 1909","Sanfjallet , 1909","Sarek , 1909","Dalby Soderskog  , 1918","Vadvetjakka , 1920","Bla Jungfrun  , 1926","Norra Kvill  , 1929","Tofsingdalen , 1930","Muddus , 1942","Padjelanta , 1962","Tiveden , 1983","Skuleskogen , 1984","Store Mosse  , 1989","Bjornlandet  , 1991","Djuro  , 1991","Tyresta , 1993","Haparanda Archipelago  , 1995","Tresticklan , 1996","Farnebofjarden , 1998","Soderasen  , 2001","Fulufjallet  , 2002","Kosterhavet  , 2009","Asnen , 2018","Swiss  , 1914","Peak District  , 1951","Lake District  , 1951","Snowdonia , 1951","Dartmoor , 1951","Pembrokeshire Coast  , 1952","North York Moors  , 1952","Yorkshire Dales  , 1954","Exmoor , 1954","Northumberland , 1956","Brecon Beacons  , 1957","The Broads  , 1989","Loch Lomond and the Trossachs  , 2002","Cairngorms , 2003","New Forest  , 2005","South Downs  , 2009","Carpathian , 1980","Shatsky , 1983","Synevir  , 1989","Uzhanian , 1991","Azov-Syvash  , 1993","Vyzhnytsia , 1995","Holy Mountains  , 1997","Yavorivskyi  , 1998","Desna-Starogutsky  , 1999","Skole Beskids  , 1999","Hutsulshchyna , 2002","Halych , 2004","Homolsh Woods  , 2004","Ichnya  , 2004","Great Meadow  , 2006","Mezynsky , 2006","Holosiivskyi , 2007","Prypiat-Stokhid  , 2007","Lower Dniester  , 2008","Buzk’s Gard  , 2009","Charming Harbor  , 2009","Cheremosh , 2009","Derman-Ostroh  , 2009","Dvorichanskyi  , 2009","Dzharylhak , 2009","Hetman , 2009","Ivory Coast  , 2009","Karmelyukove Podillya  , 2009","Kremenets , 2009","Meotida , 2009","Pyryatyn , 2009","Sloboda , 2009","Synyohora , 2009","Tuzly Lagoons  , 2009","White Lake  , 2009","Zacharovany Krai  , 2009","Zalissya  , 2009","Dniester Canyon  , 2010","Khotyn , 2010","Lower Sula  , 2010","Northern Podillya  , 2010","Oleshky , 2010","Pryazovskyi  , 2010","Tsumanska Puscha  , 2010","Verkhovyna , 2010","Lower Polissia  , 2013","Podilski Tovtry  , 2015"],null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[-46.9972767,78.54722219999999],"lng":[-159.213676,175.5938117]}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>US_Uk_parks <span class="ot">&lt;-</span> parks <span class="sc">%&gt;%</span> <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">"United Kingdom"</span> <span class="sc">|</span> country <span class="sc">==</span> <span class="st">"United States"</span>) </span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="fu">leaflet</span>(<span class="at">data=</span>US_Uk_parks) <span class="sc">%&gt;%</span> <span class="fu">addTiles</span>() <span class="sc">%&gt;%</span> <span class="fu">addMarkers</span>(<span class="sc">~</span>lon, <span class="sc">~</span>lat, <span class="at">popup =</span> <span class="fu">paste</span>(parks<span class="sc">$</span>park, <span class="st">" , "</span>,  parks<span class="sc">$</span>year, <span class="at">sep=</span><span class="st">""</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-d660e3cd25317bc7e98a" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-d660e3cd25317bc7e98a">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addMarkers","args":[[44.3385559,38.733081,43.8553804,29.2499017,25.4824229,38.5753936,37.5930377,38.2135733,38.0877312,32.1291301,33.9681871,33.7918719,42.9294762,41.2808248,36.5322649,63.1148002,24.628477,25.2866155,67.88190090000001,38.6246509,48.7596128,58.6658073,36.1069258,43.7904282,38.9299798,37.7935263,35.6130503,31.9211082,20.7203826,19.4290543,34.5313219,41.6532678,47.9958654,33.873415,58.6125631,59.8486745,36.8878548,67.35751070000001,60.594101,40.49766,37.1861597,37.1837823,46.8799663,37.8752221,48.7718174,47.8021067,35.0036935,36.4905655,41.2131788,40.3427932,32.2967359,36.4863668,38.4754706,46.978965,48.4732901,32.7872403,43.5724388,61.7104448,44.427963,37.8651011,37.2982022,53.3342499,54.5772323,52.898964,50.5718857,51.8120746,54.38716,54.1962686,51.134614,55.3378051,51.8814731,52.604949,56.1487349,57.0492193,50.8764416,50.9892513],[-68.2733346,-109.5925139,-102.3396912,-103.2501638,-80.20831029999999,-107.7415961,-112.1870895,-109.9025345,-111.1354983,-104.5538893,-119.9913964,-80.74904859999999,-122.1279394,-81.567812,-116.9325408,-151.1926058,-82.87318740000001,-80.89865090000001,-153.1860539,-90.1855273,-113.7870225,-136.9002147,-112.1129484,-110.6817627,-114.2633787,-105.5930539,-83.5531537,-104.8848075,-156.1551524,-155.2568892,-93.0637411,-87.0524338,-88.9092899,-115.9009923,-155.0631051,-150.1878803,-118.5551477,-159.213676,-153.5301093,-121.4206552,-86.0999753,-108.4886935,-121.7269094,-81.0356791,-121.2984648,-123.6043524,-109.7889229,-121.1824925,-124.0046276,-105.6836389,-111.166615,-118.5657516,-78.4534573,-103.5387091,-92.8268267,-106.3256816,-103.4415644,-142.9856804,-110.588455,-119.5383294,-113.0263005,-1.7837383,-2.7974835,-3.8520817,-3.9206884,-5.1011117,-0.892714,-2.1632062,-3.6462346,-2.2566844,-3.443504,1.608883,-4.4720131,-3.5615665,-1.6312373,-0.7380902],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["Acadia , 1919","Arches , 1971","Badlands , 1978","Big Bend , 1944","Biscayne , 1980","Black Canyon of the Gunnison , 1999","Bryce Canyon , 1928","Canyonlands , 1964","Capitol Reef , 1971","Carlsbad Caverns , 1930","Channel Islands , 1980","Congaree , 2003","Crater Lake , 1902","Cuyahoga Valley , 2000","Death Valley , 1994","Denali , 1917","Dry Tortugas , 1992","Everglades , 1934","Gates of the Arctic , 1980","Gateway Arch , 2018","Glacier , 1910","Glacier Bay , 1980","Grand Canyon , 1919","Grand Teton , 1929","Great Basin , 1986","Great Sand Dunes , 2004","Great Smoky Mountains , 1934","Guadalupe Mountains , 1972","Haleakala , 1961","Hawaii Volcanoes , 1916","Hot Springs , 1921","Indiana Dunes , 2019","Isle Royal , 1930","Joshua Tree , 1994","Katmai , 1980","Kenai Fjords , 1980","Kings Canyon , 1940","Kobuk Valley , 1980","Lake Clark , 1980","Lassen Volcanic , 1916","Mammoth Cave , 1941","Mesa Verde , 1906","Mount Ranier , 1899","New River Gorge , 2020","North Cascades , 1968","Olympic , 1938","Petrified Forest , 1962","Pinnacles , 2013","Redwood , 1968","Rocky Mountain , 1915","Saguaro , 1994","Sequoia , 1890","Shenandoah , 1935","Theodore Roosevelt , 1978","Voyageurs , 1975","White Sands , 2019","Wind Cave , 1903","Wrangell-St Elias , 1980","Yellowstone , 1872","Yosemite , 1890","Zion , 1919","Akami-Uapishk KakKasuak-Mealy Mountains , 2015","Aulavik , 1992","Auyuittuq , 2001","Banff , 1885","Bruce Peninsula , 1987","Cape Breton Island , 1936","Elk Island , 1913","Forillon , 1970","Georgian Bay Islands , 1930","Glacier , 1886","Grasslands , 1981","Gros Morne , 2005","Gulf Islands , 2003","Gwaii Hanaas , 1988","Ivaavik , 1984","Jasper , 1907","Kejimkujik , 1967","Kluane , 1993","Kootenay , 1920","Kouchibouguac , 1969","La Mauricie , 1970","Mingan Archipelago  , 1984","Mount Revelstoke , 1914","Naats'ihch'oh , 2014","Nahanni , 1974","Pacific Rim , 1970","Point Pelee , 1918","Prince Albert , 1927","Prince Edward Island , 1937","Pukaskwa , 1971","Qausuittuq , 2015","Riding Mountain , 1933","Rouge , 2015","Sable Island , 2013","Sirmilik , 2001","Terra Nova , 1957","Thaidene Nene , 2019","Thousand Islands , 1904","Torngat Mountains , 2008","Tuktut Nogait , 1998","Ukkusiksalik , 2003","Vuntut , 1993","Wapusk , 1996","Waterton Lakes , 1895","Wood Buffalo , 1922","Yoho , 1886","Abel Tasman , 1942","Aoraki/Mount Cook , 1953","Arthur's Pass , 1929","Egmont , 1900","Fiordland , 1952","Kahurangi , 1996","Mount Aspiring , 1964","Nelson Lakes , 1956","Paparoa , 1987","Rakiura , 2002","Tongariro , 1887","Westland Tai Poutini , 1960","Whanganui , 1986","Addo Elephant , 1931","Agulhas , 1998","Richtersveld , 1991","Augrabies Falls , 1966","Bontebok , 1931","Camdeboo , 2005","Garden Route , 2009","Golden Gate Highlands , 1963","Karoo , 1979","Kalahari Gemsbok , 1931","Kruger , 1926","Mapungubwe , 1995","Marakele , 1994","Meerkat , 2020","Mokala , 2007","Mountain Zebra , 1937","Namaqua , 1999","Table Mountain , 1998","Tankwa Karoo , 1986","West Coast , 1985","Butrint , 1966","Tomorr Mountain  , 1956","Dajti , 1966","Fir of Drenove  , 1966","Llogara , 1966","Lure-Dejes Mountain  , 1966","Theth , 1966","Shtame Pass  , 1996","Valbone Valley  , 1996","Prespa , 1999","Divjake-Karavasta  , 2007","Fir of Hotove-Dangelli  , 2008","Shebenik-Jabllanice  , 2008","Karaburun-Sazan Marine Park  , 2010","Valle del Sorteny  , 1999","Valles del Comapedrosa  , 2003","Madriu-Perafita-Claror  , 2005","Hohe Tauern  , 1981","Neusielder See-Seewinkel  , 1993","Donau-Auen  , 1996","Kalkalpen , 1997","Thayatal  , 2000","Gesause , 2002","Belovezhskaya Pushcha , 1932","Braslau Lakes  , 1995","Pripyatski  , 1996","Naranchanski , 1999","De Zoom-Kalmthoutse Heide  , 2001","Hoge Kempen  , 2006","Sutjeska , 1962","Kozara , 1967","Una , 2008","Drina , 2017","Pirin , 1962","Central Balkan  , 1991","Rila , 1992","Plitvice Lakes  , 1949","Paklenica , 1949","Risnjak , 1953","Mljet , 1960","Kornati  , 1980","Brijuni , 1983","Krka , 1985","Sjeverni Velebit  , 1999","Pedagogical Academy  , 1983","Liopetri Forest  , 1984","Athalassa , 1990","Troodos , 1992","Cape Greco  , 1993","Polemidia , 1996","Rizoelia , 1998","Agios Nikandros  , 2000","Petra tou Romiou  , 2001","Karpasia/Dipkarpaz  , 2004","Machairas  , 2004","Akamas , 2022","Krkonose Mountains  , 1963","Sumava , 1981","Podyji  , 1991","Bohemian Switzerland  , 2000","Thy , 2008","Mols Berge  , 2009","Wadden Sea  , 2010","Land of the Scylding  , 2015","Kongernes Nordsjaelland  , 2018","Matsalu , 1957","Lahemaa , 1971","Karula , 1993","Soomaa , 1993","Vilsandi  , 1993","Alutaguse , 2018"," , NA","Lemmonjoki  , 1956","Liesjarvi , 1956","Linnansaari , 1956","Oulanka , 1956","Petkeljarvi , 1956","Pyha-Hakki  , 1956","Rokua , 1956","Archipelago , 1982","Helvetinjarvi , 1982","Hiidenportti  , 1982","Isojarvi  , 1982","Kauhaneva-Pohjankangas  , 1982","Lauhanvuori  , 1982","Patvinsuo , 1982","Riisitunturi  , 1982","Salamajarvi , 1982","Seitseminen , 1982","Tiilikajarvi , 1982","Urho Kekkonen  , 1983","Ekenas Archipelago  , 1989","Kolovesi , 1990","Torronsuo , 1990","Bothnian Bay  , 1991","Koli  , 1991","Eastern Gulf of Finland  , 1992","Paijanne , 1993","Puurijarvi-Isosuo  , 1993","Nuuksio , 1994","Valkmusa  , 1996","Kurjenrahka , 1998","Syote , 2000","Leivonmaki , 2003","Repovesi , 2003","Pallas-Yllastunturi  , 2005","Pyha-Luosto  , 2005","Bothnian Sea  , 2011","Sipoonkorpi  , 2011","Southern Konnevesi  , 2014","Teijo , 2015","Hossa , 2017","Salla , 2022","Port-Cros , 1963","Vanoise , 1963","Pyrenees , 1967","Cevennes , 1970","Ecrins , 1973","Mercantour , 1979","Calanques , 2012","Forets , 2019","Lower Oder Valley  , 1955","Bavarian Forest  , 1970","Berchtesgaden , 1978","Schleswig-Holstein Wadden Sea  , 1985","Lower Saxon Wadden Sea  , 1986","Hamburg Wadden Sea  , 1990","Jasmund  , 1990","Muritz , 1990","Saxon Switzerland  , 1990","Western Pomerania Lagoon Area  , 1990","Hainich , 1997","Eifel , 2004","Kellerwald-Edersee  , 2004","Harz  , 2006","Black Forest  , 2014","Hunsruck-Hochwald  , 2015","Hortobagy , 1973","Kiskunsag , 1975","Bukk , 1977","Aggtelek , 1985","Ferto-Hansag  , 1991","Danube-Drava  , 1996","Balaton Uplands  , 1997","Danube-Ipoly , 1997","Koros-Maros  , 1997","Orseg , 2002","Þingvellir  , 1930","Snæfellsjökull , 2001","Vatnajökull , 2008","Connemara , 1980","Glenveagh , 1984","The Burren  , 1991","Wicklow Mountains  , 1991","Wild Nephin  , 1998","Killarney , 1932","Gran Paradiso  , 1922","Abruzzo, Lazio and Molise  , 1923","Circeo , 1934","Stelvio , 1935","Dolomiti Bellunesi  , 1988","Pollino , 1988","Sibillini Mountains  , 1988","Aspromonte , 1989","Foreste Casentinesi, Monte Falterona and Campigna , 1989","Tuscan Archipelago  , 1989","Cilento, Valle di Diano and Alburni  , 1991","Gargano , 1991","Gran Sasso and Monti della Laga  , 1991","Majella , 1991","Val Grande  , 1991","Vesuvius , 1991","Archipelago of La Maddalena  , 1994","Apennino Tosco-Emiliano  , 1997","Asinara , 1997","Sila , 1997","Gennargentu , 1998","Cinque Terre  , 1999","Alta Murgia  , 2004","Apennino Lucano-Val d’Agri-Lagonegrese , 2007","Island of Pantelleria  , 2016","Bjeshket e Nemuna  , 2012","Sharr Mountains  , 2012","Gauja , 1973","Kemeri  , 1997","Slitere  , 1999","Razna , 2007","Aukstaitija , 1974","Dzukija , 1981","Curonian Spit  , 1991","Trakai National Historic Park  , 1991","Zemaitija , 1991","Orhei  , 2013","Durmitor , 1952","Biogradska Gora  , 1952","Lovcen , 1952","Lake Skadar  , 1983","Prokletije , 2009","Veluwezoom , 1930","De Hoge Veluwe  , 1935","Schiermonnikoog , 1989","Dwingelderveld , 1991","Weeribben-Wieden  , 1992","De Groote Peel  , 1993","De Biesboch  , 1994","Zuid-Kennemerland  , 1995","De Meinweg  , 1995","De Maasduinen  , 1996","Drents-Friese Wold  , 2000","De Zoom-Kalmthoutse  , 2001","Drentsche Aa  , 2002","Duinen van Texel  , 2002","Oosterschelde , 2002","De Loonse en Drunense Duinen  , 2002","Lauwersmeer , 2003","Utrechtse Heuvelrug  , 2003","Sallandse Heuvelrug  , 2004","De Alde Feanen  , 2006","Nieuw Land  , 2018","Pelister , 1948","Mavrovo , 1949","Galicica , 1958","Shar Mountain , 2021","Rondane , 1962","Borgefjell , 1963","Gutulia , 1968","Anderdalen , 1970","Ovre Pasvik  , 1970","Stabbursdalen , 1970","Femundsmarka , 1971","Ovre Dividal  , 1971","Rago , 1971","Forlandet , 1973","Nordvest-Spitzbergen  , 1973","Sor-Spitsbergen  , 1973","Dovrefjell-Sunndallsfjella  , 1974","Ovre Anarjohka  , 1975","Jotunheimen , 1980","Hardangervidda , 1981","Reisa , 1986","Saltfjellet-Svartisen  , 1989","Jostedalsbree , 1991","Forollhogna , 2001","Dovre , 2003","Moysalen , 2003","Nordre Isfjorden  , 2003","Sassen-Bunsow Land  , 2003","Blafjella-Skjaekerfjella  , 2004","Junkerdal , 2004","Lierne , 2004","Skarvan and Roltdalen  , 2004","Folgefonna  , 2005","Indre Wijdefjorden  , 2005","Hallingskarvet , 2006","Reinheimen  , 2006","Seiland  , 2006","Varangerhalvoy , 2006","Breihemen , 2009","Lomsdal-Visten  , 2009","Ytre Hvaler  , 2009","Sjunkhatten , 2010","Langsua , 2011","Rohkunborri , 2011","Fulufjellet  , 2012","Lakho , 2012","Faerder , 2013","Jomfruland , 2016","Raet , 2016","Lofotodden , 2018","Van Mijenfjorden  , 2021","Bialowieza , 1947","Swietokrzyski  , 1950","Pieniny , 1954","Tatra , 1954","Babia Gora  , 1955","Ojcow , 1956","Wielkopolska , 1957","Kampinos , 1959","Karkonosze , 1959","Wolin  , 1960","Slowinski , 1967","Bieszczady , 1973","Roztocze , 1974","Gorce  , 1981","Wigry , 1989","Drawno , 1990","Polosie , 1990","Biebrza , 1993","Stolowe Mountains  , 1993","Magura , 1995","Narew , 1996","Tuchola Forest  , 1996","Ujscie Warty  , 2001","Cheile Bicazului-Hasmas  , 1990","Piatra Craiului  , 1990","Calimani  , 2000","Cozia , 2000","Domogled-Valea Cernei  , 2000","Nera Gorge-Beusnita  , 2000","Retezat  , 2000","Rodna Mountains  , 2000","Semenic-Caras Gorge  , 2000","Buila-Vanturarita  , 2005","Defileul Jiului  , 2005","Fruska Gora  , 1960","Djerdap , 1974","Kopaonik  , 1981","Tara , 1981","Tatra , 1949","Pieniny , 1967","Low Tatras , 1978","Mala Fatra  , 1988","Poloniny , 1997","Muranska Planina  , 1998","Slovak Paradise  , 1998","Slovak Karst  , 2002","Vel’ka Fatra  , 2002","Ordesa y Monte Perdido  , 1918","Picos de Europa  , 1918","Aiguestortes i Estany de Sant Maurici  , 1955","Donana , 1969","Tablas de Daimiel  , 1973","Cabaneros , 1995","Sierra Nevada  , 1999","Illas Atlanticas de Galicia  , 2002","Monfrague , 2007","Sierra de Guadarrama  , 2013","Sierra de las Nieves  , 2021","Abisko , 1909","Angso , 1909","Garphyttan , 1909","Gotska Sandon  , 1909","Hamra  , 1909","Pieljekaise , 1909","Sanfjallet , 1909","Sarek , 1909","Dalby Soderskog  , 1918","Vadvetjakka , 1920","Bla Jungfrun  , 1926","Norra Kvill  , 1929","Tofsingdalen , 1930","Muddus , 1942","Padjelanta , 1962","Tiveden , 1983","Skuleskogen , 1984","Store Mosse  , 1989","Bjornlandet  , 1991","Djuro  , 1991","Tyresta , 1993","Haparanda Archipelago  , 1995","Tresticklan , 1996","Farnebofjarden , 1998","Soderasen  , 2001","Fulufjallet  , 2002","Kosterhavet  , 2009","Asnen , 2018","Swiss  , 1914","Peak District  , 1951","Lake District  , 1951","Snowdonia , 1951","Dartmoor , 1951","Pembrokeshire Coast  , 1952","North York Moors  , 1952","Yorkshire Dales  , 1954","Exmoor , 1954","Northumberland , 1956","Brecon Beacons  , 1957","The Broads  , 1989","Loch Lomond and the Trossachs  , 2002","Cairngorms , 2003","New Forest  , 2005","South Downs  , 2009","Carpathian , 1980","Shatsky , 1983","Synevir  , 1989","Uzhanian , 1991","Azov-Syvash  , 1993","Vyzhnytsia , 1995","Holy Mountains  , 1997","Yavorivskyi  , 1998","Desna-Starogutsky  , 1999","Skole Beskids  , 1999","Hutsulshchyna , 2002","Halych , 2004","Homolsh Woods  , 2004","Ichnya  , 2004","Great Meadow  , 2006","Mezynsky , 2006","Holosiivskyi , 2007","Prypiat-Stokhid  , 2007","Lower Dniester  , 2008","Buzk’s Gard  , 2009","Charming Harbor  , 2009","Cheremosh , 2009","Derman-Ostroh  , 2009","Dvorichanskyi  , 2009","Dzharylhak , 2009","Hetman , 2009","Ivory Coast  , 2009","Karmelyukove Podillya  , 2009","Kremenets , 2009","Meotida , 2009","Pyryatyn , 2009","Sloboda , 2009","Synyohora , 2009","Tuzly Lagoons  , 2009","White Lake  , 2009","Zacharovany Krai  , 2009","Zalissya  , 2009","Dniester Canyon  , 2010","Khotyn , 2010","Lower Sula  , 2010","Northern Podillya  , 2010","Oleshky , 2010","Pryazovskyi  , 2010","Tsumanska Puscha  , 2010","Verkhovyna , 2010","Lower Polissia  , 2013","Podilski Tovtry  , 2015"],null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[19.4290543,67.88190090000001],"lng":[-159.213676,1.608883]}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(US_Uk_parks, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> distance_from_closest_city))  <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="sc">~</span>country) <span class="sc">+</span> <span class="fu">geom_col</span>(<span class="at">fill=</span><span class="st">"bisque4"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="5-Mapping_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
