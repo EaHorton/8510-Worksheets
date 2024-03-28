@@ -396,7 +396,7 @@ You should use the rest of this worksheet to practice text analysis (and R more 
 
 Write up a research plan in the space below. What are you looking to explore?
 
-> 
+> I plan on tackling the first research question, "Is there a difference in promotion language vs. reception language?" This will be intersting to explore across space. I have a mind to take this a bit further. I will explore whether they market the same everywhere and if there any traceable trends among places that recieve them similarly. 
 
 Lets download the data. 
 ```{r}
@@ -411,6 +411,13 @@ bb.metadata <- read.csv("https://raw.githubusercontent.com/dseefeldt/IndianaNews
 
 (@) There are a few problems with this metadata from a tidy data perspective. First the date column isn't useful for assessing change over time. Can you split it into 3 columns one for year, month, and day? This will be useful if you want to try and identify change over time. Use the Date column not the FullDate column. This column is messy and you'll need to clean it up in order to have useful data. 
 ```{r}
+
+#bb.metadata.1 <- separate_wider_delim(bb.metadata, Date, delim = ",", names = "Year" )
+
+bb.meta.tidy <- tidyr::separate(bb.metadata, Date, c('month_day', 'year'), sep = ",",remove = FALSE)
+
+
+
 ```
 
 (@) Now lets load the BB data. This happens in a slightly different way than with the SOTU data since its local data and not data from an R package. 
@@ -421,14 +428,62 @@ bb <- readtext(paste0(data_dir, "/*.txt"))
 
 (@) Now you need to join this with the metadata for each file. Note that doc_id and Filename are the same value. How would you join two datasets together in R so that you can proceed with textual analysis? 
 ```{r}
+bb_new  <- bb %>% 
+  plyr::rename(c("doc_id" = "Filename"))
+
+
+bb_whole <- 
+  bb.meta.tidy %>%  
+  arrange(year) %>% # sort metadata
+  bind_cols(bb_new) %>% # combine with texts
+  as_tibble() # convert to tibble for better screen viewing
+
+glimpse(bb_whole)
 
 ```
 
 (@) Now you can begin your textual analysis for Dr. S. Add code chunks below and intersperse text to explain what you are doing and why in the text of the worksheet. 
 ```{r}
+bb_whole_tidy <- bb_whole %>% 
+  unnest_tokens(word, text)  %>% #creates a new data frame with each text file broken into tokens
+  anti_join(stop_words)# eliminates stop words 
+
+bb_whole_tidy %>%
+  count(word, sort = TRUE) #just counting words to get my bearings 
+
+```
+
+
+
+```{r}
+
+#I'm curious if there are more words used for promotion or reception. There is a shockingly minuscule difference. 
+
+bb_whole_tidy %>% #calling our dataset
+  count(R_P_E, Filename...3)  %>% #counting words per file
+  group_by(R_P_E) %>% #grouping by Reception, Promotion, Extraneous
+  summarize(avg_words = mean(n)) #finding average word number per file per category
 
 
 ```
+
+
+```{r}
+bb.tf.idf.promotion <- bb_whole_tidy %>% filter (R_P_E == "P") %>%
+  count(Filename...3, word, sort = TRUE)  %>%  
+  bind_tf_idf(word, Filename...3, n) 
+
+bb.tf.idf.promotion %>% arrange(desc(tf_idf))
+```
+
+```{r}
+bb.tf.idf.reception <- bb_whole_tidy %>% filter (R_P_E == "R") %>%
+  count(Filename...3, word, sort = TRUE)  %>%  
+  bind_tf_idf(word, Filename...3, n) 
+
+bb.tf.idf.reception %>% arrange(desc(tf_idf))
+```
+
 
 
 (@) Finally, when you are all done. Write up your findings. What research question did you focus on and what did you learn? 
