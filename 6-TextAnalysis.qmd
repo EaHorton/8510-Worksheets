@@ -275,7 +275,7 @@ tidy_sotu %>%
 ```
 (@) The code above is commented to help you follow it. Walk through the code above, and explain what each line does in your own words. If its a function you are unfamiliar with, look up the documentation.
 
-> 
+> The first line opens the dataset. The second line counts the words for each president. The third lumps these words together per president. The next two lines create two new columns, n_tot and term_freq - the first composed of the total amount of words per doc and the second dividing the number of occurrences of a single word by the total number of words in the doc. The next lines organize the information - from highest frequency to lowest, only spitting out the highest for each president, and then printing this info. 
 
 ### TF-IDF
 
@@ -314,8 +314,26 @@ sotu.tf.idf %>% arrange(desc(tf_idf))
 (@) Pick a president who served more than one term. Filter the dataset and generate both raw word counts and tf-idf scores for that president. What words are most significant in each method? Why and what does that tell you about that president? 
 
 ```{r}
+sotu.tf.idf.TeddyRoosevelt <- tidy_sotu %>% filter (president == "Theodore Roosevelt") %>%
+  count(doc_id, word, sort = TRUE)  %>%  
+  bind_tf_idf(word, doc_id, n) 
 
+sotu.tf.idf.TeddyRoosevelt %>% arrange(desc(tf_idf))
+
+#Theodore Roosevelt was talking about Columbia not more than anything else, but significantly more than his fellow presidents. It is not surprising that "tax" and "judges" are used frequently by Roosevelt, but the lower tf-idf score is also not surprising - as these are terms we suspect to hear from the president. 
 ```
+
+```{r}
+sotu.tf.idf.Lincoln <- tidy_sotu %>% filter (president == "Abraham Lincoln") %>%
+  count(doc_id, word, sort = TRUE)  %>%  
+  bind_tf_idf(word, doc_id, n) 
+
+sotu.tf.idf.Lincoln %>% arrange(desc(tf_idf))
+
+#I tried it again with Lincoln just for fun. 
+```
+
+
 
 ### Co-Occurance
 Co-occurrence gives us a sense of words that appear in the same text, but not necessarily next to each other. It shows words that are likely to co-occur. Note that this is different than topic modeling, which we'll discuss next week. 
