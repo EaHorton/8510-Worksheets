@@ -195,8 +195,7 @@ tidy_sotu <- sotu_whole %>%
 ```
 (@) Before we move forward, take a minute a describe the chunk of code you just ran. What does each section do and how does it reflect the workflow for a topic modeling project? What are the important steps that are unique to topic modeling? 
 
->
-
+> The first 8 lines of the code above are included under the "acquiring your corpus" umbrella. The first line converts sotu_meta into a data frame. The second line creates the file path - remember this step is unique in this case becuase the dataset is already included in R. The third line reads in the data. The final chunk of 'acquiring corpus' sorts the metadata and  combines it with the text. Converting it to tibble allows for better screen viewing. The second chunk is "preprocessing." It converts the texts into single word n-grams and removes stopwords. 
 
 The most basic kind of analysis we might be interested in doing is counting words. We can do that easily using the `count()` function: 
 ```{r}
@@ -234,11 +233,19 @@ tidy_sotu %>%
 
 (@) Think back to the metadata that we loaded about these speeches. Why are more modern president's state of the union addresses shorter? 
 
->
+> The stop words are calibrated based on our modern vocabulary! Modern speeches are shorter becuase more words were ommitted. 
+
 
 (@) Filter the dataset to address this discrepancy and the recreate these statistics: 
 ```{r}
+sotu_nostop <- sotu_whole %>%
+  unnest_tokens(word, text)
 
+sotu_nostop %>%
+  count(president, doc_id)  %>% 
+  group_by(president) %>% 
+  summarize(avg_words = mean(n)) %>% 
+  arrange(desc(avg_words))
 ```
 
 ### Term Frequency
