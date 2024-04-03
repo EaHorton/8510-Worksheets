@@ -544,7 +544,8 @@ bb.reception. <- bb.tf.idf.reception %>%
 
 (@) Finally, when you are all done. Write up your findings. What research question did you focus on and what did you learn? 
 
-I focused on the difference between promotion language and reception language. The two bar graphs immediately above this write up are the most relevant to my findings. These graphs highlight the differences between promotion and reception, as similarity has been filtered out by the tf_idf process. I am particularly struck by the inclusion of words such as "cruely" and "dishonest" in the reception data. These words do not occur often, but they are tightly associated with reception. It is likely this observation would have gotten lost without splicing the data in this way. I am also curious as to why "pneumonia" appears in the promotion graph. There is probably an avenue to explore with the inclusion of "stockholder" in promotions as well. 
+I focused on the difference between promotion language and reception language. The two bar graphs immediately above this write up are the most relevant to my findings. These graphs highlight the differences between promotion and reception, as similarity has been filtered out by the tf_idf process. I am particularly struck by the inclusion of words such as "cruelty" and "dishonest" in the reception data. These words do not occur often, but they are tightly associated with reception -- meaning someone was taking this away from the show and it was not the Company's intention. It is possible this observation would have gotten lost without splicing the data in this way. I am also curious as to why "pneumonia" and "stockholder" appear in the promotion graph. Were the performers prone to getting sick by living in close proximity, leading to the cancellation or rescheduling of shows? Were people invited to become stockholders? These observations provide a possible avenue to follow. 
+
 
 
 
