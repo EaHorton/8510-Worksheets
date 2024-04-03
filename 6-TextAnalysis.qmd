@@ -448,7 +448,7 @@ bb_whole_tidy <- bb_whole %>%
   unnest_tokens(word, text)  %>% #creates a new data frame with each text file broken into tokens
   anti_join(stop_words)# eliminates stop words 
 
-bb_whole_tidy %>%
+bb.whole.n.count <- bb_whole_tidy %>%
   count(word, sort = TRUE) #just counting words to get my bearings 
 
 ```
@@ -469,7 +469,27 @@ bb_whole_tidy %>% #calling our dataset
 
 
 ```{r}
-bb.tf.idf.promotion <- bb_whole_tidy %>% filter (R_P_E == "P") %>%
+#IGNORE. this is really just a test. the following tf_idf will be more relevant 
+bb.tf.idf <- bb_whole_tidy %>%
+  count(R_P_E, word, sort = TRUE)  %>%  
+  bind_tf_idf(word, R_P_E, n) 
+
+bb.tf.idf %>% arrange(desc(tf_idf))
+```
+```{r}
+#ignore. another experiment that did not produce much fruit 
+bb.tf.idf %>% 
+filter(R_P_E == "R" | R_P_E == "P") %>% 
+  filter(tf_idf > 0.0008) %>% 
+
+  ggplot(aes(word, n, fill = R_P_E)) + 
+    geom_col(position = "fill") + facet_wrap(~word) 
+```
+
+
+```{r}
+#trying to find the words most notably associated with promotion (looking at tf_idf in results - will be in descending order)
+bb.tf.idf.promotion <- bb_whole_tidy %>% filter (R_P_E == "P") %>% #subset data to just pull promotion 
   count(Filename...3, word, sort = TRUE)  %>%  
   bind_tf_idf(word, Filename...3, n) 
 
@@ -477,18 +497,54 @@ bb.tf.idf.promotion %>% arrange(desc(tf_idf))
 ```
 
 ```{r}
-bb.tf.idf.reception <- bb_whole_tidy %>% filter (R_P_E == "R") %>%
+#finding words most strongly associated with reception (looking at tf_idf in results - will be in descending order)
+bb.tf.idf.reception <- bb_whole_tidy %>% filter (R_P_E == "R") %>% #subset data to just pull reception 
   count(Filename...3, word, sort = TRUE)  %>%  
   bind_tf_idf(word, Filename...3, n) 
 
 bb.tf.idf.reception %>% arrange(desc(tf_idf))
 ```
 
+```{r}
+#an experiment to see if this is an effective visualization for a single word 
+library(ggplot2)
+
+bb_whole_tidy %>% filter(R_P_E == "R" | R_P_E == "P") %>% #filtering the dataset for promo and reception
+  filter(word == "indians") %>% #filtering for the word I want to visualize
+  count(year, R_P_E) %>% # getting a count for the designatged word per year per category 
+  ggplot(aes(year, n, fill = R_P_E)) + #plotting the results 
+    geom_col(position = "fill")
+
+```
+```{r}
+#experiment. not super helpful!
+bb_whole_tidy %>% 
+filter(R_P_E == "R" | R_P_E == "P") %>% #filtering for reception and promotion
+  count(year, R_P_E, word) %>% filter(n > 30) %>% 
+ # getting a count for words per category per year
+  ggplot(aes(year, n, fill = R_P_E)) + #plotting the results 
+    geom_col(position = "fill") + facet_wrap(~word) 
+```
+```{r}
+#another failed experiment
+
+bb.promo. <- bb.tf.idf.promotion %>%
+  filter(tf_idf > 0.35 ) #filtering for tf_idf scores above .35 to only get a handful of high results
+    
+    ggplot(bb.promo., aes(x = word, y = tf_idf)) + theme(axis.text.x=element_text(angle=90)) + geom_col(width = .7, fill="slategrey") + labs(x="word", y="tf_idf", title="tf_idf promotion") #plotting 
+```
+
+```{r}
+bb.reception. <- bb.tf.idf.reception %>%
+  filter(tf_idf > 0.25 ) #filtering for tf_idf scores above .25 to only get a handful of high results
+    
+    ggplot(bb.reception., aes(x = word, y = tf_idf)) + theme(axis.text.x=element_text(angle=90)) + geom_col(width = .7, fill="cornflowerblue") + labs(x="word", y="tf_idf", title="tf_idf reception") #plotting
+```
 
 
 (@) Finally, when you are all done. Write up your findings. What research question did you focus on and what did you learn? 
 
-
+I focused on the difference between promotion language and reception language. The two bar graphs immediately above this write up are the most relevant to my findings. These graphs highlight the differences between promotion and reception, as similarity has been filtered out by the tf_idf process. I am particularly struck by the inclusion of words such as "cruely" and "dishonest" in the reception data. These words do not occur often, but they are tightly associated with reception. It is likely this observation would have gotten lost without splicing the data in this way. I am also curious as to why "pneumonia" appears in the promotion graph. There is probably an avenue to explore with the inclusion of "stockholder" in promotions as well. 
 
 
 
