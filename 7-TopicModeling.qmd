@@ -1,7 +1,7 @@
 ---
 title: 'Worksheet 7: Topic Modeling'
-author: ''
-date: ''
+author: Addison Horton
+date: 3/10/24
 ---
 
 _This is the seventh in a series of worksheets for History 8510 at Clemson University. The goal of these worksheets is simple: practice, practice, practice. The worksheet introduces concepts and techniques and includes prompts for you to practice in this interactive document. When you are finished, you should change the author name (above), knit your document, and upload it to canvas. Don't forget to commit your changes as you go and push to github when you finish the worksheet._
@@ -103,7 +103,16 @@ ac.top.terms %>%
 ```
 (@) Can you adjust the code above to show the top 10 words from just one topic?
 ```{r}
+ac.top.terms <- ac.topics %>%
+  arrange(desc(beta)) %>% 
+  group_by(topic) %>% slice(1:10)
 
+ac.top.terms %>%
+  mutate(term = reorder_within(term, beta, topic)) %>%
+  ggplot(aes(beta, term, fill = factor(topic))) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~ topic, scales = "free") +
+  scale_y_reordered()
 ```
 
 Another useful way to look at the words in each topic is by visualizing them as a wordcloud.
@@ -155,8 +164,63 @@ unzip("MB.zip")
 mb.metadata <- read.csv("https://raw.githubusercontent.com/regan008/8510-TextAnalysisData/main/mb-metadata.csv")
 ```
 
+```{r}
+
+data_dir_new <- paste(getwd(), "/txt", sep = "")
+mb <- readtext(paste0(data_dir, "/*.txt"))
+
+
+ mb_new  <- mb %>% 
+  plyr::rename(c("doc_id" = "Filename"))
+
+mb_whole <- 
+  mb.metadata %>%  
+  arrange(Filename) %>% # sort metadata
+  bind_cols(mb_new) %>% # combine with texts
+  as_tibble() # convert to tibble for better screen viewing
+```
+
+```{r}
+dtm <- DocumentTermMatrix(mb.metadata)
+lda_model <- LDA(dtm, k = 10)
+
+mb.topics <- tidy(lda_model, matrix = "beta")
+head(mb.topics)
+
+MB_lda <- mb.topics %>%
+  arrange(desc(beta)) %>% 
+  group_by(topic) %>% slice(1:5)
+
+MB_lda %>%
+  mutate(term = reorder_within(term, beta, topic)) %>%
+  ggplot(aes(beta, term, fill = factor(topic))) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~ topic, scales = "free") +
+  scale_y_reordered()
+```
+
+
 (@) What happens if you create a custom stopword list? How does this change the model?
 ```{r}
+
+custom_stopwords <- c("editorial", "committee", "to", "digitized", "by", "review", "google")
+stopwords <- c(stopwords, custom_stopwords)
+dtm <- DocumentTermMatrix(mb.metadata, control = list(stopwords = TRUE))
+lda_model <- LDA(dtm, k = 10)
+
+mb.topics <- tidy(lda_model, matrix = "beta")
+head(mb.topics)
+
+MB_lda <- mb.topics %>%
+  arrange(desc(beta)) %>% 
+  group_by(topic) %>% slice(1:5)
+
+MB_lda %>%
+  mutate(term = reorder_within(term, beta, topic)) %>%
+  ggplot(aes(beta, term, fill = factor(topic))) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~ topic, scales = "free") +
+  scale_y_reordered()
 
 ```
 
