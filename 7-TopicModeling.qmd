@@ -155,8 +155,12 @@ Using this we can tell that topic 5, which from earlier had the words improve, g
 (@) Use the rest of this worksheet to experiment with topic modeling. I've added the code to download a much larger dataset - the issues of Mind and Body. This corpus has 413 documents ranging from the 1890s to 1936. You'll want to start with at least 25 topics. 
 ```{r}
 #| eval: false
+#download.file("https://github.com/regan008/8510-TextAnalysisData/blob/main/MindAndBody.zip?raw=true", "MB.zip")
+#unzip("MB.zip")
+
 download.file("https://github.com/regan008/8510-TextAnalysisData/blob/main/MindAndBody.zip?raw=true", "MB.zip")
 unzip("MB.zip")
+file.rename("txt", "mbtxt")
 ```
 
 ```{r}
@@ -178,11 +182,43 @@ mb_whole <-
   arrange(Filename) %>% # sort metadata
   bind_cols(mb_new) %>% # combine with texts
   as_tibble() # convert to tibble for better screen viewing
+
+#mb_update <- mb_whole %>% mutate(Filename = paste("MB_",Filename...1))
+
+
+tidy_mb <- mb_whole %>%
+  unnest_tokens(word, text) %>% 
+  filter(str_detect(word, "[a-z']$")) %>% 
+  anti_join(stop_words)
+
+tidy_mb_words <- tidy_mb %>% count(Filename...8, word) #correct up until this step
+
+mb.dtm <- tidy_mb_words %>% 
+  count(word, Filename...8) %>% 
+  cast_dtm(word, Filename...8, n)
+
+
 ```
 
 ```{r}
-dtm <- DocumentTermMatrix(mb.metadata)
-lda_model <- LDA(dtm, k = 10)
+
+mb.lda <- LDA(mb.dtm, k = 25, control = list(seed = 12345))
+mb.lda
+
+
+#dtm <- DocumentTermMatrix(tidy_mb)
+#lda_model <- LDA(dtm, k = 25)
+
+#ac.top.terms <- ac.topics %>%
+ # arrange(desc(beta)) %>% 
+ # group_by(topic) %>% slice(1:5)
+
+#ac.top.terms %>%
+#  mutate(term = reorder_within(term, beta, topic)) %>%
+#  ggplot(aes(beta, term, fill = factor(topic))) +
+#  geom_col(show.legend = FALSE) +
+ # facet_wrap(~ topic, scales = "free") +
+#  scale_y_reordered()
 
 mb.topics <- tidy(lda_model, matrix = "beta")
 head(mb.topics)
@@ -203,17 +239,17 @@ MB_lda %>%
 (@) What happens if you create a custom stopword list? How does this change the model?
 ```{r}
 
-custom_stopwords <- c("editorial", "committee", "to", "digitized", "by", "review", "google")
+custom_stopwords <- c("january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december", )
 stopwords <- c(stopwords, custom_stopwords)
-dtm <- DocumentTermMatrix(mb.metadata, control = list(stopwords = TRUE))
-lda_model <- LDA(dtm, k = 10)
+dtm <- DocumentTermMatrix(tidy_mb, control = list(stopwords = TRUE))
+lda_model <- LDA(dtm, k = 25)
 
 mb.topics <- tidy(lda_model, matrix = "beta")
 head(mb.topics)
 
 MB_lda <- mb.topics %>%
   arrange(desc(beta)) %>% 
-  group_by(topic) %>% slice(1:5)
+  group_by(topic) %>% slice(1:10)
 
 MB_lda %>%
   mutate(term = reorder_within(term, beta, topic)) %>%
@@ -226,6 +262,8 @@ MB_lda %>%
 
 (@) Can you create a topic model for just the documents in the 1920s? How does that change the model? 
 ```{r}
+mb_1920 <- tidy_mb %>% filter(Year == 1920) %>% select(Year, Month, OCR, Volume, No, Notes, Filename...8, word)
+
 
 
 ```
