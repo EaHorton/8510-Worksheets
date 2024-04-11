@@ -400,7 +400,7 @@ Write up a research plan in the space below. What are you looking to explore?
 
 Lets download the data. 
 ```{r}
-#| eval: false
+
 #zip file of all the .txt files. One for each issue. 
 download.file("https://github.com/dseefeldt/IndianaNewspapers/raw/main/bb-txt.zip", "bb-txt.zip")
 unzip("bb-txt.zip")

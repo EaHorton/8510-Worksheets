@@ -153,6 +153,9 @@ ggplot(data=topics.by.year, aes(x=issue_date, y=gamma)) + geom_bar(stat="identit
 Using this we can tell that topic 5, which from earlier had the words improve, grow, ties, contracts, and gasoline as the top five words, is most prominent in January 1915. 
 
 (@) Use the rest of this worksheet to experiment with topic modeling. I've added the code to download a much larger dataset - the issues of Mind and Body. This corpus has 413 documents ranging from the 1890s to 1936. You'll want to start with at least 25 topics. 
+
+SEE SEPARATE PROJECTS FOR MIND BODY AND BUFFALO BILL
+
 ```{r}
 #| eval: false
 #download.file("https://github.com/regan008/8510-TextAnalysisData/blob/main/MindAndBody.zip?raw=true", "MB.zip")
@@ -169,7 +172,7 @@ mb.metadata <- read.csv("https://raw.githubusercontent.com/regan008/8510-TextAna
 ```
 
 ```{r}
-
+#| eval: false
 data_dir_new <- paste(getwd(), "/txt", sep = "")
 mb <- readtext(paste0(data_dir, "/*.txt"))
 
@@ -201,9 +204,10 @@ mb.dtm <- tidy_mb_words %>%
 ```
 
 ```{r}
+#| eval: false
 
-mb.lda <- LDA(mb.dtm, k = 25, control = list(seed = 12345))
-mb.lda
+#mb.lda <- LDA(mb.dtm, k = 25, control = list(seed = 12345))
+#mb.lda
 
 
 #dtm <- DocumentTermMatrix(tidy_mb)
@@ -220,7 +224,7 @@ mb.lda
  # facet_wrap(~ topic, scales = "free") +
 #  scale_y_reordered()
 
-mb.topics <- tidy(lda_model, matrix = "beta")
+#mb.topics <- tidy(lda_model, matrix = "beta")
 head(mb.topics)
 
 MB_lda <- mb.topics %>%
@@ -238,6 +242,7 @@ MB_lda %>%
 
 (@) What happens if you create a custom stopword list? How does this change the model?
 ```{r}
+#| eval: false
 
 custom_stopwords <- c("january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december", )
 stopwords <- c(stopwords, custom_stopwords)
@@ -262,6 +267,9 @@ MB_lda %>%
 
 (@) Can you create a topic model for just the documents in the 1920s? How does that change the model? 
 ```{r}
+#| eval: false
+
+
 mb_1920 <- tidy_mb %>% filter(Year == 1920) %>% select(Year, Month, OCR, Volume, No, Notes, Filename...8, word)
 
 
@@ -283,7 +291,59 @@ Add code blocks below as necessary.
 
 (@) Finally, when you are all done. Write up your findings. What research question did you focus on and what did you learn? 
 
+```{r}
+#| eval: false
 
+
+#url <- "https://github.com/dseefeldt/IndianaNewspapers/raw/main/bb-txt.zip"
+#download.file(url = url, destfile = "./bb-txt.zip")
+#unzip(zipfile = "./bb-txt.zip", exdir = "./bb-txt")
+
+
+
+#zip file of all the .txt files. One for each issue. 
+download.file("https://github.com/dseefeldt/IndianaNewspapers/raw/main/bb-txt.zip", "bb-txt.zip")
+unzip("bb-txt.zip")
+
+# Metadata that includes info about each article.
+bb.metadata <- read.csv("https://raw.githubusercontent.com/dseefeldt/IndianaNewspapers/main/metadata.csv")
+
+
+bb.meta.tidy <- tidyr::separate(bb.metadata, Date, c('month_day', 'year'), sep = ",",remove = FALSE)
+
+data_dir_bb <- paste(getwd(), "./bb-txt", sep = "")
+bb <- readtext(paste0(data_dir_bb, ".bb-txt"))
+
+bb_new  <- bb %>% 
+  plyr::rename(c("doc_id" = "Filename"))
+
+
+bb_whole <- 
+  bb.meta.tidy %>%  
+  arrange(year) %>% # sort metadata
+  bind_cols(bb_new) %>% # combine with texts
+  as_tibble() # convert to tibble for better screen viewing
+
+glimpse(bb_whole)
+
+bb_whole_tidy <- bb_whole %>% 
+  unnest_tokens(word, text)  %>% #creates a new data frame with each text file broken into tokens
+  anti_join(stop_words)# eliminates stop words 
+
+bb.whole.n.count <- bb_whole_tidy %>%
+  count(word, sort = TRUE) #just counting words to get my bearings 
+```
+
+
+
+```{r}
+
+```
+
+
+```{r}
+
+```
 
 **This was the final worksheet for this class. You did it - you learned to code in R! Congrats!**
 

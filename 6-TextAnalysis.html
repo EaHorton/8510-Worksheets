@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Addison Horton">
+<meta name="dcterms.date" content="2024-04-03">
+
+<title>Worksheet 6: Text Analysis</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="6-TextAnalysis_files/libs/clipboard/clipboard.min.js"></script>
+<script src="6-TextAnalysis_files/libs/quarto-html/quarto.js"></script>
+<script src="6-TextAnalysis_files/libs/quarto-html/popper.min.js"></script>
+<script src="6-TextAnalysis_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="6-TextAnalysis_files/libs/quarto-html/anchor.min.js"></script>
+<link href="6-TextAnalysis_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="6-TextAnalysis_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="6-TextAnalysis_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="6-TextAnalysis_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="6-TextAnalysis_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Worksheet 6: Text Analysis</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Addison Horton </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">April 3, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<p><em>This is the sixth in a series of worksheets for History 8510 at Clemson University. The goal of these worksheets is simple: practice, practice, practice. The worksheet introduces concepts and techniques and includes prompts for you to practice in this interactive document. When you are finished, you should change the author name (above), knit your document, and upload it to canvas. Don’t forget to commit your changes as you go and push to github when you finish the worksheet.</em></p>
+<p>Text analysis is an umbrella for a number of different methodologies. Generally speaking, it involves taking a set (or corpus) of textual sources, turning them into data that a computer can understand, and then running calculations and algorithms using that data. Typically, at its most basic level, that involves the counting of words.</p>
+<p><strong>Text analysis can be broken down into 4 general steps:</strong></p>
+<ol type="1">
+<li>Acquiring a corpus</li>
+<li>Preparing the text or Pre-processing</li>
+<li>Choosing an analytical tool * (There are many different tools or methods for text analysis. Take a minute and Google each of these methodologies: tf-idf, topic modeling, sentiment analysis, word vector analysis, n-grams)</li>
+<li>Analyzing the results</li>
+</ol>
+<p>In this worksheet we are focusing on basic text analysis. We’ll learn how to load textual data into R, how to prepare it, and then how to analyze it using tf-idf or term-frequency according to inverse document frequency.</p>
+<p>Before doing too much, lets load a few relevant libraries. The last few you will likely need to install.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytext) </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readtext)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(widyr)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SnowballC)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="acquiring-a-corpus" class="level2">
+<h2 class="anchored" data-anchor-id="acquiring-a-corpus">Acquiring a Corpus</h2>
+<p>First, lets install the State of the Union package. This package contains text of all the state of the Union addresses from Washington to Trump. Run <code>install.packages</code> to install the <code>sotu</code> package.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sotu)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This package includes both the metadata about these speeches in <code>sotu_meta</code> and the texts themselves in <code>sotu_texts</code>. Lets first look at the metadata associated with this package.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>meta <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(sotu_meta)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(meta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  X         president year years_active       party sotu_type
+1 1 George Washington 1790    1789-1793 Nonpartisan    speech
+2 2 George Washington 1790    1789-1793 Nonpartisan    speech
+3 3 George Washington 1791    1789-1793 Nonpartisan    speech
+4 4 George Washington 1792    1789-1793 Nonpartisan    speech
+5 5 George Washington 1793    1793-1797 Nonpartisan    speech
+6 6 George Washington 1794    1793-1797 Nonpartisan    speech</code></pre>
+</div>
+</div>
+<p>This package also includes a function that will let us write all of the files to disk. This is crucial but also an unusual step because when conducting text analysis in the real world, you will not have an R package filled with the data. Rather you will have to organize the metadata and load the files yourself. Writing these to the disk allows us to practice that step.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>file_paths <span class="ot">&lt;-</span> <span class="fu">sotu_dir</span>(<span class="at">dir =</span> <span class="st">"sotu_files"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(file_paths)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "sotu_files/george-washington-1790a.txt"
+[2] "sotu_files/george-washington-1790b.txt"
+[3] "sotu_files/george-washington-1791.txt" 
+[4] "sotu_files/george-washington-1792.txt" 
+[5] "sotu_files/george-washington-1793.txt" 
+[6] "sotu_files/george-washington-1794.txt" </code></pre>
+</div>
+</div>
+<p>What this does is create a new directory (sotu_files) and adds each State of the Union address as a text file. Notice each speech is its own .txt file that is comprised of just the text of the speech.</p>
+<ol class="example" type="1">
+<li>Take a look at the directory in your files pane and open one of the documents.</li>
+</ol>
+<p>Now lets load all these texts into R using the <code>readtext()</code> function. First look up the documentation for this function and read about it.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>sotu_texts <span class="ot">&lt;-</span> <span class="fu">readtext</span>(file_paths)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Take a look at sotu_texts now. Notice that we have two columns, one filled with the text, and one with a document id.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sotu_texts, <span class="at">n =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>readtext object consisting of 5 documents and 0 docvars.
+# A data frame: 5 × 2
+  doc_id                   text                 
+* &lt;chr&gt;                    &lt;chr&gt;                
+1 abraham-lincoln-1861.txt "\"\n\n Fellow-\"..."
+2 abraham-lincoln-1862.txt "\"\n\n Fellow-\"..."
+3 abraham-lincoln-1863.txt "\"\n\n Fellow-\"..."
+4 abraham-lincoln-1864.txt "\"\n\n Fellow-\"..."
+5 andrew-jackson-1829.txt  "\"\n\n Fellow \"..."</code></pre>
+</div>
+</div>
+<p>Now our textual data is loaded into R but the textual data and the metadata are in two different data frames. Lets combine them. Note that this isn’t the way I would typically recommend doing this but its a quirk of the SOTU data. Typically when I create a metadata spreadsheet for a textual dataset I have a column for the file name which makes joining the textual data and metadata together easier. Here, we’ll need to sort the dataset so that is alphabetical and then join the two together.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>sotu_whole <span class="ot">&lt;-</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  sotu_meta <span class="sc">%&gt;%</span>  </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(president) <span class="sc">%&gt;%</span> <span class="co"># sort metadata</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(sotu_texts) <span class="sc">%&gt;%</span> <span class="co"># combine with texts</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="co"># convert to tibble for better screen viewing</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(sotu_whole)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 240
+Columns: 8
+$ X            &lt;int&gt; 73, 74, 75, 76, 41, 42, 43, 44, 45, 46, 47, 48, 77, 78, 7…
+$ president    &lt;chr&gt; "Abraham Lincoln", "Abraham Lincoln", "Abraham Lincoln", …
+$ year         &lt;int&gt; 1861, 1862, 1863, 1864, 1829, 1830, 1831, 1832, 1833, 183…
+$ years_active &lt;chr&gt; "1861-1865", "1861-1865", "1861-1865", "1861-1865", "1829…
+$ party        &lt;chr&gt; "Republican", "Republican", "Republican", "Republican", "…
+$ sotu_type    &lt;chr&gt; "written", "written", "written", "written", "written", "w…
+$ doc_id       &lt;chr&gt; "abraham-lincoln-1861.txt", "abraham-lincoln-1862.txt", "…
+$ text         &lt;chr&gt; "\n\n Fellow-Citizens of the Senate and House of Represen…</code></pre>
+</div>
+</div>
+<p>Now our data is loaded into R and its ready to be pre-processed.</p>
+</section>
+<section id="pre-processing" class="level2">
+<h2 class="anchored" data-anchor-id="pre-processing">Pre-Processing</h2>
+<section id="tokenizing" class="level3">
+<h3 class="anchored" data-anchor-id="tokenizing">Tokenizing</h3>
+<p>One of the most basic pre-processing techniques for textual data is to tokenize it. Tokenization is essentially splitting a phrase, sentence, paragraph, or an entire text document into smaller units, such as individual words or terms. Each of these smaller units are called tokens. The tokens could be words, numbers or punctuation marks but, for historians, its common to remove the numbers and punctuation too. To do this we’ll create a data frame where each row contains a single word with its metadata as unit of observation.</p>
+<p><code>tidytext</code> provides a function called <code>unnest_tokens().</code> We can use this to convert our sotu_whole data frame into one that is tokenized. It takes three arguments:</p>
+<pre><code>* a tibble or data frame which contains the text
+* the name of the newly created column that will contain the tokens
+* the name of the column within the data frame which contains the text to be tokenized</code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>tidy_sotu <span class="ot">&lt;-</span> sotu_whole <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(word, text)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>tidy_sotu</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,988,203 × 8
+       X president        year years_active party      sotu_type doc_id    word 
+   &lt;int&gt; &lt;chr&gt;           &lt;int&gt; &lt;chr&gt;        &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;
+ 1    73 Abraham Lincoln  1861 1861-1865    Republican written   abraham-… fell…
+ 2    73 Abraham Lincoln  1861 1861-1865    Republican written   abraham-… citi…
+ 3    73 Abraham Lincoln  1861 1861-1865    Republican written   abraham-… of   
+ 4    73 Abraham Lincoln  1861 1861-1865    Republican written   abraham-… the  
+ 5    73 Abraham Lincoln  1861 1861-1865    Republican written   abraham-… sena…
+ 6    73 Abraham Lincoln  1861 1861-1865    Republican written   abraham-… and  
+ 7    73 Abraham Lincoln  1861 1861-1865    Republican written   abraham-… house
+ 8    73 Abraham Lincoln  1861 1861-1865    Republican written   abraham-… of   
+ 9    73 Abraham Lincoln  1861 1861-1865    Republican written   abraham-… repr…
+10    73 Abraham Lincoln  1861 1861-1865    Republican written   abraham-… in   
+# ℹ 1,988,193 more rows</code></pre>
+</div>
+</div>
+<p><code>unnest_tokens()</code> also did something else that is really important: it made everything lowercase and took out all punctuation. The function contains options if we wanted to keep those elements, but for our purposes we don’t.</p>
+<p>The function <code>unnest_tokens()</code> also has an option called token. Tokenizing by word is the default but you could also tokenize by characters, ngrams, lines, or sentences.</p>
+<p>(@)Use the documentation to tokenize the dataset into sentences:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>tidy_sotu_sentences <span class="ot">&lt;-</span> sotu_whole <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(sentence, text, <span class="at">token =</span> <span class="st">"sentences"</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(tidy_sotu_sentences)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 8
+      X president        year years_active party      sotu_type doc_id  sentence
+  &lt;int&gt; &lt;chr&gt;           &lt;int&gt; &lt;chr&gt;        &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;   &lt;chr&gt;   
+1    73 Abraham Lincoln  1861 1861-1865    Republican written   abraha… fellow-…
+2    73 Abraham Lincoln  1861 1861-1865    Republican written   abraha… you wil…
+3    73 Abraham Lincoln  1861 1861-1865    Republican written   abraha… a dislo…
+4    73 Abraham Lincoln  1861 1861-1865    Republican written   abraha… a natio…
+5    73 Abraham Lincoln  1861 1861-1865    Republican written   abraha… nations…
+6    73 Abraham Lincoln  1861 1861-1865    Republican written   abraha… the dis…</code></pre>
+</div>
+</div>
+<p>We’ve talked about n-grams loosely in class. But lets define it more formally. An n-gram is a contiguous sequence of n items from a given sample of text or speech. The n stands for the number of items. So for example, a bi-gram is sets of two words.</p>
+<p>For example, if I had the string: “Nothing to fear but fear itself” A bi-gram would look like this: Nothing to, to fear, fear but, but fear, fear itself.</p>
+<p>A tri-gram would look like this: Nothing to fear, to fear but, but fear itself</p>
+<p>We can use unnest_tokens() to create n-grams for us. To do that we just have to add an extra option that defines n.&nbsp;</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>sotu_bigrams <span class="ot">&lt;-</span> sotu_whole <span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(bigram, text, <span class="at">token =</span> <span class="st">"ngrams"</span>, <span class="at">n =</span> <span class="dv">2</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sotu_bigrams<span class="sc">$</span>bigram)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "fellow citizens" "citizens of"     "of the"          "the senate"     
+[5] "senate and"      "and house"      </code></pre>
+</div>
+</div>
+<ol start="2" class="example" type="1">
+<li>Use <code>unest_tokens()</code> to create tri-grams.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>sotu_trigrams <span class="ot">&lt;-</span> sotu_whole <span class="sc">%&gt;%</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(trigram, text, <span class="at">token =</span> <span class="st">"ngrams"</span>, <span class="at">n =</span> <span class="dv">3</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sotu_trigrams<span class="sc">$</span>trigram)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "fellow citizens of" "citizens of the"    "of the senate"     
+[4] "the senate and"     "senate and house"   "and house of"      </code></pre>
+</div>
+</div>
+</section>
+<section id="stopwords" class="level3">
+<h3 class="anchored" data-anchor-id="stopwords">Stopwords</h3>
+<p>Another crucial component of text analysis is removing stopwords. Stopwords are words like “I, he, she, of, the” that are common and don’t convey meaning. Because they are highly common they don’t tell us anything about the content of the text itself.</p>
+<p>There are stopwords that come with the <code>tidytext</code> package.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>stop_words</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,149 × 2
+   word        lexicon
+   &lt;chr&gt;       &lt;chr&gt;  
+ 1 a           SMART  
+ 2 a's         SMART  
+ 3 able        SMART  
+ 4 about       SMART  
+ 5 above       SMART  
+ 6 according   SMART  
+ 7 accordingly SMART  
+ 8 across      SMART  
+ 9 actually    SMART  
+10 after       SMART  
+# ℹ 1,139 more rows</code></pre>
+</div>
+</div>
+<p>This is just one example of stopwords. You can find other lists such as stopwords in other languages or <a href="https://www.matthewjockers.net/macroanalysisbook/expanded-stopwords-list/">stopwords designed specifically for the 19th century.</a> Its also possible you may want to edit the list of stopwords to include some of your own. For example, if we wanted to add the word, “America” to the stopwords list we could use add_row to do so:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>stop_words_custom <span class="ot">&lt;-</span> stop_words <span class="sc">%&gt;%</span> <span class="fu">add_row</span>(<span class="at">word=</span><span class="st">"America"</span>, <span class="at">lexicon=</span><span class="st">"NA"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>For now lets just remove the default stopwords. The easiest way to do that here is to do an anti-join. We join and return all rows from our table of tokens tidy_sotu where there are no matching values in our list of stopwords.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>tidy_sotu_words <span class="ot">&lt;-</span> tidy_sotu <span class="sc">%&gt;%</span> </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(stop_words)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(word)`</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>tidy_sotu_words</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 787,851 × 8
+       X president        year years_active party      sotu_type doc_id    word 
+   &lt;int&gt; &lt;chr&gt;           &lt;int&gt; &lt;chr&gt;        &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;
+ 1    73 Abraham Lincoln  1861 1861-1865    Republican written   abraham-… fell…
+ 2    73 Abraham Lincoln  1861 1861-1865    Republican written   abraham-… citi…
+ 3    73 Abraham Lincoln  1861 1861-1865    Republican written   abraham-… sena…
+ 4    73 Abraham Lincoln  1861 1861-1865    Republican written   abraham-… house
+ 5    73 Abraham Lincoln  1861 1861-1865    Republican written   abraham-… repr…
+ 6    73 Abraham Lincoln  1861 1861-1865    Republican written   abraham-… midst
+ 7    73 Abraham Lincoln  1861 1861-1865    Republican written   abraham-… unpr…
+ 8    73 Abraham Lincoln  1861 1861-1865    Republican written   abraham-… poli…
+ 9    73 Abraham Lincoln  1861 1861-1865    Republican written   abraham-… trou…
+10    73 Abraham Lincoln  1861 1861-1865    Republican written   abraham-… grat…
+# ℹ 787,841 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">#another way to do this would be to filter by words NOT in the stop word list like this:  filter(!word %in% stop_words$word)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="stemming" class="level3">
+<h3 class="anchored" data-anchor-id="stemming">Stemming</h3>
+<p>The third common kind of pre-process is called word stemming. This process reduces a word to its root stem. So for example: fishing becomes fish, fished becomes fish, fishes becomes fish. You can easily see how this might be useful for capturing all forms of a word.</p>
+<p><code>tidytext</code> doesn’t have its own word stemming function. Instead we have to rely on the functions provided by <code>hunspell</code> or <code>SnowballC</code>. I prefer <code>SnowballC</code>. You may need to install it before running the below code.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SnowballC)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>tidy_sotu_words <span class="sc">%&gt;%</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">word_stem =</span> <span class="fu">wordStem</span>(word))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 787,851 × 9
+       X president      year years_active party sotu_type doc_id word  word_stem
+   &lt;int&gt; &lt;chr&gt;         &lt;int&gt; &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;    
+ 1    73 Abraham Linc…  1861 1861-1865    Repu… written   abrah… fell… fellow   
+ 2    73 Abraham Linc…  1861 1861-1865    Repu… written   abrah… citi… citizen  
+ 3    73 Abraham Linc…  1861 1861-1865    Repu… written   abrah… sena… senat    
+ 4    73 Abraham Linc…  1861 1861-1865    Repu… written   abrah… house hous     
+ 5    73 Abraham Linc…  1861 1861-1865    Repu… written   abrah… repr… repres   
+ 6    73 Abraham Linc…  1861 1861-1865    Repu… written   abrah… midst midst    
+ 7    73 Abraham Linc…  1861 1861-1865    Repu… written   abrah… unpr… unpreced 
+ 8    73 Abraham Linc…  1861 1861-1865    Repu… written   abrah… poli… polit    
+ 9    73 Abraham Linc…  1861 1861-1865    Repu… written   abrah… trou… troubl   
+10    73 Abraham Linc…  1861 1861-1865    Repu… written   abrah… grat… gratitud 
+# ℹ 787,841 more rows</code></pre>
+</div>
+</div>
+<p>Now if you compare the word and word_stem columns you can see the effect that wordStem had. Notice that it works well in cases like</p>
+<p>citizens = citizen</p>
+<p>But it does some odd things to words like representatives. Whether this is useful for you will depend on the question your asking (and the OCR accuracy) but its a useful technique to be familiar with nevertheless.</p>
+</section>
+</section>
+<section id="analysis" class="level2">
+<h2 class="anchored" data-anchor-id="analysis">Analysis</h2>
+<p>Lets reset our work space and ensure that our df is loaded with single tokenized words and filter by our stopword list. Go ahead and clear your environment using the broom button and then run the below code. This code is simply everything we’ve run up to this point.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>meta <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(sotu_meta)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>file_paths <span class="ot">&lt;-</span> <span class="fu">sotu_dir</span>(<span class="at">dir =</span> <span class="st">"sotu_files"</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>sotu_texts <span class="ot">&lt;-</span> <span class="fu">readtext</span>(file_paths)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>sotu_whole <span class="ot">&lt;-</span> </span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  sotu_meta <span class="sc">%&gt;%</span>  </span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(president) <span class="sc">%&gt;%</span> <span class="co"># sort metadata</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(sotu_texts) <span class="sc">%&gt;%</span> <span class="co"># combine with texts</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() </span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>tidy_sotu <span class="ot">&lt;-</span> sotu_whole <span class="sc">%&gt;%</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(word, text) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(stop_words)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(word)`</code></pre>
+</div>
+</div>
+<ol start="3" class="example" type="1">
+<li>Before we move forward, take a minute a describe the chunk of code you just ran. What does each section do and how does it reflect the workflow for a topic modeling project? What are the important steps that are unique to topic modeling?</li>
+</ol>
+<blockquote class="blockquote">
+<p>The first 8 lines of the code above are included under the “acquiring your corpus” umbrella. The first line converts sotu_meta into a data frame. The second line creates the file path - remember this step is unique in this case becuase the dataset is already included in R. The third line reads in the data. The final chunk of ‘acquiring corpus’ sorts the metadata and combines it with the text. Converting it to tibble allows for better screen viewing. The second chunk is “preprocessing.” It converts the texts into single word n-grams and removes stopwords.</p>
+</blockquote>
+<p>The most basic kind of analysis we might be interested in doing is counting words. We can do that easily using the <code>count()</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>tidy_sotu <span class="sc">%&gt;%</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(word, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 29,897 × 2
+   word           n
+   &lt;chr&gt;      &lt;int&gt;
+ 1 government  7597
+ 2 congress    5808
+ 3 united      5156
+ 4 people      4298
+ 5 country     3641
+ 6 public      3419
+ 7 time        3188
+ 8 american    2988
+ 9 war         2976
+10 world       2633
+# ℹ 29,887 more rows</code></pre>
+</div>
+</div>
+<p>Now we know that the most used word in state of the union speeches is government. But what if we wanted to look at when presidents use the words war versus the word peace?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>tidy_sotu <span class="sc">%&gt;%</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(word <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"war"</span>, <span class="st">"peace"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(year, word)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 442 × 3
+    year word      n
+   &lt;int&gt; &lt;chr&gt; &lt;int&gt;
+ 1  1790 peace     3
+ 2  1790 war       4
+ 3  1791 peace     4
+ 4  1791 war       1
+ 5  1792 peace     5
+ 6  1792 war       2
+ 7  1793 peace     6
+ 8  1793 war       4
+ 9  1794 peace     3
+10  1794 war       1
+# ℹ 432 more rows</code></pre>
+</div>
+</div>
+<p>This data frame is to big to understand quickly without visualizing it. We can create a bar chart to better understand it:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>tidy_sotu <span class="sc">%&gt;%</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(word <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"war"</span>, <span class="st">"peace"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(year, word) <span class="sc">%&gt;%</span> </span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(year, n, <span class="at">fill =</span> word)) <span class="sc">+</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">"fill"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="6-TextAnalysis_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>We also might want to ask about the average length of each president’s state of the union address. Who had the longest speech and who had the shortest?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>tidy_sotu <span class="sc">%&gt;%</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(president, doc_id)  <span class="sc">%&gt;%</span> </span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(president) <span class="sc">%&gt;%</span> </span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">avg_words =</span> <span class="fu">mean</span>(n)) <span class="sc">%&gt;%</span> </span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(avg_words))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 42 × 2
+   president           avg_words
+   &lt;chr&gt;                   &lt;dbl&gt;
+ 1 William Howard Taft     9126.
+ 2 William McKinley        7797 
+ 3 Jimmy Carter            7673.
+ 4 Theodore Roosevelt      7356 
+ 5 James K. Polk           6920.
+ 6 Grover Cleveland        5736.
+ 7 James Buchanan          5409 
+ 8 Benjamin Harrison       5308.
+ 9 Rutherford B. Hayes     4411 
+10 Martin Van Buren        4286.
+# ℹ 32 more rows</code></pre>
+</div>
+</div>
+<ol start="4" class="example" type="1">
+<li>Think back to the metadata that we loaded about these speeches. Why are more modern president’s state of the union addresses shorter?</li>
+</ol>
+<blockquote class="blockquote">
+<p>The stop words are calibrated based on our modern vocabulary! Modern speeches are shorter becuase more words were ommitted.</p>
+</blockquote>
+<ol start="5" class="example" type="1">
+<li>Filter the dataset to address this discrepancy and the recreate these statistics:</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>sotu_nostop <span class="ot">&lt;-</span> sotu_whole <span class="sc">%&gt;%</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(word, text)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>sotu_nostop <span class="sc">%&gt;%</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(president, doc_id)  <span class="sc">%&gt;%</span> </span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(president) <span class="sc">%&gt;%</span> </span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">avg_words =</span> <span class="fu">mean</span>(n)) <span class="sc">%&gt;%</span> </span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(avg_words))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 42 × 2
+   president           avg_words
+   &lt;chr&gt;                   &lt;dbl&gt;
+ 1 William Howard Taft    22689 
+ 2 Theodore Roosevelt     19741 
+ 3 William McKinley       18648.
+ 4 James K. Polk          18052.
+ 5 Jimmy Carter           16076.
+ 6 James Buchanan         14136 
+ 7 Grover Cleveland       14027.
+ 8 Benjamin Harrison      13668 
+ 9 Martin Van Buren       11365.
+10 Rutherford B. Hayes    10935.
+# ℹ 32 more rows</code></pre>
+</div>
+</div>
+<section id="term-frequency" class="level3">
+<h3 class="anchored" data-anchor-id="term-frequency">Term Frequency</h3>
+<p>Often, the raw frequency of a term is not as useful as relative frequency. In other words, how often that word appears relative to the total number of words in a text. This ratio is called <strong>term frequency</strong>.</p>
+<p>You can calculate the term frequency by dividing the total occurrences of a word by the total number of words. Typically you want to do this per document.</p>
+<p>Here’s an easy way to calculate it:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>tidy_sotu_rel.freq <span class="ot">&lt;-</span> tidy_sotu <span class="sc">%&gt;%</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(doc_id, word, <span class="at">sort =</span> T)  <span class="sc">%&gt;%</span><span class="co"># count occurrence of word and sort descending</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(doc_id) <span class="sc">%&gt;%</span> </span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">n_tot =</span> <span class="fu">sum</span>(n), <span class="co"># count total number of words per doc</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">term_freq =</span> n<span class="sc">/</span>n_tot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can assume that words with a high frequency in the text are more important or significant. Here we can find the words with the most significance for each president:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>tidy_sotu <span class="sc">%&gt;%</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(president, word)  <span class="sc">%&gt;%</span>  <span class="co"># count n for each word</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(president) <span class="sc">%&gt;%</span> </span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">n_tot =</span> <span class="fu">sum</span>(n), <span class="co"># count total number of words per doc</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">term_freq =</span> n<span class="sc">/</span>n_tot) <span class="sc">%&gt;%</span> </span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(term_freq)) <span class="sc">%&gt;%</span> <span class="co"># sort by term frequency</span></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">1</span>) <span class="sc">%&gt;%</span>  <span class="co"># take the top for each president</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">n =</span> <span class="cn">Inf</span>) <span class="co"># print all rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Selecting by term_freq</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 44 × 5
+# Groups:   president [42]
+   president             word           n n_tot term_freq
+   &lt;chr&gt;                 &lt;chr&gt;      &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;
+ 1 John Adams            united        49  2768   0.0177 
+ 2 John Tyler            government   209 12596   0.0166 
+ 3 Martin Van Buren      government   256 17145   0.0149 
+ 4 William J. Clinton    people       336 22713   0.0148 
+ 5 Franklin D. Roosevelt war          283 19311   0.0147 
+ 6 William McKinley      government   452 31188   0.0145 
+ 7 Andrew Jackson        government   436 31031   0.0141 
+ 8 Donald Trump          american     135  9690   0.0139 
+ 9 Andrew Johnson        government   207 14968   0.0138 
+10 George Washington     united        86  6226   0.0138 
+11 Calvin Coolidge       government   274 20518   0.0134 
+12 James K. Polk         mexico       360 27679   0.0130 
+13 James Buchanan        government   279 21636   0.0129 
+14 Zachary Taylor        congress      38  2948   0.0129 
+15 Ulysses S. Grant      united       359 27933   0.0129 
+16 William Howard Taft   government   461 36506   0.0126 
+17 Grover Cleveland      government   574 45889   0.0125 
+18 Franklin Pierce       united       200 16240   0.0123 
+19 George Bush           world         82  6706   0.0122 
+20 James Monroe          united       184 15157   0.0121 
+21 George W. Bush        america      209 17265   0.0121 
+22 Millard Fillmore      government   135 11986   0.0113 
+23 John Quincy Adams     congress     131 11788   0.0111 
+24 Harry S Truman        war          308 27819   0.0111 
+25 Gerald R. Ford        federal       65  5879   0.0111 
+26 Herbert Hoover        government   121 10947   0.0111 
+27 Rutherford B. Hayes   congress     194 17644   0.0110 
+28 Chester A. Arthur     government   185 16961   0.0109 
+29 Lyndon B. Johnson     congress     115 11207   0.0103 
+30 James Madison         war           85  8327   0.0102 
+31 Barack Obama          america      204 20529   0.00994
+32 Benjamin Harrison     government   209 21230   0.00984
+33 Richard M. Nixon      federal      232 23701   0.00979
+34 Jimmy Carter          congress     518 53710   0.00964
+35 John F. Kennedy       world         68  7302   0.00931
+36 Theodore Roosevelt    government   528 58848   0.00897
+37 Ronald Reagan         government   133 15005   0.00886
+38 Ronald Reagan         people       133 15005   0.00886
+39 Woodrow Wilson        government   105 11982   0.00876
+40 Warren G. Harding     public        39  4583   0.00851
+41 Dwight D. Eisenhower  world        204 24410   0.00836
+42 Thomas Jefferson      country       58  7418   0.00782
+43 Abraham Lincoln       congress      81 10462   0.00774
+44 Abraham Lincoln       united        81 10462   0.00774</code></pre>
+</div>
+</div>
+<ol start="6" class="example" type="1">
+<li>The code above is commented to help you follow it. Walk through the code above, and explain what each line does in your own words. If its a function you are unfamiliar with, look up the documentation.</li>
+</ol>
+<blockquote class="blockquote">
+<p>The first line opens the dataset. The second line counts the words for each president. The third lumps these words together per president. The next two lines create two new columns, n_tot and term_freq - the first composed of the total amount of words per doc and the second dividing the number of occurrences of a single word by the total number of words in the doc. The next lines organize the information - from highest frequency to lowest, only spitting out the highest for each president, and then printing this info.</p>
+</blockquote>
+</section>
+<section id="tf-idf" class="level3">
+<h3 class="anchored" data-anchor-id="tf-idf">TF-IDF</h3>
+<p>The above measures the frequency of terms within individual documents. But what if we know about words that seem more important based on the contents of the <strong>entire</strong> corpus? That is where tf-idf or term-frequency according to inverse document frequency comes in.</p>
+<p>Tf-idf measures how important a word is within a corpus by scaling term frequency per document according to the inverse of the term’s document frequency (number of documents within the corpus in which the term appears divided by the number of documents). The tf–idf value increases proportionally to the number of times a word appears in the document and is offset by the number of documents in the corpus that contain the word, which helps to adjust for the fact that some words appear more frequently in general.</p>
+<p>Don’t worry too much about how tf-idf is calculated. But if you feel like you are a bit lost and want to understand the specifics - I recommend reading the <a href="https://en.wikipedia.org/wiki/Tf%E2%80%93idf">tf-idf wikipedia page</a> and this blog post from <a href="https://www.learndatasci.com/glossary/tf-idf-term-frequency-inverse-document-frequency/"><em>Learn Data Science</em></a>.</p>
+<p>We’ll calculate tf-idf in the next code chunk but lets talk for a second about what that number will represent. It will be:</p>
+<pre><code>* lower for words that appear frequently in many documents of the corpus, and lowest              when the word occurs in virtually all documents.
+* higher for words that appear frequently in just a few documents of the corpus,                  this lending high discriminatory power to those few documents.</code></pre>
+<p>Luckily, <code>tidytext</code> provides a function for calculating tf-idf. To calculate tf-idf the function needs a list of every word in every document and the count. Like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>tidy_sotu <span class="sc">%&gt;%</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(doc_id, word, <span class="at">sort =</span> <span class="cn">TRUE</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 358,186 × 3
+   doc_id                       word               n
+   &lt;chr&gt;                        &lt;chr&gt;          &lt;int&gt;
+ 1 harry-s-truman-1946.txt      dollars          207
+ 2 jimmy-carter-1980b.txt       congress         204
+ 3 harry-s-truman-1946.txt      war              201
+ 4 william-howard-taft-1910.txt government       164
+ 5 james-k-polk-1846.txt        mexico           158
+ 6 richard-m-nixon-1974b.txt    federal          141
+ 7 harry-s-truman-1946.txt      million          138
+ 8 harry-s-truman-1946.txt      fiscal           129
+ 9 jimmy-carter-1981.txt        administration   129
+10 william-howard-taft-1912.txt government       129
+# ℹ 358,176 more rows</code></pre>
+</div>
+</div>
+<p>We can feed that to the function and get the tf-idf:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>sotu.tf.idf <span class="ot">&lt;-</span> tidy_sotu <span class="sc">%&gt;%</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(doc_id, word, <span class="at">sort =</span> <span class="cn">TRUE</span>)  <span class="sc">%&gt;%</span>  </span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_tf_idf</span>(word, doc_id, n) </span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sotu.tf.idf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 6
+  doc_id                       word           n     tf     idf    tf_idf
+  &lt;chr&gt;                        &lt;chr&gt;      &lt;int&gt;  &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;
+1 harry-s-truman-1946.txt      dollars      207 0.0164 0.598   0.00981  
+2 jimmy-carter-1980b.txt       congress     204 0.0126 0.00418 0.0000528
+3 harry-s-truman-1946.txt      war          201 0.0159 0.0339  0.000540 
+4 william-howard-taft-1910.txt government   164 0.0147 0.00418 0.0000613
+5 james-k-polk-1846.txt        mexico       158 0.0225 0.799   0.0180   
+6 richard-m-nixon-1974b.txt    federal      141 0.0141 0.293   0.00414  </code></pre>
+</div>
+</div>
+<p>The resulting data frame has 3 columns: term frequency (tf), inverse document frequency (idf) and Tf-idf (tf_idf).</p>
+<p>Lets look at what the words with the highest tf-idf score are.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>sotu.tf.idf <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(tf_idf))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 358,186 × 6
+   doc_id                        word          n      tf   idf tf_idf
+   &lt;chr&gt;                         &lt;chr&gt;     &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+ 1 donald-trump-2019.txt         applause    104 0.0424   2.22 0.0942
+ 2 lyndon-b-johnson-1966.txt     vietnam      32 0.0152   2.35 0.0356
+ 3 jimmy-carter-1980a.txt        soviet       31 0.0218   1.49 0.0325
+ 4 george-w-bush-2003.txt        hussein      19 0.00811  3.87 0.0314
+ 5 george-w-bush-2003.txt        saddam       19 0.00811  3.69 0.0299
+ 6 franklin-d-roosevelt-1943.txt 1942         13 0.00758  3.87 0.0294
+ 7 dwight-d-eisenhower-1961.txt  1953         23 0.00747  3.87 0.0289
+ 8 john-adams-1800.txt           gentlemen     8 0.0153   1.77 0.0270
+ 9 benjamin-harrison-1892.txt    1892         40 0.00741  3.53 0.0262
+10 franklin-d-roosevelt-1942.txt hitler        7 0.00527  4.79 0.0252
+# ℹ 358,176 more rows</code></pre>
+</div>
+</div>
+<ol start="7" class="example" type="1">
+<li>Pick a president who served more than one term. Filter the dataset and generate both raw word counts and tf-idf scores for that president. What words are most significant in each method? Why and what does that tell you about that president?</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>sotu.tf.idf.TeddyRoosevelt <span class="ot">&lt;-</span> tidy_sotu <span class="sc">%&gt;%</span> <span class="fu">filter</span> (president <span class="sc">==</span> <span class="st">"Theodore Roosevelt"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(doc_id, word, <span class="at">sort =</span> <span class="cn">TRUE</span>)  <span class="sc">%&gt;%</span>  </span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_tf_idf</span>(word, doc_id, n) </span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>sotu.tf.idf.TeddyRoosevelt <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(tf_idf))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 22,967 × 6
+   doc_id                      word           n      tf   idf  tf_idf
+   &lt;chr&gt;                       &lt;chr&gt;      &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+ 1 theodore-roosevelt-1903.txt colombia      28 0.00466 0.981 0.00457
+ 2 theodore-roosevelt-1903.txt colombian     13 0.00216 2.08  0.00449
+ 3 theodore-roosevelt-1905.txt domingo       18 0.00197 2.08  0.00410
+ 4 theodore-roosevelt-1905.txt santo         18 0.00197 2.08  0.00410
+ 5 theodore-roosevelt-1906.txt colored       14 0.00159 2.08  0.00332
+ 6 theodore-roosevelt-1906.txt tax           29 0.00330 0.981 0.00324
+ 7 theodore-roosevelt-1903.txt granada        9 0.00150 2.08  0.00311
+ 8 theodore-roosevelt-1902.txt soundings      5 0.00140 2.08  0.00291
+ 9 theodore-roosevelt-1903.txt revolution    24 0.00399 0.693 0.00277
+10 theodore-roosevelt-1902.txt cable         14 0.00391 0.693 0.00271
+# ℹ 22,957 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Theodore Roosevelt was talking about Columbia not more than anything else, but significantly more than his fellow presidents. It is not surprising that "tax" and "judges" are used frequently by Roosevelt, but the lower tf-idf score is also not surprising - as these are terms we suspect to hear from the president. </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>sotu.tf.idf.Lincoln <span class="ot">&lt;-</span> tidy_sotu <span class="sc">%&gt;%</span> <span class="fu">filter</span> (president <span class="sc">==</span> <span class="st">"Abraham Lincoln"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(doc_id, word, <span class="at">sort =</span> <span class="cn">TRUE</span>)  <span class="sc">%&gt;%</span>  </span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_tf_idf</span>(word, doc_id, n) </span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>sotu.tf.idf.Lincoln <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(tf_idf))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5,766 × 6
+   doc_id                   word              n      tf   idf  tf_idf
+   &lt;chr&gt;                    &lt;chr&gt;         &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+ 1 abraham-lincoln-1861.txt capital          16 0.00621 0.693 0.00430
+ 2 abraham-lincoln-1861.txt circuit           8 0.00310 1.39  0.00430
+ 3 abraham-lincoln-1862.txt forever           9 0.00291 1.39  0.00404
+ 4 abraham-lincoln-1861.txt hired             7 0.00272 1.39  0.00376
+ 5 abraham-lincoln-1861.txt judges            7 0.00272 1.39  0.00376
+ 6 abraham-lincoln-1862.txt bonds             8 0.00259 1.39  0.00359
+ 7 abraham-lincoln-1864.txt pensioners        6 0.00250 1.39  0.00347
+ 8 abraham-lincoln-1863.txt consuls           5 0.00209 1.39  0.00289
+ 9 abraham-lincoln-1863.txt international     5 0.00209 1.39  0.00289
+10 abraham-lincoln-1863.txt oath              5 0.00209 1.39  0.00289
+# ℹ 5,756 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co">#I tried it again with Lincoln just for fun. </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="co-occurance" class="level3">
+<h3 class="anchored" data-anchor-id="co-occurance">Co-Occurance</h3>
+<p>Co-occurrence gives us a sense of words that appear in the same text, but not necessarily next to each other. It shows words that are likely to co-occur. Note that this is different than topic modeling, which we’ll discuss next week.</p>
+<p>For this section we will make use of the <code>widyr</code> package. The function which helps us do this is the <code>pairwise_count()</code> function. It lets us count common pairs of words co-appearing within the same speech. This function might take a second as the resulting data frame will be incredibly large.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>sotu_word_pairs <span class="ot">&lt;-</span> sotu_whole <span class="sc">%&gt;%</span> </span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">speech_end =</span> <span class="fu">word</span>(text, <span class="sc">-</span><span class="dv">5000</span>, <span class="at">end =</span> <span class="sc">-</span><span class="dv">1</span>)) <span class="sc">%&gt;%</span>  <span class="co"># extract last 100 words</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(word, speech_end) <span class="sc">%&gt;%</span>   <span class="co"># tokenize</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>word <span class="sc">%in%</span> stop_words<span class="sc">$</span>word) <span class="sc">%&gt;%</span>  <span class="co"># remove stopwords</span></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pairwise_count</span>(word, doc_id, <span class="at">sort =</span> <span class="cn">TRUE</span>, <span class="at">upper =</span> <span class="cn">FALSE</span>) <span class="co"># don't include upper triangle of matrix</span></span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sotu_word_pairs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  item1      item2          n
+  &lt;chr&gt;      &lt;chr&gt;      &lt;dbl&gt;
+1 congress   time         239
+2 congress   government   237
+3 government time         237
+4 congress   united       236
+5 time       united       236
+6 government united       235</code></pre>
+</div>
+</div>
+<p>Now we have a list of words that appear near each other in the text as well as the frequency. Once again this dataset is far too large to look at in a data frame. Instead, we’ll create a network graph that shows us the relationships between words for any words that appear more than 200 times. I chose 200 after looking at the above dataset and seeing that the highest count was 239. You want the network graph to be manageable and not too large.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'igraph'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:lubridate':
+
+    %--%, union</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:dplyr':
+
+    as_data_frame, groups, union</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:purrr':
+
+    compose, simplify</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:tidyr':
+
+    crossing</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:tibble':
+
+    as_data_frame</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    decompose, spectrum</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:base':
+
+    union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggraph)</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>sotu_word_pairs <span class="sc">%&gt;%</span> </span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n <span class="sc">&gt;=</span> <span class="dv">200</span>) <span class="sc">%&gt;%</span>  <span class="co"># only word pairs that occur 200 or more times</span></span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">graph_from_data_frame</span>() <span class="sc">%&gt;%</span> <span class="co">#convert to graph</span></span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggraph</span>(<span class="at">layout =</span> <span class="st">"fr"</span>) <span class="sc">+</span> <span class="co"># place nodes according to the force-directed algorithm of Fruchterman and Reingold</span></span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>(<span class="at">edge_alpha =</span> n, <span class="at">edge_width =</span> n), <span class="at">edge_colour =</span> <span class="st">"tomato"</span>) <span class="sc">+</span></span>
+<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="at">size =</span> <span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> name), <span class="at">repel =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb70-10"><a href="#cb70-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">point.padding =</span> <span class="fu">unit</span>(<span class="fl">0.2</span>, <span class="st">"lines"</span>)) <span class="sc">+</span></span>
+<span id="cb70-11"><a href="#cb70-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: The `trans` argument of `continuous_scale()` is deprecated as of ggplot2 3.5.0.
+ℹ Please use the `transform` argument instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="6-TextAnalysis_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<ol start="8" class="example" type="1">
+<li>Create a network graph that shows the relationship between words that appear between 125 and 175 times.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>sotu_word_pairs <span class="sc">%&gt;%</span> </span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n <span class="sc">&gt;=</span> <span class="dv">125</span> <span class="sc">&amp;</span> n <span class="sc">&lt;=</span> <span class="dv">175</span>) <span class="sc">%&gt;%</span>  <span class="co"># only word pairs that occur between 125 and 175 times</span></span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">graph_from_data_frame</span>() <span class="sc">%&gt;%</span> <span class="co">#convert to graph</span></span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggraph</span>(<span class="at">layout =</span> <span class="st">"fr"</span>) <span class="sc">+</span> <span class="co"># place nodes according to the force-directed algorithm of Fruchterman and Reingold</span></span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>(<span class="at">edge_alpha =</span> n, <span class="at">edge_width =</span> n), <span class="at">edge_colour =</span> <span class="st">"cornflowerblue"</span>) <span class="sc">+</span></span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="at">size =</span> <span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> name), <span class="at">repel =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb72-8"><a href="#cb72-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">point.padding =</span> <span class="fu">unit</span>(<span class="fl">0.2</span>, <span class="st">"lines"</span>)) <span class="sc">+</span></span>
+<span id="cb72-9"><a href="#cb72-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: ggrepel: 91 unlabeled data points (too many overlaps). Consider
+increasing max.overlaps</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="6-TextAnalysis_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="analyzing-historical-newspapers-about-buffalo-bill" class="level2">
+<h2 class="anchored" data-anchor-id="analyzing-historical-newspapers-about-buffalo-bill">Analyzing Historical Newspapers About Buffalo Bill</h2>
+<p>To practice text analysis this week you will be helping Dr.&nbsp;Seefeldt with his research. In the github repository below I have included a metadata file containing all of the associated info from each article and a txt folder with each text file.</p>
+<p>The dataset is described by Dr.&nbsp;Seefeldt this way: &gt; The project staff identified 99 visits to Indiana communities, some of which included performances spanning two or more days. We located and captured a total of 720 Indiana newspaper pieces, including 273 articles promoting specific Wild West performances, 74 substantive pieces documenting locally-based reception to these performances, and 373 extraneous items, including advertisements, images, and reprints of articles generated elsewhere. In total, the team transcribed approximately 740 items (R = Reception; P = Promotion; E = Extraneous)</p>
+<p>Use this link to read more about the project and the historical context: <a href="https://docs.google.com/document/d/1LnmyCob5zc984EkMAx3sXlXQqhNbm9O8XV4O3HrQUbQ/edit?usp=sharing">https://docs.google.com/document/d/1LnmyCob5zc984EkMAx3sXlXQqhNbm9O8XV4O3HrQUbQ/edit?usp=sharing</a></p>
+<p>You should use the rest of this worksheet to practice text analysis (and R more broadly) by exploring this dataset. Using the metadata provided and the raw text files can you use what you learned above to analyze these texts? What historical conclusions might you be able to draw? Perform the textual analysis and then write up your findings for Dr.&nbsp;Seefeldt. What might he be able to draw from this analysis? I will then take your work, compile it, and share it with him. Here are 3 research questions to get started. You can use one of these or come up with your own.</p>
+<ul>
+<li>Is there a difference in promotion language vs.&nbsp;reception language. In other words, what was BBWW selling and what did Indiana newspapers find remarkable.</li>
+<li>Can we detect some change over time in promotion language and reception language (marketing and reviewing)? Were there types of characters, scenarios, action promised in promotional material and/or noted in reviews earlier vs later?</li>
+<li>What can be gleaned from the items tagged as extraneous as far as topics? These are news items that are somehow related to BBWW. Crime, finances, celebrity, etc.</li>
+</ul>
+<p>Write up a research plan in the space below. What are you looking to explore?</p>
+<blockquote class="blockquote">
+<p>I plan on tackling the first research question, “Is there a difference in promotion language vs.&nbsp;reception language?” This will be intersting to explore across space. I have a mind to take this a bit further. I will explore whether they market the same everywhere and if there any traceable trends among places that recieve them similarly.</p>
+</blockquote>
+<p>Lets download the data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="co">#zip file of all the .txt files. One for each issue. </span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="st">"https://github.com/dseefeldt/IndianaNewspapers/raw/main/bb-txt.zip"</span>, <span class="st">"bb-txt.zip"</span>)</span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a><span class="fu">unzip</span>(<span class="st">"bb-txt.zip"</span>)</span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Metadata that includes info about each article.</span></span>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>bb.metadata <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/dseefeldt/IndianaNewspapers/main/metadata.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="9" class="example" type="1">
+<li>There are a few problems with this metadata from a tidy data perspective. First the date column isn’t useful for assessing change over time. Can you split it into 3 columns one for year, month, and day? This will be useful if you want to try and identify change over time. Use the Date column not the FullDate column. This column is messy and you’ll need to clean it up in order to have useful data.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="co">#bb.metadata.1 &lt;- separate_wider_delim(bb.metadata, Date, delim = ",", names = "Year" )</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>bb.meta.tidy <span class="ot">&lt;-</span> tidyr<span class="sc">::</span><span class="fu">separate</span>(bb.metadata, Date, <span class="fu">c</span>(<span class="st">'month_day'</span>, <span class="st">'year'</span>), <span class="at">sep =</span> <span class="st">","</span>,<span class="at">remove =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Expected 2 pieces. Missing pieces filled with `NA` in 317 rows [295, 296, 297,
+298, 299, 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313,
+314, ...].</code></pre>
+</div>
+</div>
+<ol start="10" class="example" type="1">
+<li>Now lets load the BB data. This happens in a slightly different way than with the SOTU data since its local data and not data from an R package.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>data_dir <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">getwd</span>(), <span class="st">"/txt"</span>, <span class="at">sep =</span> <span class="st">""</span>)</span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>bb <span class="ot">&lt;-</span> <span class="fu">readtext</span>(<span class="fu">paste0</span>(data_dir, <span class="st">"/*.txt"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="11" class="example" type="1">
+<li>Now you need to join this with the metadata for each file. Note that doc_id and Filename are the same value. How would you join two datasets together in R so that you can proceed with textual analysis?</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>bb_new  <span class="ot">&lt;-</span> bb <span class="sc">%&gt;%</span> </span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>  plyr<span class="sc">::</span><span class="fu">rename</span>(<span class="fu">c</span>(<span class="st">"doc_id"</span> <span class="ot">=</span> <span class="st">"Filename"</span>))</span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a>bb_whole <span class="ot">&lt;-</span> </span>
+<span id="cb78-6"><a href="#cb78-6" aria-hidden="true" tabindex="-1"></a>  bb.meta.tidy <span class="sc">%&gt;%</span>  </span>
+<span id="cb78-7"><a href="#cb78-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(year) <span class="sc">%&gt;%</span> <span class="co"># sort metadata</span></span>
+<span id="cb78-8"><a href="#cb78-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(bb_new) <span class="sc">%&gt;%</span> <span class="co"># combine with texts</span></span>
+<span id="cb78-9"><a href="#cb78-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="co"># convert to tibble for better screen viewing</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>New names:
+• `Filename` -&gt; `Filename...3`
+• `Filename` -&gt; `Filename...16`</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(bb_whole)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 763
+Columns: 17
+$ R_P_E         &lt;chr&gt; "P", "P", "E", "E", "E", "E", "E", "E", "E", "P", "P", "…
+$ Transcript    &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TR…
+$ Filename...3  &lt;chr&gt; "FtWayneEveningPost-6-26-96.txt", "SullivanDemocrat-1-17…
+$ Title         &lt;chr&gt; "Buffalo Bill", "Agents Wanted for Heroes of the Plains"…
+$ Publication   &lt;chr&gt; "Fort Wayne Evening Post", "Sullivan Democrat", "Logansp…
+$ Date          &lt;chr&gt; "June 26,  1896", "Jan. 17, 1883", "Jan. 20, 1883", "Jan…
+$ month_day     &lt;chr&gt; "June 26", "Jan. 17", "Jan. 20", "Jan. 27", "Jan. 30", "…
+$ year          &lt;chr&gt; "  1896", " 1883", " 1883", " 1883", " 1883", " 1883", "…
+$ FullDate      &lt;chr&gt; "1896-06-26", "1883-01-17", "1883-01-20", "1883-01-27", …
+$ Page          &lt;chr&gt; "N/A", "4", "8", "4", "4", "4", "2", "1", "4", "8", "5",…
+$ Summary       &lt;chr&gt; "Emphasizing show as educational; notes Buffalo Bill's a…
+$ Notes         &lt;chr&gt; "", "Contains the Wild Bill Image", "", "", "", "", "", …
+$ SourceFormat  &lt;chr&gt; "P", "A", "P", "P", "P", "P", "P", "P", "P", "P", "P", "…
+$ X             &lt;chr&gt; "", "", "", "", "", "", "", "", "", "", "", "", "", "", …
+$ duplicated    &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, …
+$ Filename...16 &lt;chr&gt; "AlbionNobleCountyDemocrat-2-15-94.txt", "AlbionNobleCou…
+$ text          &lt;chr&gt; "Albion Noble County Democrat February 15, 1894 pg. 4\nW…</code></pre>
+</div>
+</div>
+<ol start="12" class="example" type="1">
+<li>Now you can begin your textual analysis for Dr.&nbsp;S. Add code chunks below and intersperse text to explain what you are doing and why in the text of the worksheet.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>bb_whole_tidy <span class="ot">&lt;-</span> bb_whole <span class="sc">%&gt;%</span> </span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(word, text)  <span class="sc">%&gt;%</span> <span class="co">#creates a new data frame with each text file broken into tokens</span></span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(stop_words)<span class="co"># eliminates stop words </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(word)`</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>bb.whole.n.count <span class="ot">&lt;-</span> bb_whole_tidy <span class="sc">%&gt;%</span></span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(word, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="co">#just counting words to get my bearings </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="co">#I'm curious if there are more words used for promotion or reception. There is a shockingly minuscule difference. </span></span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>bb_whole_tidy <span class="sc">%&gt;%</span> <span class="co">#calling our dataset</span></span>
+<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(R_P_E, Filename...<span class="dv">3</span>)  <span class="sc">%&gt;%</span> <span class="co">#counting words per file</span></span>
+<span id="cb85-5"><a href="#cb85-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(R_P_E) <span class="sc">%&gt;%</span> <span class="co">#grouping by Reception, Promotion, Extraneous</span></span>
+<span id="cb85-6"><a href="#cb85-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">avg_words =</span> <span class="fu">mean</span>(n)) <span class="co">#finding average word number per file per category</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+  R_P_E avg_words
+  &lt;chr&gt;     &lt;dbl&gt;
+1 ""         39.5
+2 "E"       116. 
+3 "P"       102. 
+4 "R"       103. </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="co">#IGNORE. this is really just a test. the following tf_idf will be more relevant </span></span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>bb.tf.idf <span class="ot">&lt;-</span> bb_whole_tidy <span class="sc">%&gt;%</span></span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(R_P_E, word, <span class="at">sort =</span> <span class="cn">TRUE</span>)  <span class="sc">%&gt;%</span>  </span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_tf_idf</span>(word, R_P_E, n) </span>
+<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a>bb.tf.idf <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(tf_idf))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 19,048 × 6
+   R_P_E word        n      tf   idf  tf_idf
+   &lt;chr&gt; &lt;chr&gt;   &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+ 1 R     indians    92 0.00995 0.288 0.00286
+ 2 R     reedy      15 0.00162 1.39  0.00225
+ 3 R     pg         66 0.00714 0.288 0.00205
+ 4 P     pg        191 0.00638 0.288 0.00183
+ 5 E     pg        253 0.00577 0.288 0.00166
+ 6 P     indians   152 0.00507 0.288 0.00146
+ 7 R     indian     45 0.00487 0.288 0.00140
+ 8 E     indian    201 0.00458 0.288 0.00132
+ 9 E     life      189 0.00431 0.288 0.00124
+10 R     horse      38 0.00411 0.288 0.00118
+# ℹ 19,038 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ignore. another experiment that did not produce much fruit </span></span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>bb.tf.idf <span class="sc">%&gt;%</span> </span>
+<span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(R_P_E <span class="sc">==</span> <span class="st">"R"</span> <span class="sc">|</span> R_P_E <span class="sc">==</span> <span class="st">"P"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb89-4"><a href="#cb89-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(tf_idf <span class="sc">&gt;</span> <span class="fl">0.0008</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb89-5"><a href="#cb89-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb89-6"><a href="#cb89-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(word, n, <span class="at">fill =</span> R_P_E)) <span class="sc">+</span> </span>
+<span id="cb89-7"><a href="#cb89-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">"fill"</span>) <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="sc">~</span>word) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="6-TextAnalysis_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="co">#trying to find the words most notably associated with promotion (looking at tf_idf in results - will be in descending order)</span></span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a>bb.tf.idf.promotion <span class="ot">&lt;-</span> bb_whole_tidy <span class="sc">%&gt;%</span> <span class="fu">filter</span> (R_P_E <span class="sc">==</span> <span class="st">"P"</span>) <span class="sc">%&gt;%</span> <span class="co">#subset data to just pull promotion </span></span>
+<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(Filename...<span class="dv">3</span>, word, <span class="at">sort =</span> <span class="cn">TRUE</span>)  <span class="sc">%&gt;%</span>  </span>
+<span id="cb90-4"><a href="#cb90-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_tf_idf</span>(word, Filename...<span class="dv">3</span>, n) </span>
+<span id="cb90-5"><a href="#cb90-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-6"><a href="#cb90-6" aria-hidden="true" tabindex="-1"></a>bb.tf.idf.promotion <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(tf_idf))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 23,876 × 6
+   Filename...3                          word             n     tf   idf tf_idf
+   &lt;chr&gt;                                 &lt;chr&gt;        &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+ 1 ElkTruth-8-28-14p.2-second.txt        advertisment     1 0.111   5.68  0.632
+ 2 DailyWabashExpress-5-24-83.txt        guy              2 0.105   5.68  0.598
+ 3 FtWayneGazette-7-6-01.txt             date             2 0.143   3.38  0.483
+ 4 FtWayneSentinel-7-13-07.txt           ariadne          2 0.0833  5.68  0.474
+ 5 IndianapolisNews-3-2-83.txt           bloomfield       2 0.0833  5.68  0.474
+ 6 LogansportChronicle-6-9-83.txt        tamed            1 0.0833  5.68  0.474
+ 7 MarshallCountyIndependent-7-12-01.txt utica            1 0.0833  5.68  0.474
+ 8 IndianapolisNews-9-30-85.txt          graphic          1 0.125   3.74  0.467
+ 9 IndianapolisStar-9-15-14.txt          26               1 0.125   3.74  0.467
+10 FtWayneSentinel-7-12-01.txt           stubbs           2 0.08    5.68  0.455
+# ℹ 23,866 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="co">#finding words most strongly associated with reception (looking at tf_idf in results - will be in descending order)</span></span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>bb.tf.idf.reception <span class="ot">&lt;-</span> bb_whole_tidy <span class="sc">%&gt;%</span> <span class="fu">filter</span> (R_P_E <span class="sc">==</span> <span class="st">"R"</span>) <span class="sc">%&gt;%</span> <span class="co">#subset data to just pull reception </span></span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(Filename...<span class="dv">3</span>, word, <span class="at">sort =</span> <span class="cn">TRUE</span>)  <span class="sc">%&gt;%</span>  </span>
+<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_tf_idf</span>(word, Filename...<span class="dv">3</span>, n) </span>
+<span id="cb92-5"><a href="#cb92-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-6"><a href="#cb92-6" aria-hidden="true" tabindex="-1"></a>bb.tf.idf.reception <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(tf_idf))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7,343 × 6
+   Filename...3                               word         n     tf   idf tf_idf
+   &lt;chr&gt;                                      &lt;chr&gt;    &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+ 1 IndianapolisMonroesIronCladAge-6-16-83.txt tickets      2 0.105   4.50  0.474
+ 2 FtWayneSentinel-7-13-01.txt                delight…     1 0.0909  4.50  0.409
+ 3 FtWayneSentinel-7-13-01.txt                yorkers      1 0.0909  4.50  0.409
+ 4 FtWayneJournalGazette-7-18-07.txt          union        2 0.105   3.81  0.401
+ 5 IndianapolisMonroesIronCladAge-6-16-83.txt collect…     2 0.105   3.81  0.401
+ 6 CrawfJournal7-31-09p4.txt                  cruelty      2 0.0769  4.50  0.346
+ 7 LogansportJournal-5-4-85.txt               fly          1 0.0769  4.50  0.346
+ 8 LogansportJournal-5-4-85.txt               stimula…     1 0.0769  4.50  0.346
+ 9 FtWayneJournalGazette-7-18-07.txt          madison      2 0.105   3.11  0.328
+10 ElkhartDailyReview-8-14-08.txt             blown        2 0.0714  4.50  0.321
+# ℹ 7,333 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="co">#an experiment to see if this is an effective visualization for a single word </span></span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a>bb_whole_tidy <span class="sc">%&gt;%</span> <span class="fu">filter</span>(R_P_E <span class="sc">==</span> <span class="st">"R"</span> <span class="sc">|</span> R_P_E <span class="sc">==</span> <span class="st">"P"</span>) <span class="sc">%&gt;%</span> <span class="co">#filtering the dataset for promo and reception</span></span>
+<span id="cb94-5"><a href="#cb94-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(word <span class="sc">==</span> <span class="st">"indians"</span>) <span class="sc">%&gt;%</span> <span class="co">#filtering for the word I want to visualize</span></span>
+<span id="cb94-6"><a href="#cb94-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(year, R_P_E) <span class="sc">%&gt;%</span> <span class="co"># getting a count for the designatged word per year per category </span></span>
+<span id="cb94-7"><a href="#cb94-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(year, n, <span class="at">fill =</span> R_P_E)) <span class="sc">+</span> <span class="co">#plotting the results </span></span>
+<span id="cb94-8"><a href="#cb94-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">"fill"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="6-TextAnalysis_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="co">#experiment. not super helpful!</span></span>
+<span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a>bb_whole_tidy <span class="sc">%&gt;%</span> </span>
+<span id="cb95-3"><a href="#cb95-3" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(R_P_E <span class="sc">==</span> <span class="st">"R"</span> <span class="sc">|</span> R_P_E <span class="sc">==</span> <span class="st">"P"</span>) <span class="sc">%&gt;%</span> <span class="co">#filtering for reception and promotion</span></span>
+<span id="cb95-4"><a href="#cb95-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(year, R_P_E, word) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(n <span class="sc">&gt;</span> <span class="dv">30</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb95-5"><a href="#cb95-5" aria-hidden="true" tabindex="-1"></a> <span class="co"># getting a count for words per category per year</span></span>
+<span id="cb95-6"><a href="#cb95-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(year, n, <span class="at">fill =</span> R_P_E)) <span class="sc">+</span> <span class="co">#plotting the results </span></span>
+<span id="cb95-7"><a href="#cb95-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">"fill"</span>) <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="sc">~</span>word) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="6-TextAnalysis_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="co">#another failed experiment</span></span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>bb.promo. <span class="ot">&lt;-</span> bb.tf.idf.promotion <span class="sc">%&gt;%</span></span>
+<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(tf_idf <span class="sc">&gt;</span> <span class="fl">0.35</span> ) <span class="co">#filtering for tf_idf scores above .35 to only get a handful of high results</span></span>
+<span id="cb96-5"><a href="#cb96-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb96-6"><a href="#cb96-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(bb.promo., <span class="fu">aes</span>(<span class="at">x =</span> word, <span class="at">y =</span> tf_idf)) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">axis.text.x=</span><span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">90</span>)) <span class="sc">+</span> <span class="fu">geom_col</span>(<span class="at">width =</span> .<span class="dv">7</span>, <span class="at">fill=</span><span class="st">"slategrey"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"word"</span>, <span class="at">y=</span><span class="st">"tf_idf"</span>, <span class="at">title=</span><span class="st">"tf_idf promotion"</span>) <span class="co">#plotting </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="6-TextAnalysis_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>bb.reception. <span class="ot">&lt;-</span> bb.tf.idf.reception <span class="sc">%&gt;%</span></span>
+<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(tf_idf <span class="sc">&gt;</span> <span class="fl">0.25</span> ) <span class="co">#filtering for tf_idf scores above .25 to only get a handful of high results</span></span>
+<span id="cb97-3"><a href="#cb97-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb97-4"><a href="#cb97-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(bb.reception., <span class="fu">aes</span>(<span class="at">x =</span> word, <span class="at">y =</span> tf_idf)) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">axis.text.x=</span><span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">90</span>)) <span class="sc">+</span> <span class="fu">geom_col</span>(<span class="at">width =</span> .<span class="dv">7</span>, <span class="at">fill=</span><span class="st">"cornflowerblue"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"word"</span>, <span class="at">y=</span><span class="st">"tf_idf"</span>, <span class="at">title=</span><span class="st">"tf_idf reception"</span>) <span class="co">#plotting</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="6-TextAnalysis_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<ol start="13" class="example" type="1">
+<li>Finally, when you are all done. Write up your findings. What research question did you focus on and what did you learn?</li>
+</ol>
+<p>I focused on the difference between promotion language and reception language. The two bar graphs immediately above this write up are the most relevant to my findings. These graphs highlight the differences between promotion and reception, as similarity has been filtered out by the tf_idf process. I am particularly struck by the inclusion of words such as “cruelty” and “dishonest” in the reception data. These words do not occur often, but they are tightly associated with reception – meaning someone was taking this away from the show and it was not the Company’s intention. It is possible this observation would have gotten lost without splicing the data in this way. I am also curious as to why “pneumonia” and “stockholder” appear in the promotion graph. Were the performers prone to getting sick by living in close proximity, leading to the cancellation or rescheduling of shows? Were people invited to become stockholders? These observations provide a possible avenue to follow.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
